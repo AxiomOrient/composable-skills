@@ -1,0 +1,6 @@
+interface:
+  display_name: "Product Brief"
+  short_description: "Use when turning a rough idea into a short product brief that names the user, problem, intended outcome, success signals, and non-goals before writing specs or design docs. Do not use for detailed feature requirements or technical solution design."
+  default_prompt: "$plan-why-build-this"
+policy:
+  allow_implicit_invocation: true

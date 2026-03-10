@@ -1,0 +1,6 @@
+interface:
+  display_name: "Delivery Check"
+  short_description: "Neutral final verification skill. Use when explicit final verification is required after work output. Do not use for feature implementation or broad analysis; use as a final validation gate. English triggers: check-delivered, final verification."
+  default_prompt: "$check-delivered"
+policy:
+  allow_implicit_invocation: true

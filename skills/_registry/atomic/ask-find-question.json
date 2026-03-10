@@ -1,0 +1,109 @@
+{
+  "name": "ask-find-question",
+  "title": "Question Clarify",
+  "layer": "atomic",
+  "family": "question",
+  "job_type": "ask-find-question",
+  "description": "Turn fuzzy intent into one clear problem statement and a small question handle. Use when the user does not know how to ask yet, feels mentally foggy, or needs the question boundary tightened before deeper design.",
+  "purpose": "Convert a vague thought into a bounded problem statement with a few stable question anchors.",
+  "when_to_use": [
+    "Need to turn a fuzzy thought into one clear question handle.",
+    "Need to reduce mental overload before deeper question design.",
+    "Need a bounded problem statement rather than broad ideation."
+  ],
+  "do_not_use": [
+    "Already have a clear bounded question.",
+    "Need the final answer directly.",
+    "Need repository analysis, implementation, or review."
+  ],
+  "required_inputs": [
+    {
+      "name": "RAW_TOPIC",
+      "type": "string",
+      "required": true,
+      "description": "Messy topic, rough thought, or problem statement draft."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "string",
+      "required": false,
+      "description": "Who the future answer or decision is for."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Known time, resource, domain, or evidence constraints."
+    }
+  ],
+  "input_contract_notes": [
+    "RAW_TOPIC can be messy; the skill should reduce ambiguity instead of demanding a polished first draft.",
+    "If the user does not provide explicit constraints, infer only the single most limiting constraint from the prompt and mark it as inferred.",
+    "Ask what should be avoided before expanding ideal outcomes."
+  ],
+  "structured_outputs": [
+    {
+      "name": "FOG_KEYS",
+      "type": "list",
+      "required": true,
+      "shape": "{KEYWORD}",
+      "description": "Three concrete anchor words that represent the core issue."
+    },
+    {
+      "name": "NEGATIVE_SPACE",
+      "type": "list",
+      "required": true,
+      "shape": "{AVOID}",
+      "description": "What the future question should avoid or not become."
+    },
+    {
+      "name": "PRIMARY_CONSTRAINT",
+      "type": "string",
+      "required": true,
+      "description": "Single dominant constraint that most limits the question."
+    },
+    {
+      "name": "PROBLEM_STATEMENT",
+      "type": "string",
+      "required": true,
+      "description": "One clear problem-definition sentence."
+    },
+    {
+      "name": "NEXT_RECOMMENDED_SKILL",
+      "type": "string",
+      "required": true,
+      "description": "Smallest useful next question-design step."
+    }
+  ],
+  "output_contract_notes": [
+    "FOG_KEYS should stay short and concrete, not abstract themes.",
+    "PROBLEM_STATEMENT should express one bounded question direction, not a list of possible asks.",
+    "NEXT_RECOMMENDED_SKILL should usually point to ask-break-it-down unless the question is already bounded enough to ask."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "ask-find-question.v1"
+  ],
+  "neutrality_rules": [
+    "Do not answer the topic while clarifying the question.",
+    "Separate what the user wants from what the user wants to avoid.",
+    "If the prompt stays ambiguous, narrow to one problem statement instead of inventing extra goals."
+  ],
+  "execution_constraints": [
+    "Reduce the thought to three anchors, one dominant constraint, and one problem statement.",
+    "Prefer the shortest clear wording that helps the user take control of the question.",
+    "Do not expand into solution advice or answer content."
+  ],
+  "mandatory_rules": [
+    "Always emit exactly one PROBLEM_STATEMENT.",
+    "Keep FOG_KEYS to three items unless the prompt gives fewer usable anchors."
+  ],
+  "response_profile": "clarify_question",
+  "default_prompt": "$ask-find-question",
+  "default_program": "[stages: preflight>detect>analyze>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: inversion-focus | output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/ask-find-question",
+  "primary_lens": "inversion-focus",
+  "lens_rationale": "Question clarification should lower cognitive load, define the negative boundary first, and collapse ambiguity into one usable problem statement."
+}

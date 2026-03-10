@@ -1,0 +1,99 @@
+{
+  "name": "check-security-holes",
+  "layer": "atomic",
+  "family": "check-merge-ready",
+  "job_type": "check-security-holes",
+  "description": "Use when running security audits, threat modeling, or vulnerability verification with prioritized findings. Do not use when non-security implementation, generic debugging, or pure performance analysis is the primary task. English triggers: security audit, vulnerability check, threat model.",
+  "purpose": "Surface security issues and threat-relevant risks.",
+  "when_to_use": [
+    "Need vulnerability, threat-model, or mitigation-verification output.",
+    "Need security-specific review with prioritized findings.",
+    "Need exploitability or mitigation evidence before merge or release."
+  ],
+  "do_not_use": [
+    "Need general debugging or performance analysis.",
+    "Need direct implementation.",
+    "Need broad review or release judgement instead of security-specific output."
+  ],
+  "required_inputs": [
+    {
+      "name": "SECURITY_GOAL",
+      "type": "audit|threat-model|mitigation-verify",
+      "required": true,
+      "description": "Security objective."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|service|repo|diff",
+      "required": true,
+      "description": "Scope to inspect."
+    },
+    {
+      "name": "ASSETS_OR_BOUNDARIES",
+      "type": "list",
+      "required": true,
+      "shape": "{ASSET_OR_BOUNDARY, WHY_RELEVANT}",
+      "description": "Assets, trust boundaries, or entrypoints to prioritize."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Scans, prior findings, logs, or threat notes."
+    }
+  ],
+  "input_contract_notes": [
+    "ASSETS_OR_BOUNDARIES should anchor the review to real assets, trust boundaries, or entrypoints rather than broad fear-driven scanning.",
+    "KNOWN_EVIDENCE should cite existing scans, logs, or prior findings only; do not preload vulnerability conclusions into the evidence list.",
+    "Use SECURITY_GOAL to choose the review mode, not to imply that a vulnerability must be found."
+  ],
+  "structured_outputs": [
+    {
+      "name": "THREAT_MODEL",
+      "type": "object",
+      "required": true,
+      "description": "Assets, attacker model, boundaries, and entrypoints."
+    },
+    {
+      "name": "SECURITY_FINDINGS",
+      "type": "list",
+      "required": true,
+      "shape": "{SEVERITY, ISSUE, LOCATION, EVIDENCE, EXPLOITABILITY}",
+      "description": "Prioritized vulnerability findings."
+    },
+    {
+      "name": "MITIGATION_VERIFICATION",
+      "type": "list",
+      "required": true,
+      "shape": "{CONTROL_OR_MITIGATION, STATUS, EVIDENCE}",
+      "description": "Mitigation checks or verification results."
+    }
+  ],
+  "output_contract_notes": [
+    "SECURITY_FINDINGS may be empty when the threat model and available evidence do not support a concrete vulnerability claim.",
+    "Use MITIGATION_VERIFICATION for hardening checks or control status instead of presenting every improvement idea as a vulnerability.",
+    "If exploitability is uncertain, record that uncertainty explicitly instead of smoothing it into a confirmed finding."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "security-report.v1"
+  ],
+  "neutrality_rules": [
+    "Build the threat model before asserting vulnerability impact.",
+    "If exploitability is uncertain, mark it as unverified rather than overstating certainty.",
+    "Separate discovered vulnerabilities from hardening suggestions."
+  ],
+  "execution_constraints": [
+    "Do not invent vulnerabilities to satisfy a security-audit request; return an empty SECURITY_FINDINGS list when evidence does not support a finding.",
+    "Keep the report anchored to the stated assets and boundaries instead of broad speculative fear scanning.",
+    "Treat missing proof as unverified exploitability, not as a confirmed issue."
+  ],
+  "response_profile": "security_report",
+  "default_prompt": "$check-security-holes",
+  "default_program": "[stages: preflight>detect>analyze>plan>verify>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,safety-gates,quality-gates{security,tests},deterministic-output |\n lens: nist-rmf |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/check-security-holes",
+  "primary_lens": "nist-rmf",
+  "lens_rationale": "Security review should frame assets, controls, and monitoring needs systematically."
+}

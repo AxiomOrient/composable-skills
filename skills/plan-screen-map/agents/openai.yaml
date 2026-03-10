@@ -1,0 +1,6 @@
+interface:
+  display_name: "Information Architecture"
+  short_description: "Use when defining hierarchy, navigation, screen or page relationships, and core user flows before detailed UI or technical implementation. Do not use for detailed feature behavior or backend solution design."
+  default_prompt: "$plan-screen-map"
+policy:
+  allow_implicit_invocation: true

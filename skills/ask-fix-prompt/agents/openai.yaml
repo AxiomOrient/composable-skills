@@ -1,0 +1,6 @@
+interface:
+  display_name: "Answer Repair"
+  short_description: "Diagnose why an answer was wrong, shallow, or structurally weak, then produce the minimum prompt repair. Trigger when the user says the answer is wrong, missed something, or needs a feedback-and-repair loop. Do not trigger for first-pass answering or coding work."
+  default_prompt: "$ask-fix-prompt"
+policy:
+  allow_implicit_invocation: true

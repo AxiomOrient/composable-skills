@@ -1,0 +1,6 @@
+interface:
+  display_name: "Feature Spec"
+  short_description: "Use when writing implementation-ready feature specifications with explicit scope, required behavior, acceptance scenarios, and edge cases. Do not use for high-level product briefs, information architecture, or technical solution design. English triggers: feature spec, requirements spec, functional specification."
+  default_prompt: "$plan-what-it-does"
+policy:
+  allow_implicit_invocation: true

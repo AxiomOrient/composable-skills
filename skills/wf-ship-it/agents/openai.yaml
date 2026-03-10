@@ -1,0 +1,6 @@
+interface:
+  display_name: "Ship Workflow"
+  short_description: "Workflow skill that runs repository checks, release hygiene, release readiness, and then the release-only commit/tag/publish flow as one default entrypoint."
+  default_prompt: "$wf-ship-it"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Performance Optimizer"
+  short_description: "Use when performance bottlenecks require measurement, optimization, and before/after verification. Do not use when the task is general feature implementation or optimization guesses without measurement. English triggers: performance optimization, profiling, latency, memory optimization."
+  default_prompt: "$build-make-faster"
+policy:
+  allow_implicit_invocation: true

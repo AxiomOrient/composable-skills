@@ -1,0 +1,6 @@
+interface:
+  display_name: "Ship Risk Check"
+  short_description: "Review-only skill. Evaluate existing diff/PR risks and quality gates. Do not edit code or create implementation plans here. English triggers: code review, diff review, regression audit."
+  default_prompt: "$check-ship-risk"
+policy:
+  allow_implicit_invocation: true

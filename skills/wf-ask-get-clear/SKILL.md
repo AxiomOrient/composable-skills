@@ -1,0 +1,74 @@
+---
+name: wf-ask-get-clear
+description: "Workflow skill that turns a fuzzy topic into one clear problem statement and a usable question stack. Use when the user needs help asking a better question before asking for the answer."
+---
+
+# Get Clear Workflow
+
+## Purpose
+Compose question clarification and scaffolding into one reusable question-design workflow.
+
+## Default Program
+```text
+[stages: preflight>detect>analyze>plan>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: inversion-focus | output: md(contract=v1)]
+```
+
+## Use When
+- Need a clear problem statement and question stack in one pass.
+- Need a reusable workflow entrypoint before deeper challenge or answer work.
+- Need a named composition rather than manually listing clarify plus scaffold each time.
+
+## Do Not Use When
+- Need assumption-challenging reframing in the same workflow.
+- Need the final answer directly.
+- Need repository or implementation work.
+
+## Required Inputs
+- `TOPIC` (string; required): Raw topic or rough thought to clarify into a question.
+- `AUDIENCE` (string; required): Target reader or decision-maker for the future answer.
+- `CONSTRAINTS` (list; optional): Scope, evidence, time, or deliverable constraints.
+
+## Input Contract Notes
+- TOPIC can be rough or messy; this workflow exists to turn that into a usable question handle.
+- Keep CONSTRAINTS short and concrete; the workflow will surface the dominant one.
+
+## Structured Outputs
+- `PROBLEM_STATEMENT` (string; required): Single clear problem-definition sentence.
+- `QUESTION_STACK` (question-stack.v1; required): Prioritized stack of askable questions.
+- `EXPANDED_ATOMIC_PATH` (list; required; shape: {SKILL}): Expanded atomic path used by the workflow.
+
+## Output Contract Notes
+- QUESTION_STACK should stay short enough to act on immediately.
+- EXPANDED_ATOMIC_PATH must preserve the real execution order.
+
+## Artifacts
+- `artifacts_in`: none
+- `artifacts_out`: ask-find-question.v1, question-stack.v1
+
+## Neutrality Rules
+- Preserve the neutrality rules of each underlying atomic skill.
+- Do not expand into answer content while shaping the question.
+- Keep the workflow transparent by exposing the expanded skill list.
+
+## Execution Constraints
+- Prefer one usable problem statement over multiple half-bounded prompts.
+- Keep the stack focused on the core decision the audience actually needs.
+
+## Mandatory Rules
+- Expose the expanded atomic path explicitly.
+- Keep the workflow output short enough that the user can ask or refine the question immediately.
+
+## Expansion
+- `$ask-find-question`
+- `$ask-break-it-down`
+
+## Example Invocation
+```text
+$wf-ask-get-clear
+TOPIC: AI 코드 리뷰 도구를 팀에 도입하면 실제로 생산성이 올라갈까?
+AUDIENCE: engineering manager
+```
+
+## Output Discipline
+- `response_profile=question_stack`
+- User-facing rendering is delegated to `respond`.

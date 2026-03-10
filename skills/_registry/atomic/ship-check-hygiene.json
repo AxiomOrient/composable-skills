@@ -1,0 +1,122 @@
+{
+  "name": "ship-check-hygiene",
+  "layer": "atomic",
+  "family": "release",
+  "job_type": "ship-check-hygiene",
+  "description": "Use when release readiness depends on legacy removal, document freshness, and public-surface sync. Do not use for branch mutation or rollout-risk judgement.",
+  "purpose": "Verify release hygiene gates such as required docs, stale or legacy surface removal, and registry-to-doc sync before release judgement or publication.",
+  "when_to_use": [
+    "Need to confirm required release docs are upgraded before shipping.",
+    "Need to check that legacy files, stale docs, or removed public skills are actually cleaned up.",
+    "Need explicit evidence that registry, user docs, and public surface still agree."
+  ],
+  "do_not_use": [
+    "Need git branch, tag, or remote state only; use ship-check-repo instead.",
+    "Need rollout risk or rollback judgement; use ship-go-nogo instead.",
+    "Need to rewrite docs directly; use document, doc-curate, or doc-publish-readme instead."
+  ],
+  "required_inputs": [
+    {
+      "name": "HYGIENE_SCOPE",
+      "type": "diff|repo",
+      "required": true,
+      "allowed_values": [
+        "diff",
+        "repo"
+      ],
+      "description": "Release hygiene scope under inspection."
+    },
+    {
+      "name": "REQUIRED_DOCS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH, WHY_REQUIRED}",
+      "description": "Docs that must be updated or present before release."
+    },
+    {
+      "name": "SURFACE_CONTRACTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONTRACT, SOURCE}",
+      "description": "Public-surface contracts such as registry/docs parity or required path ownership."
+    },
+    {
+      "name": "LEGACY_PATTERNS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATTERN, WHY_BLOCKING}",
+      "description": "Names, files, or patterns that must not survive the release."
+    }
+  ],
+  "input_contract_notes": [
+    "REQUIRED_DOCS should list only release-blocking docs, not every nice-to-have document in the repository.",
+    "SURFACE_CONTRACTS should be observable contracts, such as registry/docs parity or root README ownership, not abstract taste rules.",
+    "LEGACY_PATTERNS is for concrete legacy removal checks, not for broad cleanup brainstorming.",
+    "Prefer exact skill names, file paths, or anchored patterns over broad words such as 'release' that would match unrelated content."
+  ],
+  "structured_outputs": [
+    {
+      "name": "HYGIENE_FINDINGS",
+      "type": "list",
+      "required": true,
+      "shape": "{ISSUE, LOCATION, EVIDENCE, BLOCKS_RELEASE}",
+      "description": "Concrete hygiene problems such as stale docs, leftover legacy surface, or unsynced public references."
+    },
+    {
+      "name": "DOC_GATE_STATUS",
+      "type": "pass|blocked|inconclusive",
+      "required": true,
+      "allowed_values": [
+        "pass",
+        "blocked",
+        "inconclusive"
+      ],
+      "description": "Whether required release docs are ready."
+    },
+    {
+      "name": "SURFACE_SYNC_STATUS",
+      "type": "pass|blocked|inconclusive",
+      "required": true,
+      "allowed_values": [
+        "pass",
+        "blocked",
+        "inconclusive"
+      ],
+      "description": "Whether registry, skill docs, and user-facing docs stay in sync."
+    },
+    {
+      "name": "REQUIRED_CLEANUPS",
+      "type": "list",
+      "required": true,
+      "shape": "{ACTION, WHY}",
+      "description": "Bounded cleanup actions required before release."
+    }
+  ],
+  "output_contract_notes": [
+    "If required release docs are missing or stale, DOC_GATE_STATUS should be blocked instead of buried in a note.",
+    "SURFACE_SYNC_STATUS should reflect observable mismatches only, such as registry/doc drift or surviving legacy names.",
+    "REQUIRED_CLEANUPS should stay bounded and release-relevant rather than turning into a generic improvement backlog.",
+    "HYGIENE_FINDINGS and REQUIRED_CLEANUPS may both be empty when docs and public surface are already clean."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "release-hygiene-report.v1"
+  ],
+  "neutrality_rules": [
+    "Do not invent hygiene blockers when docs and public surface evidence is clean.",
+    "Treat missing release docs or stale public references as release risk, not as optional polish.",
+    "Keep release-blocking hygiene issues separate from non-blocking cleanup ideas."
+  ],
+  "execution_constraints": [
+    "Do not edit files from this skill; it is a check-only release gate.",
+    "If docs upgrade is required and not evidenced, block release instead of assuming the docs will catch up later.",
+    "Keep findings traceable to concrete files, paths, or public-surface contracts."
+  ],
+  "response_profile": "analysis_report",
+  "default_prompt": "$ship-check-hygiene",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff|repo |\n policy: evidence,safety-gates,quality-gates{docs,release,registry},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/ship-check-hygiene",
+  "primary_lens": "release-gatekeeper",
+  "lens_rationale": "Release hygiene should be judged as delivery safety, not as optional cleanup, because stale docs and legacy public surface create real rollout risk."
+}

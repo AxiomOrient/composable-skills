@@ -1,0 +1,70 @@
+{
+  "name": "tidy-why-complex",
+  "title": "Complexity Inventory",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "tidy-why-complex",
+  "description": "Inventory essential versus accidental complexity in a bounded scope before simplification. Use when the immediate job is to identify complexity sources, not to plan the entire simplification yet.",
+  "purpose": "Map complexity sources and classify them as essential or accidental before simplification work.",
+  "when_to_use": [
+    "Need a bounded complexity inventory before simplification.",
+    "Need to know whether complexity comes from domain rules or accidental structure.",
+    "Need to identify which complexity clusters are worth removing first."
+  ],
+  "do_not_use": [
+    "Need a full simplification plan already.",
+    "Need direct implementation work.",
+    "The target scope is not bounded."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Where to inspect complexity."
+    },
+    {
+      "name": "SIMPLIFICATION_GOAL",
+      "type": "naming|structure|side-effects|mixed",
+      "required": true,
+      "description": "Complexity dimension to prioritize."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "ESSENTIAL_COMPLEXITY",
+      "type": "list",
+      "required": true,
+      "description": "Complexity that is inherent to the domain."
+    },
+    {
+      "name": "ACCIDENTAL_COMPLEXITY",
+      "type": "list",
+      "required": true,
+      "description": "Complexity created by incidental structure or naming."
+    },
+    {
+      "name": "SIMPLIFICATION_CANDIDATES",
+      "type": "list",
+      "required": true,
+      "description": "Candidates worth simplifying first."
+    }
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "tidy-why-complex.v1"
+  ],
+  "neutrality_rules": [
+    "Do not label domain-required complexity as accidental without evidence.",
+    "Separate pain points from actual simplification candidates.",
+    "Keep the inventory descriptive before recommending changes."
+  ],
+  "response_profile": "analysis_report",
+  "default_prompt": "$tidy-why-complex",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$tidy-why-complex\nTARGET_SCOPE: src/auth\nSIMPLIFICATION_GOAL: structure",
+  "source_path": "skills/tidy-why-complex",
+  "primary_lens": "hickey-carmack",
+  "lens_rationale": "Complexity inventory should separate essential structure from accidental abstraction and hidden state."
+}

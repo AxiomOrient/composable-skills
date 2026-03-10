@@ -1,0 +1,6 @@
+interface:
+  display_name: "Test Gap Review"
+  short_description: "Test-category gap-analysis skill. Review where regression protection is missing before writing tests."
+  default_prompt: "$test-find-gaps"
+policy:
+  allow_implicit_invocation: true

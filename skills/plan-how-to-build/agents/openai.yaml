@@ -1,0 +1,6 @@
+interface:
+  display_name: "Technical Design Doc"
+  short_description: "Use when turning approved requirements into a buildable technical design with explicit boundaries, data and control flow, decisions, trade-offs, and verification paths. Do not use for product briefs, IA maps, or pure feature requirements."
+  default_prompt: "$plan-how-to-build"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,97 @@
+{
+  "name": "ship-commit",
+  "layer": "atomic",
+  "family": "docs",
+  "job_type": "ship-commit",
+  "description": "Use when generating Conventional Commit message candidates from an existing diff or change summary. Do not use when implementation, debugging, or review analysis is requested. English triggers: commit message, conventional commit, commit title.",
+  "purpose": "Generate precise Conventional Commit proposals from an existing diff or structured change summary.",
+  "when_to_use": [
+    "Need commit message candidates after the implementation is already done.",
+    "Need commit type, scope, and breaking-change status inferred from evidence.",
+    "Need 3-5 stable commit candidates with rationale."
+  ],
+  "do_not_use": [
+    "Need implementation, debugging, or review work.",
+    "Need release decision rather than commit wording.",
+    "There is no diff or change summary to summarize."
+  ],
+  "required_inputs": [
+    {
+      "name": "DIFF_SUMMARY",
+      "type": "diff|change-summary",
+      "required": true,
+      "description": "Diff or structured summary of the completed changes."
+    },
+    {
+      "name": "CHANGE_INTENT",
+      "type": "string",
+      "required": true,
+      "description": "What the change was meant to accomplish."
+    },
+    {
+      "name": "SCOPE_HINT",
+      "type": "string",
+      "required": false,
+      "description": "Optional conventional-commit scope hint."
+    },
+    {
+      "name": "BREAKING_CHANGE",
+      "type": "yes|no|uncertain",
+      "required": false,
+      "description": "Breaking-change status if already known."
+    }
+  ],
+  "input_contract_notes": [
+    "DIFF_SUMMARY should reflect completed changes only; this skill does not invent intent that is absent from the diff.",
+    "CHANGE_INTENT should describe the actual purpose of the change, not the commit wording you hope to get.",
+    "Use SCOPE_HINT only when it clarifies the conventional-commit scope rather than forcing a misleading one."
+  ],
+  "structured_outputs": [
+    {
+      "name": "TOP_CANDIDATE",
+      "type": "string",
+      "required": true,
+      "description": "Best commit candidate."
+    },
+    {
+      "name": "ALTERNATIVES",
+      "type": "list",
+      "required": true,
+      "shape": "{MESSAGE, WHY}",
+      "description": "Alternative commit candidates."
+    },
+    {
+      "name": "BODY_FOOTER_NOTES",
+      "type": "list",
+      "required": true,
+      "shape": "{NOTE, WHEN_TO_USE}",
+      "description": "Optional body/footer notes such as BREAKING CHANGE."
+    }
+  ],
+  "output_contract_notes": [
+    "TOP_CANDIDATE should be the shortest accurate Conventional Commit message that fits the evidenced change.",
+    "Use ALTERNATIVES when type, scope, or emphasis is genuinely ambiguous instead of pretending there is only one valid message.",
+    "BODY_FOOTER_NOTES should stay empty when no justified footer is needed."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "commit-proposal.v1"
+  ],
+  "neutrality_rules": [
+    "Infer commit type from the diff, not from wishful framing.",
+    "If type or scope is ambiguous, surface alternatives explicitly.",
+    "Do not invent breaking-change claims without evidence."
+  ],
+  "execution_constraints": [
+    "Do not perform git mutations from this skill; message generation only.",
+    "Prefer accurate compression over marketing language or changelog prose.",
+    "If the diff does not support a confident single message, return stable alternatives rather than overcommitting."
+  ],
+  "response_profile": "commit_proposal",
+  "default_prompt": "$ship-commit",
+  "default_program": "[stages: preflight>detect>analyze>handoff>audit |\n scope: diff |\n policy: evidence,deterministic-output |\n lens: minto-pyramid |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/ship-commit",
+  "primary_lens": "minto-pyramid",
+  "lens_rationale": "Commit messages should compress change logic into a short ordered argument with minimal noise."
+}

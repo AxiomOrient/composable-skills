@@ -1,0 +1,98 @@
+{
+  "name": "debug-map-blast-radius",
+  "title": "Failure Surface Map",
+  "layer": "atomic",
+  "family": "analysis",
+  "job_type": "debug-map-blast-radius",
+  "description": "Map a concrete failure into reproduction scope, impacted paths, and observed-versus-expected boundaries before deeper debugging. Use when a bug exists but the failing surface is still diffuse.",
+  "purpose": "Reduce a broad bug report to a bounded reproduction window and impacted code surface before root-cause work.",
+  "when_to_use": [
+    "A failure is reported but the affected modules or boundaries are still unclear.",
+    "Need to map observed versus expected behavior before debugging deeper.",
+    "Need a reproducible scope window for a bug hunt."
+  ],
+  "do_not_use": [
+    "Need the final code fix directly.",
+    "Need general repository analysis without a concrete failure symptom.",
+    "Already have a confirmed root cause."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope in which the failure appears."
+    },
+    {
+      "name": "FAILURE_SYMPTOM",
+      "type": "string",
+      "required": true,
+      "description": "Observed failure symptom."
+    },
+    {
+      "name": "EXPECTED_BEHAVIOR",
+      "type": "string",
+      "required": true,
+      "description": "Expected behavior instead of the failure."
+    },
+    {
+      "name": "REPRO_HINTS",
+      "type": "list",
+      "required": false,
+      "description": "Known triggering inputs, timing, or environment hints."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "REPRO_WINDOW",
+      "type": "object",
+      "required": true,
+      "description": "Minimal reproduction scope and trigger conditions."
+    },
+    {
+      "name": "IMPACTED_PATHS",
+      "type": "list",
+      "required": true,
+      "description": "Files, modules, or boundaries most likely involved."
+    },
+    {
+      "name": "OBSERVED_VS_EXPECTED",
+      "type": "object",
+      "required": true,
+      "description": "Observed behavior versus expected behavior."
+    },
+    {
+      "name": "NEXT_DEBUG_ENTRY_POINTS",
+      "type": "list",
+      "required": true,
+      "description": "Cheapest next entry points for debugging."
+    }
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "debug-map-blast-radius.v1"
+  ],
+  "neutrality_rules": [
+    "Map the failing surface without asserting a root cause.",
+    "Keep suspected modules tentative until evidence confirms them.",
+    "If reproduction remains unclear, state the smallest missing condition explicitly."
+  ],
+  "response_profile": "analysis_report",
+  "default_prompt": "$debug-map-blast-radius",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]",
+  "explicit_only": false,
+  "procedure": [
+    "Normalize the failure symptom and expected behavior into one comparison table.",
+    "Derive the smallest reproduction window from the given evidence.",
+    "Identify the most likely impacted paths and system boundaries.",
+    "Return the cheapest next debugging entry points without claiming root cause."
+  ],
+  "mandatory_rules": [
+    "Do not jump directly to the fix.",
+    "Keep the output focused on scope reduction and entry-point selection."
+  ],
+  "example_invocation": "$debug-map-blast-radius\nTARGET_SCOPE: src/auth\nFAILURE_SYMPTOM: login succeeds but session is lost after refresh\nEXPECTED_BEHAVIOR: session persists after refresh",
+  "source_path": "skills/debug-map-blast-radius",
+  "primary_lens": "feynman",
+  "lens_rationale": "Failure mapping should shrink the problem space using observable repro evidence."
+}

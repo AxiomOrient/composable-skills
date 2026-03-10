@@ -1,0 +1,6 @@
+interface:
+  display_name: "Doc Inventory Scan"
+  short_description: "Inventory documentation files, classify their status, and expose orphan, duplicate, or stale docs before curation. Use when the immediate job is inventory, not rewriting docs yet."
+  default_prompt: "$doc-find-all"
+policy:
+  allow_implicit_invocation: true

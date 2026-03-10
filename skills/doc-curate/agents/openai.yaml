@@ -1,0 +1,6 @@
+interface:
+  display_name: "Curate Docs"
+  short_description: "Use when repository docs below the repo root README must be indexed, structured, linked, de-duplicated, and stale-doc-cleaned based on actual file evidence. Build non-root entry docs and navigation with MECE structure, but leave root README authoring to doc-publish-readme. Do not modify runtime code."
+  default_prompt: "$doc-curate"
+policy:
+  allow_implicit_invocation: true

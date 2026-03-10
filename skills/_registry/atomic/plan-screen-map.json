@@ -1,0 +1,135 @@
+{
+  "name": "plan-screen-map",
+  "title": "Information Architecture",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "plan-screen-map",
+  "description": "Use when defining hierarchy, navigation, screen or page relationships, and core user flows before detailed UI or technical implementation. Do not use for detailed feature behavior or backend solution design.",
+  "purpose": "Define the content and navigation structure users must move through so later specs and design work share the same map.",
+  "when_to_use": [
+    "Need a clear hierarchy for pages, screens, content groups, or routes.",
+    "Need navigation rules and user flows before screen-level design or implementation.",
+    "Need to separate structure decisions from detailed feature requirements."
+  ],
+  "do_not_use": [
+    "Need only a product brief or business framing.",
+    "Need detailed functional requirements and acceptance checks.",
+    "Need technical boundaries, APIs, or data-flow design."
+  ],
+  "required_inputs": [
+    {
+      "name": "IA_SCOPE",
+      "type": "site|app|section|feature",
+      "required": true,
+      "description": "Boundary the information architecture governs."
+    },
+    {
+      "name": "PRIMARY_USERS",
+      "type": "list",
+      "required": true,
+      "shape": "{USER, GOAL}",
+      "description": "Primary user groups and the goal each one is trying to accomplish."
+    },
+    {
+      "name": "CONTENT_OBJECTS",
+      "type": "list",
+      "required": true,
+      "shape": "{ITEM, PURPOSE}",
+      "description": "Pages, screens, content groups, or entities that must exist in the structure."
+    },
+    {
+      "name": "ENTRY_POINTS",
+      "type": "list",
+      "required": true,
+      "shape": "{ENTRY, USER_NEED}",
+      "description": "Where users enter the structure and what they expect to do from there."
+    },
+    {
+      "name": "KNOWN_FLOWS",
+      "type": "list",
+      "required": false,
+      "shape": "{FLOW, START, END}",
+      "description": "Known start-to-end flows that the IA must support."
+    },
+    {
+      "name": "NAV_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Constraints such as platform limits, route rules, localization needs, or compliance requirements."
+    }
+  ],
+  "input_contract_notes": [
+    "CONTENT_OBJECTS should name structure elements, not full visual designs or implementation tickets.",
+    "ENTRY_POINTS should reflect real user entry paths, not idealized happy-path assumptions only.",
+    "KNOWN_FLOWS should stay few and core; this skill is for structure, not exhaustive scenario enumeration.",
+    "If naming is still unsettled, keep labels descriptive and plain rather than prematurely brand-polished."
+  ],
+  "structured_outputs": [
+    {
+      "name": "IA_SUMMARY",
+      "type": "string",
+      "required": true,
+      "description": "One short summary of the hierarchy and why it is organized this way."
+    },
+    {
+      "name": "HIERARCHY_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{NODE, PARENT, PURPOSE}",
+      "description": "Parent-child structure for the main navigation or content hierarchy."
+    },
+    {
+      "name": "NAVIGATION_PATHS",
+      "type": "list",
+      "required": true,
+      "shape": "{FROM, TO, WHEN}",
+      "description": "Allowed navigation moves and the context in which each one should appear."
+    },
+    {
+      "name": "CORE_FLOWS",
+      "type": "list",
+      "required": true,
+      "shape": "{FLOW, STEPS, SUCCESS_END}",
+      "description": "Core user flows that the IA must support."
+    },
+    {
+      "name": "LABELING_NOTES",
+      "type": "list",
+      "required": true,
+      "shape": "{LABEL, WHY}",
+      "description": "Important naming and labeling notes that improve clarity and findability."
+    }
+  ],
+  "output_contract_notes": [
+    "HIERARCHY_MAP should make the parent-child structure explicit enough that later UI work does not need to guess the topology.",
+    "NAVIGATION_PATHS should describe when a path is available, not just that two nodes are related somehow.",
+    "CORE_FLOWS should stay focused on the structural path through the system rather than detailed functional logic.",
+    "LABELING_NOTES should explain meaning and findability, not visual copy style."
+  ],
+  "artifacts_in": [
+    "plan-why-build-this.v1",
+    "scope-contract.v1"
+  ],
+  "artifacts_out": [
+    "ia-map.v1"
+  ],
+  "neutrality_rules": [
+    "Separate structure choices from visual styling or technical implementation assumptions.",
+    "Do not invent user flows or nodes that the supplied content and user goals do not support.",
+    "Keep ambiguous labels as notes or open edges rather than pretending the terminology is settled."
+  ],
+  "execution_constraints": [
+    "Do not turn this skill into a visual design spec or backend architecture document.",
+    "Prefer a small, navigable structure that supports the primary user goals before adding secondary branches.",
+    "If a flow or label is uncertain, mark it explicitly instead of hiding the ambiguity in a polished sitemap."
+  ],
+  "response_profile": "ia_contract",
+  "default_prompt": "$plan-screen-map",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,ux},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$plan-screen-map\nIA_SCOPE: feature\nPRIMARY_USERS:\n  - USER: 신규 관리자\n    GOAL: 첫 팀 설정을 끝낸다\nCONTENT_OBJECTS:\n  - ITEM: Workspace Overview\n    PURPOSE: 현재 상태와 다음 행동 보여주기\nENTRY_POINTS:\n  - ENTRY: 첫 로그인 직후\n    USER_NEED: 어디부터 설정해야 하는지 바로 이해하고 싶다",
+  "source_path": "skills/plan-screen-map",
+  "primary_lens": "nielsen-norman",
+  "lens_rationale": "Information architecture succeeds when hierarchy, navigation, and information scent stay explicit enough that users can predict where to go next."
+}

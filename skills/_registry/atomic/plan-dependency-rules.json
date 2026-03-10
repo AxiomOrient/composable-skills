@@ -1,0 +1,88 @@
+{
+  "name": "plan-dependency-rules",
+  "title": "Dependency Rule Plan",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "plan-dependency-rules",
+  "description": "Define target dependency rules and allowed module directions before bounded refactoring. Use when the immediate job is to make dependency rules explicit, not to plan the full refactor yet.",
+  "purpose": "Make target dependency rules explicit before structural cleanup.",
+  "when_to_use": [
+    "Need explicit dependency rules before refactoring.",
+    "Need to clarify allowed versus forbidden imports or calls.",
+    "Need a target boundary map for a bounded structural cleanup."
+  ],
+  "do_not_use": [
+    "Need a broad architecture redesign.",
+    "Need direct implementation or code changes.",
+    "There is no bounded module or layer boundary to define.",
+    "Need only current-state boundary diagnosis without target dependency rules."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|layer",
+      "required": true,
+      "description": "Boundary whose dependency rules will be defined."
+    },
+    {
+      "name": "CURRENT_BOUNDARY_NOTES",
+      "type": "list",
+      "required": false,
+      "shape": "{NOTE, EVIDENCE}",
+      "description": "Known dependency problems or leaks."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_SCOPE should point to one bounded module, layer, or path where dependency rules can be stated concretely.",
+    "CURRENT_BOUNDARY_NOTES should cite observed leaks or coupling rather than aspirational architecture slogans."
+  ],
+  "structured_outputs": [
+    {
+      "name": "ALLOWED_DEPENDENCIES",
+      "type": "list",
+      "required": true,
+      "shape": "{FROM, TO, WHY_ALLOWED}",
+      "description": "Permitted dependency directions."
+    },
+    {
+      "name": "FORBIDDEN_DEPENDENCIES",
+      "type": "list",
+      "required": true,
+      "shape": "{FROM, TO, WHY_FORBIDDEN}",
+      "description": "Dependency directions or couplings to remove."
+    },
+    {
+      "name": "TRANSITION_STEPS",
+      "type": "list",
+      "required": true,
+      "shape": "{STEP, WHY}",
+      "description": "Bounded steps to reach the target dependency rules."
+    }
+  ],
+  "output_contract_notes": [
+    "ALLOWED_DEPENDENCIES and FORBIDDEN_DEPENDENCIES should describe concrete directional rules, not vague layering principles.",
+    "TRANSITION_STEPS should stay bounded to the rule change rather than expanding into a full refactor plan."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "plan-dependency-rules.v1"
+  ],
+  "neutrality_rules": [
+    "Describe the current dependency reality before prescribing rules.",
+    "Keep target rules bounded to the inspected scope.",
+    "Do not propose new abstraction layers without evidence they reduce coupling."
+  ],
+  "execution_constraints": [
+    "Do not turn this skill into a broad technical design or whole-system architecture rewrite.",
+    "Prefer the smallest rule set that removes the observed coupling problem.",
+    "Keep target rules explicit enough that later refactor work can check compliance."
+  ],
+  "response_profile": "planning_doc",
+  "default_prompt": "$plan-dependency-rules",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{compat},deterministic-output | lens: uncle-bob | output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$plan-dependency-rules\nTARGET_SCOPE: src/domain\nCURRENT_BOUNDARY_NOTES: ui imports domain internals",
+  "source_path": "skills/plan-dependency-rules",
+  "primary_lens": "uncle-bob",
+  "lens_rationale": "Dependency planning should make boundary direction and forbidden couplings explicit."
+}

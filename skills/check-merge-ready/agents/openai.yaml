@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review"
+  short_description: "Neutral review-only verdict skill. Produce findings-first PR/code review with severity, confidence, file/line evidence, testing gaps, and integrate/hold judgement. Use for general review, PR review, and /review-style checks. For mandatory 9-item checklist evaluation, compose with check-quality-scan; for gate-centric release risk judgement, compose with audit. Do not edit code or create implementation plans here. English triggers: review, code review, PR review, /review, review verdict."
+  default_prompt: "$check-merge-ready"
+policy:
+  allow_implicit_invocation: true

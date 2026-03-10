@@ -1,0 +1,80 @@
+{
+  "name": "tidy-find-magic-numbers",
+  "title": "Constant Extraction Scan",
+  "layer": "atomic",
+  "family": "check-merge-ready",
+  "job_type": "tidy-find-magic-numbers",
+  "description": "Find repeated literals, configuration-like values, and policy constants that should be centralized into constants, config, or shared definitions. Use when a bounded module, folder, or repo needs explicit constant/common extraction analysis.",
+  "purpose": "Identify exact literal values and policy constants that can be centralized without changing behavior.",
+  "when_to_use": [
+    "Need to find extractable constants in a module, folder, or repo.",
+    "Need to reduce repeated literals and policy drift.",
+    "Need evidence-backed commonization candidates before refactoring."
+  ],
+  "do_not_use": [
+    "Need a general bug review.",
+    "Need to implement the refactor immediately without first identifying candidates.",
+    "The target contains no meaningful repeated literals or config-like values."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Where to scan for extractable constants."
+    },
+    {
+      "name": "EXTRACTION_POLICY",
+      "type": "constants|config|shared-definition",
+      "required": true,
+      "description": "Preferred extraction destination style."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "EXTRACTABLE_CONSTANTS",
+      "type": "list",
+      "required": true,
+      "description": "Concrete literal values or policy constants that should be extracted."
+    },
+    {
+      "name": "REUSE_OPPORTUNITIES",
+      "type": "list",
+      "required": true,
+      "description": "Places where the same value or policy recurs."
+    },
+    {
+      "name": "EXTRACTION_BLOCKERS",
+      "type": "list",
+      "required": true,
+      "description": "Reasons some values should remain local."
+    }
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "constant-extraction-report.v1"
+  ],
+  "neutrality_rules": [
+    "Recommend extraction only when reuse or policy consistency is evidenced.",
+    "Do not force extraction for values that are local and semantically unique.",
+    "Separate extraction candidates from blockers and uncertainty."
+  ],
+  "response_profile": "review_findings",
+  "default_prompt": "$tidy-find-magic-numbers",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "explicit_only": false,
+  "procedure": [
+    "Scan the target for repeated literals, thresholds, enum-like strings, and policy values.",
+    "Group candidates by semantic role rather than raw textual equality alone.",
+    "Recommend the narrowest centralization target for each candidate.",
+    "List blockers for candidates that should stay local."
+  ],
+  "mandatory_rules": [
+    "Name the exact literal or value family being recommended.",
+    "Include evidence locations for each extraction recommendation."
+  ],
+  "example_invocation": "$tidy-find-magic-numbers\nTARGET_SCOPE: src/auth\nEXTRACTION_POLICY: constants",
+  "source_path": "skills/tidy-find-magic-numbers",
+  "primary_lens": "hickey-carmack",
+  "lens_rationale": "Constant extraction should prefer explicit reusable data over repeated magic literals."
+}

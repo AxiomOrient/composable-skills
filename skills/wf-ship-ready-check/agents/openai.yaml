@@ -1,0 +1,6 @@
+interface:
+  display_name: "Release Check Workflow"
+  short_description: "Workflow skill that verifies repository reality, release hygiene, and final release readiness before publication. Use when the user wants a transparent release review instead of a single vague 'can we ship?' prompt."
+  default_prompt: "$wf-ship-ready-check"
+policy:
+  allow_implicit_invocation: true

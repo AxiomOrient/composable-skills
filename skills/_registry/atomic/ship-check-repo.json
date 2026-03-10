@@ -1,0 +1,112 @@
+{
+  "name": "ship-check-repo",
+  "layer": "atomic",
+  "family": "release",
+  "job_type": "ship-check-repo",
+  "description": "Use when release work must start by confirming the repository is a real git release target with usable branches, remotes, and a clean enough working tree. Do not use for rollout judgement or actual publication.",
+  "purpose": "Check repository, branch, remote, and tag preconditions before release review or publication.",
+  "when_to_use": [
+    "Need to confirm the target is a git repository before any release work.",
+    "Need to inspect source/target branch state, worktree cleanliness, remotes, or tag collisions.",
+    "Need explicit repository preconditions before release review or publish execution."
+  ],
+  "do_not_use": [
+    "Need rollout risk or GO/NO-GO judgement; use ship-go-nogo instead.",
+    "Need documentation or public-surface hygiene checks; use ship-check-hygiene instead.",
+    "Need to mutate branches, tags, or remotes; use release-publish instead."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_BRANCHES",
+      "type": "list",
+      "required": true,
+      "shape": "{BRANCH, ROLE}",
+      "description": "Branches involved in the release, such as source/dev and target/main."
+    },
+    {
+      "name": "REMOTE_NAME",
+      "type": "string",
+      "required": false,
+      "description": "Remote expected to receive the release refs. Default is origin."
+    },
+    {
+      "name": "TAG_INTENT",
+      "type": "string",
+      "required": false,
+      "description": "Candidate tag or version label to validate for collisions."
+    },
+    {
+      "name": "REPO_EXPECTATIONS",
+      "type": "list",
+      "required": false,
+      "shape": "{CHECK}",
+      "description": "Extra repository preconditions such as clean worktree, tracking branch, or remote push access."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_BRANCHES should identify the actual release branch roles rather than vague branch names with no role.",
+    "Use TAG_INTENT when the release process cares about tag collisions or pre-existing version refs.",
+    "This skill checks repository reality only; it does not decide whether the release should go out."
+  ],
+  "structured_outputs": [
+    {
+      "name": "REPO_FACTS",
+      "type": "list",
+      "required": true,
+      "shape": "{CHECK, RESULT, EVIDENCE}",
+      "description": "Observed repository facts such as git root presence, worktree state, remote existence, or tag availability."
+    },
+    {
+      "name": "BRANCH_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{BRANCH, ROLE, STATUS}",
+      "description": "Observed branch roles and current state."
+    },
+    {
+      "name": "REPO_BLOCKERS",
+      "type": "list",
+      "required": true,
+      "shape": "{ISSUE, WHY_BLOCKING}",
+      "description": "Repository conditions that stop release work."
+    },
+    {
+      "name": "REPO_RELEASE_STATUS",
+      "type": "ready|blocked|inconclusive",
+      "required": true,
+      "allowed_values": [
+        "ready",
+        "blocked",
+        "inconclusive"
+      ],
+      "description": "Overall repository readiness for release work."
+    }
+  ],
+  "output_contract_notes": [
+    "REPO_FACTS should stay purely observational and cite concrete repository evidence.",
+    "Use REPO_RELEASE_STATUS=blocked when a hard precondition fails, such as not being in a git repo or target branch missing.",
+    "Use inconclusive when the repository exists but a critical fact such as remote push capability could not be verified.",
+    "REPO_BLOCKERS may be an empty list when repository preconditions are clean; do not invent blockers to fill the section."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "release-repo-check-report.v1"
+  ],
+  "neutrality_rules": [
+    "Report repository facts as observed state, not as guessed release policy.",
+    "Do not infer push or publish success from branch names alone.",
+    "If a repository precondition cannot be verified, mark it inconclusive rather than assuming ready."
+  ],
+  "execution_constraints": [
+    "Do not modify branches, tags, remotes, or files from this skill.",
+    "Keep repository checks bounded to release-relevant state instead of broad repo review.",
+    "Prefer concrete git evidence such as current branch, clean worktree, remote refs, and tag presence."
+  ],
+  "response_profile": "analysis_report",
+  "default_prompt": "$ship-check-repo",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo |\n policy: evidence,safety-gates,quality-gates{release,git},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/ship-check-repo",
+  "primary_lens": "release-gatekeeper",
+  "lens_rationale": "Release work should begin from explicit repository reality rather than branch-name assumptions or optimistic publish expectations."
+}

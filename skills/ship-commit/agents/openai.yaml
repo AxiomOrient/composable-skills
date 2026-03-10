@@ -1,0 +1,6 @@
+interface:
+  display_name: "Commit"
+  short_description: "Use when generating Conventional Commit message candidates from an existing diff or change summary. Do not use when implementation, debugging, or review analysis is requested. English triggers: commit message, conventional commit, commit title."
+  default_prompt: "$ship-commit"
+policy:
+  allow_implicit_invocation: true

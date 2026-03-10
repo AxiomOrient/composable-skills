@@ -1,0 +1,6 @@
+interface:
+  display_name: "Failure Surface Map"
+  short_description: "Map a concrete failure into reproduction scope, impacted paths, and observed-versus-expected boundaries before deeper debugging. Use when a bug exists but the failing surface is still diffuse."
+  default_prompt: "$debug-map-blast-radius"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Finish Until Done"
+  short_description: "Atomic completion-control skill for bounded non-code work. Keep one explicit mission moving until its done contract is satisfied or a real blocker stops progress."
+  default_prompt: "$finish-until-done"
+policy:
+  allow_implicit_invocation: true

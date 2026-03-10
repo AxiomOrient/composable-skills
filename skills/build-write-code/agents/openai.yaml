@@ -1,0 +1,6 @@
+interface:
+  display_name: "Write Code"
+  short_description: "Implementation-only skill. Apply code changes and produce verification-backed implementation evidence. Do not own orchestration, plan/task synchronization, architecture analysis reports, or code-review verdicts here. English triggers: implement, code change, feature build, bug fix."
+  default_prompt: "$build-write-code"
+policy:
+  allow_implicit_invocation: true

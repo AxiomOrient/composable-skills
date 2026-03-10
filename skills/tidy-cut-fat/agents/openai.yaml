@@ -1,0 +1,6 @@
+interface:
+  display_name: "Simplifier"
+  short_description: "Use when complexity must be reduced without changing core behavior: oversized objects, unclear architecture, noisy folder trees, weak naming, hidden side effects, or accidental abstraction. Produce a minimal simplification blueprint focused on essentials only. Allow large structural change when it clearly removes accidental complexity. Do not use for net-new feature work or incident firefighting. English triggers: simplify architecture, simplify refactor, reduce complexity, remove indirection."
+  default_prompt: "$tidy-cut-fat"
+policy:
+  allow_implicit_invocation: true

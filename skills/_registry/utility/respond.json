@@ -1,0 +1,77 @@
+{
+  "name": "respond",
+  "layer": "utility",
+  "family": "rendering",
+  "job_type": "respond",
+  "description": "Final-output only skill. Render the final user-facing response in plain, short, easy, concrete language using skill-specific response profiles. Do not analyze, plan, implement, or review here.",
+  "purpose": "Render one final user-facing response from upstream stage payloads and the resolved response profile using simple, concrete language that a beginner can follow.",
+  "when_to_use": [
+    "Need the final user-facing response rendered from completed upstream work.",
+    "Need standalone or composed response sections selected from the resolved response profile.",
+    "Need one deterministic exit point after multi-skill execution."
+  ],
+  "do_not_use": [
+    "Need new analysis, implementation, debugging, or review work.",
+    "Need to create findings that upstream stages did not establish.",
+    "Need to infer missing sections from unstated evidence."
+  ],
+  "required_inputs": [
+    {
+      "name": "RESPONSE_PROFILE",
+      "type": "response-profile.v1",
+      "required": true,
+      "description": "Resolved response profile with primary skill, profile id, and required sections."
+    },
+    {
+      "name": "STAGE_PAYLOADS",
+      "type": "list(stage-payload.v1)",
+      "required": true,
+      "description": "Finalized upstream payloads accumulated before rendering. Use only established facts from these payloads."
+    },
+    {
+      "name": "LANGUAGE_PREFERENCE",
+      "type": "match-user|ko|en",
+      "required": false,
+      "description": "Optional output language. Default is to match the user's language."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "FINAL_RESPONSE",
+      "type": "markdown.v1",
+      "required": true,
+      "description": "Single final response rendered for the user in plain, short, concrete language."
+    },
+    {
+      "name": "RENDERED_SECTIONS",
+      "type": "list",
+      "required": true,
+      "description": "Sections actually rendered from the response profile."
+    }
+  ],
+  "artifacts_in": [
+    "stage-payloads.v1",
+    "response-profile.v1"
+  ],
+  "artifacts_out": [
+    "final-response.v1"
+  ],
+  "neutrality_rules": [
+    "Render only what upstream stages established.",
+    "Do not add new findings, verdicts, or recommendations during rendering.",
+    "If required support is missing, omit the unsupported claim instead of fabricating content."
+  ],
+  "mandatory_rules": [
+    "Start with the answer, not the process.",
+    "Explain technical terms in plain words the first time they appear.",
+    "Prefer short sentences and common words over internal jargon.",
+    "Prefer file names, line numbers, function names, and measurements over abstract labels.",
+    "Prefer a short paragraph that explains meaning and next action over a taxonomy of labels.",
+    "If there is no finding or evidence is incomplete, say that plainly."
+  ],
+  "response_profile": "generic",
+  "default_prompt": "$respond",
+  "default_program": "[stages: handoff |\n scope: diff |\n policy: evidence,deterministic-output,response-contract{plain-korean,feynman-clear,actionable,core-first,short-sentences,plain-words,concrete-details} |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/respond"
+}

@@ -1,0 +1,131 @@
+{
+  "name": "scout-facts",
+  "title": "Scout Facts",
+  "layer": "atomic",
+  "family": "analysis",
+  "job_type": "scout-facts",
+  "description": "Neutral analysis-only skill. Produce evidence-based findings and option comparison reports only. Do not plan, implement, or review code here. English triggers: analysis report, cause analysis, option analysis.",
+  "purpose": "Produce an evidence-first analysis without implementation or verdict work.",
+  "when_to_use": [
+    "Need evidence-first analysis before implementation.",
+    "Need root-cause analysis, option comparison, structure mapping, or evidence-gap analysis.",
+    "Need a recommendation that remains explicitly separated from evidence."
+  ],
+  "do_not_use": [
+    "Need direct code changes.",
+    "Need immediate incident recovery or debugging.",
+    "Need final review or release judgement."
+  ],
+  "required_inputs": [
+    {
+      "name": "ANALYSIS_GOAL",
+      "type": "root-cause|option-compare|structure-map|evidence-gap",
+      "required": true,
+      "allowed_values": [
+        "root-cause",
+        "option-compare",
+        "structure-map",
+        "evidence-gap"
+      ],
+      "description": "Exact analysis job."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|folder|repo|artifact",
+      "required": true,
+      "description": "Bounded target scope."
+    },
+    {
+      "name": "QUESTION",
+      "type": "string",
+      "required": true,
+      "description": "Uncertainty or decision to resolve."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Known files, logs, commands, or measurements."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Time, scope, or non-goal constraints."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_SCOPE must stay bounded enough that every major claim can cite concrete evidence from within scope.",
+    "QUESTION should be one decision or uncertainty, not a broad brainstorming topic.",
+    "KNOWN_EVIDENCE should point to existing artifacts only; do not preload conclusions into the evidence list.",
+    "If simplicity, core-user impact, or non-essential work reduction matters to the decision, state it explicitly in CONSTRAINTS instead of assuming it by default."
+  ],
+  "structured_outputs": [
+    {
+      "name": "OBSERVED_EVIDENCE",
+      "type": "list",
+      "required": true,
+      "shape": "{OBSERVATION, LOCATION, EVIDENCE}",
+      "description": "Observed facts grounded in files, logs, commands, or measurements."
+    },
+    {
+      "name": "INFERRED_FINDINGS",
+      "type": "list",
+      "required": true,
+      "shape": "{FINDING, BASED_ON, CONFIDENCE}",
+      "description": "Interpretations derived from observed evidence, kept separate from raw observation."
+    },
+    {
+      "name": "OPTION_SET",
+      "type": "list",
+      "required": false,
+      "required_when": "ANALYSIS_GOAL=option-compare",
+      "shape": "{OPTION, UPSIDE, DOWNSIDE, RECOMMENDED}",
+      "description": "Compared options with trade-offs."
+    },
+    {
+      "name": "RECOMMENDATION",
+      "type": "string",
+      "required": true,
+      "description": "Selected recommendation."
+    },
+    {
+      "name": "NEXT_VERIFICATION_STEPS",
+      "type": "list",
+      "required": true,
+      "shape": "{STEP, PURPOSE, EXPECTED_SIGNAL}",
+      "description": "Cheapest next checks when evidence is incomplete."
+    }
+  ],
+  "output_contract_notes": [
+    "Keep OBSERVED_EVIDENCE and INFERRED_FINDINGS separate; every inference should point back to cited evidence.",
+    "OPTION_SET is required only for option-compare runs; omit it for other analysis goals instead of filling placeholders.",
+    "RECOMMENDATION may explicitly be hold or inconclusive when evidence is insufficient."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "analysis-report.v1"
+  ],
+  "neutrality_rules": [
+    "Separate observation, evidence, inference, and recommendation.",
+    "Do not invent defects or implementation direction without evidence.",
+    "Return no-finding or inconclusive when evidence is insufficient."
+  ],
+  "execution_constraints": [
+    "Do not patch code, generate implementation plans, or deliver review verdicts from this skill.",
+    "Prefer the cheapest discriminating next check over broad speculative follow-up work.",
+    "If the evidence cannot support a claim, say inconclusive instead of smoothing the gap away."
+  ],
+  "response_profile": "analysis_report",
+  "default_prompt": "$scout-facts",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{tests,security},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/scout-facts",
+  "split_candidates": [
+    "debug-map-blast-radius"
+  ],
+  "primary_lens": "kahneman-tversky",
+  "lens_rationale": "Use a bias-aware evidence lens so analysis stays neutral, separates observation from inference, and marks uncertainty before recommendation."
+}

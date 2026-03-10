@@ -1,0 +1,6 @@
+interface:
+  display_name: "Release Publish"
+  short_description: "Use when a validated change set must be cleaned up, merged into the release branch as a release-only commit, tagged, and optionally published as a GitHub release. Do not use for release-risk judgement only; use ship-go-nogo or wf-ship-ready-check for GO/NO-GO analysis."
+  default_prompt: "$release-publish"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,106 @@
+{
+  "name": "check-quality-scan",
+  "layer": "atomic",
+  "family": "check-merge-ready",
+  "job_type": "check-quality-scan",
+  "description": "Neutral checklist-only quality inspection skill for changed code. Use when you must explicitly verify design elegance, code conciseness, latent bug risk, goal achievement, security issues, duplicate code, performance risk, constant/common extraction opportunities, and unnecessary code. Do not replace review verdict skills; compose with review or audit when final go/no-go judgement is required. Korean triggers: 설계는 우아해?, 코드는 간결해?, 잠재적인 버그는 없어?, 목적은 달성했어?, 보안 문제 없어?, 중복 코드 제거했어?, 성능 문제는 없어?, 상수화/공통화 가능해?, 불필요한 코드 없어?.",
+  "purpose": "Check code quality against a fixed checklist without replacing verdict review.",
+  "when_to_use": [
+    "Need the mandatory 9-item checklist evaluated.",
+    "Need explicit pass/risk/unknown output across fixed quality dimensions.",
+    "Need checklist evidence before a final review or audit."
+  ],
+  "do_not_use": [
+    "Need direct code implementation.",
+    "Need a single narrow scan instead of the full checklist.",
+    "Need final integrate/hold verdict only."
+  ],
+  "required_inputs": [
+    {
+      "name": "CHECK_SCOPE",
+      "type": "diff|file|module|folder",
+      "required": true,
+      "description": "Scope to inspect."
+    },
+    {
+      "name": "CHANGE_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Intended behavior or maintenance goal."
+    },
+    {
+      "name": "TARGET_AREA",
+      "type": "security|perf|duplication|constants|general-quality",
+      "required": false,
+      "description": "Optional emphasis area."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Tests, benchmarks, issue context, or supporting evidence."
+    }
+  ],
+  "input_contract_notes": [
+    "CHANGE_GOAL should describe the intended behavior or maintenance result, not the checklist verdict you want to receive.",
+    "TARGET_AREA narrows emphasis only; it does not remove the obligation to report the full fixed checklist.",
+    "KNOWN_EVIDENCE should cite existing tests, benchmarks, or artifacts rather than conclusions."
+  ],
+  "structured_outputs": [
+    {
+      "name": "CHECKLIST_TABLE",
+      "type": "list",
+      "required": true,
+      "shape": "{ITEM, STATUS, EVIDENCE, ACTION}",
+      "description": "Checklist rows with item, status, evidence, and action."
+    },
+    {
+      "name": "FINDINGS_SUMMARY",
+      "type": "list",
+      "required": true,
+      "shape": "{ISSUE, ITEM, EVIDENCE, IMPACT}",
+      "description": "Material risks surfaced by the checklist."
+    },
+    {
+      "name": "UNKNOWN_ITEMS",
+      "type": "list",
+      "required": true,
+      "shape": "{ITEM, CHEAPEST_CHECK}",
+      "description": "Unknown items plus cheapest verification steps."
+    }
+  ],
+  "output_contract_notes": [
+    "CHECKLIST_TABLE should cover the fixed checklist even when TARGET_AREA narrows emphasis for deeper commentary.",
+    "Use FINDINGS_SUMMARY only for material risks supported by evidence; do not restate every checklist row there.",
+    "Use UNKNOWN_ITEMS when evidence is missing instead of forcing a pass or risk label."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "quality-checklist-report.v1"
+  ],
+  "neutrality_rules": [
+    "Use pass, risk, or unknown only; do not force a negative finding.",
+    "If evidence is insufficient for a checklist item, mark it unknown with the cheapest verification step.",
+    "Do not elevate style preference above behavior, safety, or performance evidence."
+  ],
+  "execution_constraints": [
+    "Do not collapse the checklist into a generic review verdict from this skill.",
+    "Keep each item scoped to observable evidence rather than taste-only commentary.",
+    "If multiple items point to the same issue, record the issue once in FINDINGS_SUMMARY and keep the row-by-row detail in CHECKLIST_TABLE."
+  ],
+  "response_profile": "review_findings",
+  "default_prompt": "$check-quality-scan",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security,perf,compat,style},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/check-quality-scan",
+  "split_candidates": [
+    "tidy-find-magic-numbers",
+    "tidy-find-copies",
+    "check-module-walls",
+    "check-failure-paths",
+    "test-find-gaps"
+  ],
+  "primary_lens": "kahneman-tversky",
+  "lens_rationale": "Checklist review should resist conclusion-first bias and keep risk claims evidence-backed."
+}

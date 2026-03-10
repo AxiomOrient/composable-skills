@@ -1,0 +1,140 @@
+{
+  "name": "doc-build-index",
+  "title": "Knowledge Index Docs",
+  "layer": "atomic",
+  "family": "docs",
+  "job_type": "doc-build-index",
+  "description": "Analyze module trees, libraries, or papers into per-artifact explanation docs, local index files, and a guide index that links them together. Use when the target has hierarchy or external knowledge sources and readers need a navigable docset. Do not modify the repo root README.",
+  "purpose": "Build hierarchical analysis docs and index files from folders, modules, libraries, or papers without touching the repo root README.",
+  "when_to_use": [
+    "Need per-folder, per-module, per-library, or per-paper explanation docs.",
+    "Need local README or index files that link analysis docs together.",
+    "Need one guide index that aggregates lower-level indexes without rewriting the repo root README."
+  ],
+  "do_not_use": [
+    "Need only a single guide or doc page with no hierarchy.",
+    "Need repo root README authoring or multilingual publishing.",
+    "Need documentation inventory or cleanup only."
+  ],
+  "required_inputs": [
+    {
+      "name": "DOCSET_KIND",
+      "type": "module-tree|library|paper|mixed",
+      "required": true,
+      "description": "Primary kind of knowledge surface being documented."
+    },
+    {
+      "name": "DOC_FORM",
+      "type": "guide|reference|paper-summary|survey|mixed",
+      "required": false,
+      "description": "Document form for the generated analysis docs. Default is guide for module/library trees and paper-summary for paper targets when omitted."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "folder|module|library|paper|subtree",
+      "required": true,
+      "description": "Exact hierarchy or source set to document."
+    },
+    {
+      "name": "INDEX_DEPTH",
+      "type": "artifact-only|folder-tree|multi-level",
+      "required": true,
+      "description": "How deep the analysis and index hierarchy should go."
+    },
+    {
+      "name": "INDEX_LAYOUT",
+      "type": "docs-mirror|in-place-readme",
+      "required": false,
+      "description": "Where index files should live. Default is docs-mirror when omitted."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|researcher|mixed",
+      "required": true,
+      "description": "Primary audience for the resulting docset."
+    },
+    {
+      "name": "AUDIENCE_LEVEL",
+      "type": "general|intermediate|expert",
+      "required": false,
+      "description": "Difficulty level. Default is general-reader language when omitted."
+    },
+    {
+      "name": "EVIDENCE_LINKS",
+      "type": "list",
+      "required": true,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Files, library docs, papers, or other sources used to support the analysis docs."
+    }
+  ],
+  "input_contract_notes": [
+    "Use docs-mirror when you want doc files separated from the source tree; use in-place-readme only when local README files are the intended entrypoints.",
+    "This skill may create folder-level README or guide index files, but it must not modify the repo root README.",
+    "DOC_FORM controls whether the resulting analysis docs read like guides, references, surveys, or paper summaries; do not use lens choice alone to encode the output genre.",
+    "If AUDIENCE_LEVEL is omitted, explain the hierarchy and key terms for a general reader first."
+  ],
+  "structured_outputs": [
+    {
+      "name": "ANALYSIS_DOCS",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, TARGET, FORM, SUMMARY, EVIDENCE_REF}",
+      "description": "Analysis docs created or updated for specific folders, modules, libraries, or papers."
+    },
+    {
+      "name": "LOCAL_INDEX_FILES",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, COVERS, LINKS_TO}",
+      "description": "Local README or index files that organize nearby analysis docs."
+    },
+    {
+      "name": "GUIDE_INDEX_FILES",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, COVERS, LINKS_TO}",
+      "description": "Higher-level guide or index files that aggregate local indexes."
+    },
+    {
+      "name": "COVERAGE_GAPS",
+      "type": "list",
+      "required": true,
+      "shape": "{TARGET, GAP, NEXT_SOURCE}",
+      "description": "Missing evidence or unsupported targets that prevent complete coverage."
+    }
+  ],
+  "output_contract_notes": [
+    "ANALYSIS_DOCS should stay traceable to a specific target and evidence reference.",
+    "ANALYSIS_DOCS should reflect DOC_FORM explicitly so readers can tell whether each file is a guide, reference, survey, or paper summary.",
+    "LOCAL_INDEX_FILES should link readers downward to detailed docs and upward to the next guide level when both exist.",
+    "GUIDE_INDEX_FILES should aggregate the hierarchy without acting as a replacement for the repo root README."
+  ],
+  "artifacts_in": [
+    "doc-inventory.v1"
+  ],
+  "artifacts_out": [
+    "knowledge-index-docset.v1"
+  ],
+  "neutrality_rules": [
+    "Write only claims grounded in the actual files, library docs, papers, or other cited sources.",
+    "If a target lacks enough evidence, record a coverage gap instead of inventing a summary.",
+    "Separate analysis-doc writing from repo root README authoring."
+  ],
+  "execution_constraints": [
+    "Do not modify the repo root README from this skill.",
+    "Prefer a stable hierarchy: analysis doc -> local index -> guide index.",
+    "Define technical terms in plain words before using shorthand or specialist jargon when AUDIENCE_LEVEL is general or omitted."
+  ],
+  "mandatory_rules": [
+    "Keep every index file linked to the analysis docs it summarizes.",
+    "Do not collapse multiple unrelated modules, libraries, or papers into one vague summary page."
+  ],
+  "response_profile": "documentation_report",
+  "default_prompt": "$doc-build-index",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$doc-build-index\nDOCSET_KIND: module-tree\nTARGET_SCOPE: src/auth\nINDEX_DEPTH: multi-level\nAUDIENCE: general",
+  "source_path": "skills/doc-build-index",
+  "primary_lens": "nielsen-norman",
+  "lens_rationale": "Hierarchical docsets succeed when navigation, scanning order, and information scent stay explicit at every level."
+}

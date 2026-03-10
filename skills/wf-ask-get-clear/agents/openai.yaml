@@ -1,0 +1,6 @@
+interface:
+  display_name: "Get Clear Workflow"
+  short_description: "Workflow skill that turns a fuzzy topic into one clear problem statement and a usable question stack. Use when the user needs help asking a better question before asking for the answer."
+  default_prompt: "$wf-ask-get-clear"
+policy:
+  allow_implicit_invocation: true

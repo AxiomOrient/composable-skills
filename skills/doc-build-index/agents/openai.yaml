@@ -1,0 +1,6 @@
+interface:
+  display_name: "Knowledge Index Docs"
+  short_description: "Analyze module trees, libraries, or papers into per-artifact explanation docs, local index files, and a guide index that links them together. Use when the target has hierarchy or external knowledge sources and readers need a navigable docset. Do not modify the repo root README."
+  default_prompt: "$doc-build-index"
+policy:
+  allow_implicit_invocation: true

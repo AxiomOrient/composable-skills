@@ -1,0 +1,6 @@
+interface:
+  display_name: "Constant Extraction Scan"
+  short_description: "Find repeated literals, configuration-like values, and policy constants that should be centralized into constants, config, or shared definitions. Use when a bounded module, folder, or repo needs explicit constant/common extraction analysis."
+  default_prompt: "$tidy-find-magic-numbers"
+policy:
+  allow_implicit_invocation: true

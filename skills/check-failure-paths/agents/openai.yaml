@@ -1,0 +1,6 @@
+interface:
+  display_name: "Error Path Review"
+  short_description: "Review only the failure paths, exception handling, fallback logic, and cleanup behavior of a bounded scope. Use when the goal is to inspect error handling rather than run a broad review."
+  default_prompt: "$check-failure-paths"
+policy:
+  allow_implicit_invocation: true

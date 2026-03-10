@@ -1,0 +1,164 @@
+{
+  "name": "compose",
+  "layer": "utility",
+  "family": "orchestration",
+  "job_type": "compose",
+  "description": "Single entrypoint for deterministic orchestration with Stage x Policy x Lens from explicit macro syntax. English triggers: compose, composition, orchestration, workflow fusion.",
+  "purpose": "Parse explicit skill macros into one deterministic execution program without adding hidden domain logic.",
+  "when_to_use": [
+    "Need to normalize a multi-skill macro into one deterministic execution plan.",
+    "Need workflow expansion from registry-backed workflow skills.",
+    "Need stage, lens, scope, or output overrides resolved before domain execution."
+  ],
+  "do_not_use": [
+    "Need domain analysis, implementation, review, or debugging by itself.",
+    "Need shorthand or non-canonical names instead of explicit workflows or explicit skills.",
+    "Need to infer missing domain skills without an explicit macro or workflow skill.",
+    "Need direct PROGRAM DSL input parsing as a public entry mode."
+  ],
+  "required_inputs": [
+    {
+      "name": "MACRO_EXPRESSION",
+      "type": "string",
+      "required": true,
+      "shape": "$skill + $wf-workflow + @path + [prompt]",
+      "description": "Explicit macro text such as $wf-check-full-review + @src/auth + $check-delivered."
+    },
+    {
+      "name": "LENS_OVERRIDE",
+      "type": "string",
+      "required": false,
+      "description": "Optional explicit lens override token."
+    },
+    {
+      "name": "SCOPE_OVERRIDE",
+      "type": "string|list",
+      "required": false,
+      "description": "Optional explicit scope tokens such as @src or scope:paths(src/auth)."
+    }
+  ],
+  "input_contract_notes": [
+    "Public compose entry is macro-only. Direct PROGRAM DSL parsing is internal and not part of the public skill contract.",
+    "Bracket payloads `[ ... ]` are appended to prompt tail in encounter order and are treated as explicit prompt text.",
+    "Scope can come from `@path`, markdown doc tokens, or explicit `scope:...`; compose only normalizes what is explicitly present."
+  ],
+  "structured_outputs": [
+    {
+      "name": "INPUT_MODE",
+      "type": "macro",
+      "required": true,
+      "allowed_values": ["macro"],
+      "description": "Public input mode used for the current parse."
+    },
+    {
+      "name": "PARSED_SKILLS",
+      "type": "list",
+      "required": true,
+      "shape": "{EXPLICIT_SKILL}",
+      "description": "Explicit skills parsed from the macro before workflow expansion."
+    },
+    {
+      "name": "EFFECTIVE_SKILLS",
+      "type": "list",
+      "required": true,
+      "shape": "{EXPLICIT_OR_WORKFLOW_SKILL}",
+      "description": "Explicit skills after internal response-layer normalization but before workflow flattening."
+    },
+    {
+      "name": "EXPANDED_SKILLS",
+      "type": "list",
+      "required": true,
+      "shape": "{EXPANDED_SKILL}",
+      "description": "Deterministically flattened skill list after workflow expansion."
+    },
+    {
+      "name": "PARSED_DOC_INPUTS",
+      "type": "list",
+      "required": false,
+      "shape": "{DOC_OR_PATH}",
+      "description": "Document or path tokens parsed from the macro."
+    },
+    {
+      "name": "PROMPT_TAIL",
+      "type": "string",
+      "required": false,
+      "description": "Concatenated explicit prompt payload parsed from free text and bracket blocks."
+    },
+    {
+      "name": "NORMALIZED_SCOPE",
+      "type": "string",
+      "required": true,
+      "description": "Resolved scope after macro tokens and skill defaults are merged."
+    },
+    {
+      "name": "LENS_SOURCE",
+      "type": "explicit-override|workflow-default|atomic-default|fallback-default",
+      "required": true,
+      "allowed_values": ["explicit-override", "workflow-default", "atomic-default", "fallback-default"],
+      "description": "Where the final lens came from."
+    },
+    {
+      "name": "PROGRAM",
+      "type": "string",
+      "required": true,
+      "description": "Normalized execution program."
+    },
+    {
+      "name": "RESPONSE_PROFILE",
+      "type": "object",
+      "required": true,
+      "description": "Resolved response profile metadata for the final render."
+    },
+    {
+      "name": "STRUCTURAL_WARNINGS",
+      "type": "list",
+      "required": false,
+      "shape": "{WARNING}",
+      "description": "Non-blocking orchestration warnings such as duplicate collapse or implicit response-layer append."
+    },
+    {
+      "name": "STRUCTURAL_ERRORS",
+      "type": "list",
+      "required": false,
+      "shape": "{ERROR}",
+      "description": "Blocking parse or expansion errors returned when macro normalization fails."
+    }
+  ],
+  "output_contract_notes": [
+    "PROGRAM is the normalized one-line DSL string; the parser may also emit an auxiliary structured program breakdown.",
+    "PARSED_SKILLS preserves the user macro surface, while EFFECTIVE_SKILLS includes internal response-layer normalization and EXPANDED_SKILLS removes workflow names.",
+    "When normalization fails, STRUCTURAL_ERRORS should explain the blocking reason instead of guessing hidden fallback behavior."
+  ],
+  "artifacts_in": [
+    "macro-expression.v1"
+  ],
+  "artifacts_out": [
+    "compose-program.v2"
+  ],
+  "neutrality_rules": [
+    "Parse only explicit macro, registry, and override inputs.",
+    "Do not invent domain conclusions, findings, or hidden stage logic during orchestration.",
+    "If a workflow expansion is invalid or cyclic, return the structural error instead of guessing a fallback."
+  ],
+  "execution_constraints": [
+    "Do not perform domain analysis, implementation, or verification inside compose.",
+    "Collapse duplicate skills only after workflow expansion and report the collapse as a warning.",
+    "If two or more explicit skills remain in the macro, final response profile resolves to the generic composite profile."
+  ],
+  "mandatory_rules": [
+    "Require MACRO_EXPRESSION.",
+    "Prefer canonical wf-* workflow names in new macros."
+  ],
+  "required_refs": [
+    "../_core/SKILL-FUSION-CONTRACT-v1.2.md",
+    "../_core/MICRO-MODULES-v1.md",
+    "../_core/RESPONSE-CONTRACT-v1.md",
+    "../_core/lenses.json"
+  ],
+  "example_invocation": "$compose + $wf-check-full-review + @src/auth + $check-delivered",
+  "response_profile": "generic",
+  "default_prompt": "$compose",
+  "default_program": "[orchestration-only]",
+  "explicit_only": false,
+  "source_path": "skills/compose"
+}

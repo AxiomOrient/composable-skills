@@ -1,0 +1,6 @@
+interface:
+  display_name: "Test Run User Scenarios"
+  short_description: "Test-category scenario validation skill. Simulate realistic users and agents running the framework through happy, failure, and weird cases."
+  default_prompt: "$test-run-user-scenarios"
+policy:
+  allow_implicit_invocation: true

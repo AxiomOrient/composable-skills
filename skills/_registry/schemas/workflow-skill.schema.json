@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Workflow Skill",
+  "type": "object",
+  "required": [
+    "name",
+    "layer",
+    "family",
+    "job_type",
+    "description",
+    "purpose",
+    "when_to_use",
+    "do_not_use",
+    "required_inputs",
+    "structured_outputs",
+    "artifacts_in",
+    "artifacts_out",
+    "neutrality_rules",
+    "response_profile",
+    "default_prompt",
+    "default_program",
+    "explicit_only",
+    "expands_to"
+  ],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "layer": { "const": "workflow" },
+    "expands_to": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^\\$[a-z0-9-]+$" },
+      "minItems": 1
+    },
+    "input_contract_notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "required_inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "required", "description"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "required": { "type": "boolean" },
+          "description": { "type": "string", "minLength": 1 },
+          "required_when": { "type": "string", "minLength": 1 },
+          "exclusive_with": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 },
+                "minItems": 1
+              }
+            ]
+          },
+          "allowed_values": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1
+          },
+          "shape": { "type": "string", "minLength": 1 }
+        }
+      },
+      "minItems": 1
+    },
+    "structured_outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type", "required", "description"],
+        "properties": {
+          "name": { "type": "string", "minLength": 1 },
+          "type": { "type": "string", "minLength": 1 },
+          "required": { "type": "boolean" },
+          "description": { "type": "string", "minLength": 1 },
+          "required_when": { "type": "string", "minLength": 1 },
+          "exclusive_with": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 },
+                "minItems": 1
+              }
+            ]
+          },
+          "allowed_values": {
+            "type": "array",
+            "items": { "type": "string", "minLength": 1 },
+            "minItems": 1
+          },
+          "shape": { "type": "string", "minLength": 1 }
+        }
+      },
+      "minItems": 1
+    },
+    "output_contract_notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "execution_constraints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "allowed_extensions": { "type": "array", "items": { "type": "string" } },
+    "forbidden_extensions": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

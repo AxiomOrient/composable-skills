@@ -1,0 +1,6 @@
+interface:
+  display_name: "Release Repo Check"
+  short_description: "Use when release work must start by confirming the repository is a real git release target with usable branches, remotes, and a clean enough working tree. Do not use for rollout judgement or actual publication."
+  default_prompt: "$ship-check-repo"
+policy:
+  allow_implicit_invocation: true

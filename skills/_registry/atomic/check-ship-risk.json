@@ -1,0 +1,104 @@
+{
+  "name": "check-ship-risk",
+  "title": "Ship Risk Check",
+  "layer": "atomic",
+  "family": "check-merge-ready",
+  "job_type": "check-ship-risk",
+  "description": "Review-only skill. Evaluate existing diff/PR risks and quality gates. Do not edit code or create implementation plans here. English triggers: code review, diff review, regression audit.",
+  "purpose": "Assess release or quality-gate risk with explicit evidence.",
+  "when_to_use": [
+    "Need regression, gate, or release-adjacent audit output.",
+    "Need explicit pass/fail or gap status for tests, security, and compatibility gates.",
+    "Need audit evidence before merge or release."
+  ],
+  "do_not_use": [
+    "Need direct code implementation.",
+    "Need a general review verdict rather than gate audit.",
+    "Need vulnerability analysis only."
+  ],
+  "required_inputs": [
+    {
+      "name": "AUDIT_GOAL",
+      "type": "regression-gate|release-risk|quality-gate-check",
+      "required": true,
+      "description": "Type of audit judgement required."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "diff|file|module|folder|repo",
+      "required": true,
+      "description": "Scope to audit."
+    },
+    {
+      "name": "CHANGE_INTENT",
+      "type": "string",
+      "required": true,
+      "description": "Claimed purpose of the change."
+    },
+    {
+      "name": "KNOWN_GATE_SIGNAL",
+      "type": "list",
+      "required": false,
+      "shape": "{SIGNAL, STATUS, SOURCE}",
+      "description": "Known test, security, compat, or CI signals."
+    }
+  ],
+  "input_contract_notes": [
+    "CHANGE_INTENT should describe the claimed purpose of the change, not the audit verdict you expect to receive.",
+    "KNOWN_GATE_SIGNAL should distinguish observed gate evidence from assumed or stale status.",
+    "Use AUDIT_GOAL to choose the gate lens, not to preload the conclusion that a blocker must exist."
+  ],
+  "structured_outputs": [
+    {
+      "name": "GATE_STATUS",
+      "type": "list",
+      "required": true,
+      "shape": "{GATE, STATUS, EVIDENCE}",
+      "description": "Status of each relevant gate."
+    },
+    {
+      "name": "AUDIT_FINDINGS",
+      "type": "list",
+      "required": true,
+      "shape": "{ISSUE, GATE, EVIDENCE, IMPACT}",
+      "description": "Blocking or risky audit findings."
+    },
+    {
+      "name": "RISK_RECOMMENDATION",
+      "type": "string",
+      "required": true,
+      "description": "Audit recommendation based on the gate evidence."
+    }
+  ],
+  "output_contract_notes": [
+    "AUDIT_FINDINGS may be empty when the observed gate evidence does not support a blocker or material risk.",
+    "Use GATE_STATUS to record unverified or missing gate evidence instead of inventing a finding to fill the list.",
+    "RISK_RECOMMENDATION should follow the cited gate evidence, including `pass-with-known-gaps` or equivalent inconclusive outcomes when needed."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "audit-report.v1"
+  ],
+  "neutrality_rules": [
+    "Separate gate evidence from recommendation.",
+    "If a gate is unverified, mark it as a gap instead of assuming pass or fail.",
+    "Do not inflate style preference into a blocker without release or regression impact."
+  ],
+  "execution_constraints": [
+    "Do not manufacture audit blockers because the prompt asks for an audit; return an empty AUDIT_FINDINGS list when gate evidence is clean.",
+    "If evidence is incomplete, mark the gate unverified and keep the recommendation proportional to that gap.",
+    "Keep audit output tied to concrete gate signals rather than broad suspicion or preference debates."
+  ],
+  "response_profile": "review_findings",
+  "default_prompt": "$check-ship-risk",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security,compat,style},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/check-ship-risk",
+  "split_candidates": [
+    "check-merge-ready",
+    "check-security-holes",
+    "ship-go-nogo"
+  ],
+  "primary_lens": "kahneman-tversky",
+  "lens_rationale": "Audit should separate observed gate signals from inferred risk and mark uncertainty explicitly."
+}

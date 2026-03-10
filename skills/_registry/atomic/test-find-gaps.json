@@ -1,0 +1,98 @@
+{
+  "name": "test-find-gaps",
+  "title": "Test Gap Review",
+  "layer": "atomic",
+  "family": "test",
+  "job_type": "test-find-gaps",
+  "description": "Test-category gap-analysis skill. Review whether a bounded scope is missing regression tests for core behavior, failure paths, or boundary contracts. Use when the goal is test-gap analysis rather than writing tests immediately.",
+  "purpose": "Identify exact regression-prevention gaps in a bounded target before test implementation.",
+  "when_to_use": [
+    "Need to know what is not covered by current tests.",
+    "Need to review test gaps for core behavior, edge cases, or failure paths.",
+    "Need evidence-backed test priorities before adding tests."
+  ],
+  "do_not_use": [
+    "Need to write the tests immediately without first reviewing gaps.",
+    "Need a broad code review unrelated to test coverage.",
+    "There is no bounded target scope."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope to inspect for missing tests."
+    },
+    {
+      "name": "TEST_FOCUS",
+      "type": "core-behavior|edge-cases|failure-paths|boundary-contracts|mixed",
+      "required": true,
+      "description": "Which test gap category to prioritize."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_SCOPE should point to a bounded behavior surface, not the whole repo unless the repo is the real unit under test.",
+    "TEST_FOCUS should guide prioritization, not preload the claim that missing tests definitely exist in that category.",
+    "Do not assume a gap just because a nearby file lacks tests; use observable current coverage as the baseline."
+  ],
+  "structured_outputs": [
+    {
+      "name": "MISSING_TEST_SCENARIOS",
+      "type": "list",
+      "required": true,
+      "shape": "{SCENARIO, RISK, CHEAPEST_TEST}",
+      "description": "Important scenarios that lack regression protection."
+    },
+    {
+      "name": "CURRENT_COVERAGE_NOTES",
+      "type": "list",
+      "required": true,
+      "shape": "{COVERED_BEHAVIOR, EVIDENCE}",
+      "description": "What the current test suite does cover."
+    },
+    {
+      "name": "TEST_PRIORITY_ORDER",
+      "type": "list",
+      "required": true,
+      "shape": "{TEST, WHY_NOW}",
+      "description": "Ordered list of the cheapest high-value tests to add."
+    }
+  ],
+  "output_contract_notes": [
+    "CURRENT_COVERAGE_NOTES should describe observable coverage before declaring gaps.",
+    "MISSING_TEST_SCENARIOS may be empty when current regression protection is already sufficient for the stated focus.",
+    "TEST_PRIORITY_ORDER should rank by regression value and cheapest signal, not by raw scenario count."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "test-gap-report.v1"
+  ],
+  "neutrality_rules": [
+    "Describe current coverage before declaring a gap.",
+    "Prioritize missing tests by risk and regression value, not by raw count.",
+    "Separate missing tests from cases that are already covered indirectly."
+  ],
+  "execution_constraints": [
+    "Do not confuse low-level coverage metrics with meaningful behavioral gaps unless the missing behavior is explicit.",
+    "Keep the report focused on regression protection rather than general code quality.",
+    "Prefer the smallest useful next test over broad speculative test suites.",
+    "Do not recommend tests whose only purpose is to satisfy CI or assert implementation trivia."
+  ],
+  "response_profile": "review_findings",
+  "default_prompt": "$test-find-gaps",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: kent-beck | output: md(contract=v1)]",
+  "explicit_only": false,
+  "procedure": [
+    "Inspect the target behavior and the current tests that cover it.",
+    "List missing high-value regression scenarios by focus category.",
+    "Return a priority order for the cheapest useful tests to add."
+  ],
+  "mandatory_rules": [
+    "Do not equate low line coverage with a meaningful test gap automatically.",
+    "Keep the output scoped to missing regression protection."
+  ],
+  "example_invocation": "$test-find-gaps\nTARGET_SCOPE: src/auth\nTEST_FOCUS: failure-paths",
+  "source_path": "skills/test-find-gaps",
+  "primary_lens": "kent-beck",
+  "lens_rationale": "Test-gap review should identify the smallest missing checks that guard real behavior."
+}

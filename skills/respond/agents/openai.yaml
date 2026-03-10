@@ -1,0 +1,6 @@
+interface:
+  display_name: "Respond"
+  short_description: "Final-output only skill. Render the final user-facing response in plain, short, easy language using skill-specific response profiles. Do not analyze, plan, implement, or review here."
+  default_prompt: "$respond"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Completion Contract Loop"
+  short_description: "Atomic completion-control skill for code-changing work. Keep a bounded implementation mission moving until its explicit done contract is satisfied or a real blocker stops progress."
+  default_prompt: "$build-until-done"
+policy:
+  allow_implicit_invocation: true

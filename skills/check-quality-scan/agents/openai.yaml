@@ -1,0 +1,6 @@
+interface:
+  display_name: "Quality Checklist"
+  short_description: "Neutral checklist-only quality inspection skill for changed code. Use when you must explicitly verify design elegance, code conciseness, latent bug risk, goal achievement, security issues, duplicate code, performance risk, constant/common extraction opportunities, and unnecessary code. Do not replace review verdict skills; compose with review or audit when final go/no-go judgement is required. Korean triggers: 설계는 우아해?, 코드는 간결해?, 잠재적인 버그는 없어?, 목적은 달성했어?, 보안 문제 없어?, 중복 코드 제거했어?, 성능 문제는 없어?, 상수화/공통화 가능해?, 불필요한 코드 없어?."
+  default_prompt: "$check-quality-scan"
+policy:
+  allow_implicit_invocation: true

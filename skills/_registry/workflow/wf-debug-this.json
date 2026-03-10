@@ -1,0 +1,100 @@
+{
+  "name": "wf-debug-this",
+  "title": "Debug Workflow",
+  "layer": "workflow",
+  "family": "project-workflow",
+  "job_type": "wf-debug-this",
+  "description": "Workflow skill that narrows a failure surface, performs root-cause debugging, and checks regression protection. Use when the user wants an explicit debug loop rather than a broad 'fix the bug' instruction.",
+  "purpose": "Compose failure-surface reduction, debugging, and test-gap awareness into one explicit debug workflow.",
+  "when_to_use": [
+    "Need a bounded debug loop for a concrete failure.",
+    "Need to reduce failure surface before root-cause work.",
+    "Need debug output tied to follow-up regression protection."
+  ],
+  "do_not_use": [
+    "Need a first-pass implementation with no concrete failure.",
+    "Need only a failure-surface map without deeper debugging.",
+    "Need a broad project review instead of a debug loop."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope where the failure occurs."
+    },
+    {
+      "name": "FAILURE_SYMPTOM",
+      "type": "string",
+      "required": true,
+      "description": "Observed failure symptom."
+    },
+    {
+      "name": "EXPECTED_BEHAVIOR",
+      "type": "string",
+      "required": true,
+      "description": "Expected behavior."
+    }
+  ],
+  "input_contract_notes": [
+    "FAILURE_SYMPTOM should describe the observable failure, not a guessed root cause.",
+    "EXPECTED_BEHAVIOR should be specific enough to distinguish pass from fail during debugging.",
+    "TARGET_SCOPE should bound where evidence is gathered before the workflow widens the search."
+  ],
+  "structured_outputs": [
+    {
+      "name": "FAILURE_SURFACE_MAP",
+      "type": "debug-map-blast-radius.v1",
+      "required": true,
+      "description": "Reduced failing surface and entry points."
+    },
+    {
+      "name": "DEBUG_REPORT",
+      "type": "debug-report.v1",
+      "required": true,
+      "description": "Root-cause analysis and fix direction."
+    },
+    {
+      "name": "TEST_GAP_REPORT",
+      "type": "test-gap-report.v1",
+      "required": true,
+      "description": "Regression protection gaps to close after the fix."
+    }
+  ],
+  "output_contract_notes": [
+    "FAILURE_SURFACE_MAP should remain a map of likely surface and entry points, not a confirmed root cause.",
+    "DEBUG_REPORT should explicitly separate confirmed cause from still-open hypotheses.",
+    "TEST_GAP_REPORT should focus on regression protection to add after the concrete fix."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "debug-map-blast-radius.v1",
+    "debug-report.v1",
+    "test-gap-report.v1"
+  ],
+  "neutrality_rules": [
+    "Keep surface mapping, root cause, and test gaps as distinct outputs.",
+    "Do not treat suspicion from the surface map as confirmed cause.",
+    "Keep the workflow explicit and inspectable."
+  ],
+  "execution_constraints": [
+    "Do not collapse mapped surface, root cause, and regression gaps into one blob report.",
+    "If reproduction or evidence is incomplete, keep the debug result inconclusive instead of overstating confidence.",
+    "Preserve the explicit expanded workflow path in the final output."
+  ],
+  "response_profile": "debug_report",
+  "default_prompt": "$wf-debug-this",
+  "default_program": "[stages: preflight>detect>analyze>implement>verify>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: feynman | output: md(contract=v1)]",
+  "explicit_only": false,
+  "expands_to": [
+    "$debug-map-blast-radius",
+    "$debug-find-root-cause",
+    "$test-find-gaps"
+  ],
+  "mandatory_rules": [
+    "Preserve the separation between mapped surface and confirmed cause.",
+    "Expose the expanded atomic path explicitly."
+  ],
+  "example_invocation": "$wf-debug-this\nTARGET_SCOPE: src/session\nFAILURE_SYMPTOM: session disappears after refresh\nEXPECTED_BEHAVIOR: session persists after refresh",
+  "source_path": "skills/wf-debug-this"
+}

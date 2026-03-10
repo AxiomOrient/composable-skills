@@ -1,0 +1,91 @@
+{
+  "name": "gemini",
+  "layer": "utility",
+  "family": "external-delegation",
+  "job_type": "gemini",
+  "description": "Use when the user explicitly requests Gemini CLI as a sub-agent for large-context analysis or web research, including session resume. Do not run Gemini implicitly. English triggers: gemini, gemini cli, external research delegation.",
+  "purpose": "Run an explicitly requested Gemini CLI delegation and keep its output separated from local evidence.",
+  "when_to_use": [
+    "The user explicitly invokes gemini or $gemini.",
+    "Need large-context external analysis, web research, or session resume through Gemini CLI.",
+    "Need Gemini output compared against local evidence instead of replacing it."
+  ],
+  "do_not_use": [
+    "Gemini was not explicitly requested.",
+    "Need ordinary local repository analysis that can be completed without external delegation.",
+    "Need automatic file edits unless the user explicitly requested apply mode."
+  ],
+  "required_inputs": [
+    {
+      "name": "GEMINI_MODE",
+      "type": "new|resume|apply",
+      "required": true,
+      "description": "Execution mode for Gemini CLI."
+    },
+    {
+      "name": "GEMINI_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Exact analysis or verification goal for Gemini."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|folder|repo",
+      "required": true,
+      "description": "Bounded target scope for Gemini."
+    },
+    {
+      "name": "SESSION_ID",
+      "type": "string",
+      "required": false,
+      "description": "Explicit Gemini session id for resume mode."
+    }
+  ],
+  "input_contract_notes": [
+    "Prefer `GEMINI_MODE=new` when the job is a fresh analysis; use `resume` only when the prior Gemini session context is part of the task.",
+    "`SESSION_ID` should be supplied for `resume` runs and omitted for fresh runs unless the user explicitly wants a specific session reused.",
+    "Use `apply` only when the user explicitly wants Gemini to propose or make concrete changes rather than analysis-only delegation."
+  ],
+  "structured_outputs": [
+    {
+      "name": "GEMINI_FINDINGS",
+      "type": "list",
+      "required": true,
+      "description": "Summarized Gemini claims or findings."
+    },
+    {
+      "name": "LOCAL_COMPARISON",
+      "type": "list",
+      "required": true,
+      "description": "Local evidence comparison against Gemini output."
+    },
+    {
+      "name": "CONFLICTS",
+      "type": "list",
+      "required": true,
+      "description": "Explicit conflicts between Gemini and local evidence."
+    }
+  ],
+  "output_contract_notes": [
+    "`GEMINI_FINDINGS` should summarize Gemini output as reported, not silently merge it into the local conclusion.",
+    "`LOCAL_COMPARISON` should state where local evidence agrees, disagrees, or remains insufficient.",
+    "`CONFLICTS` may be empty when Gemini and local evidence align; do not invent disagreement just to fill the section."
+  ],
+  "artifacts_in": [
+    "gemini-request.v1"
+  ],
+  "artifacts_out": [
+    "external-verification-report.v1"
+  ],
+  "neutrality_rules": [
+    "Report Gemini output and local analysis separately.",
+    "Do not promote Gemini claims above local evidence without comparison.",
+    "If Gemini and local evidence conflict, surface the conflict explicitly."
+  ],
+  "response_profile": "external_verification",
+  "default_prompt": "$gemini",
+  "default_program": "[stages: preflight>detect>analyze>verify>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,safety-gates,deterministic-output |\n lens: feynman |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$compose + $gemini + $check-delivered\n\nGEMINI_MODE: new\nGEMINI_GOAL: Compare the current auth token refresh flow against official provider docs.\nTARGET_SCOPE: src/auth",
+  "source_path": "skills/gemini"
+}

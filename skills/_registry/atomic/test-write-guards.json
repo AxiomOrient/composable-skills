@@ -1,0 +1,104 @@
+{
+  "name": "test-write-guards",
+  "title": "Test Guards",
+  "layer": "atomic",
+  "family": "test",
+  "job_type": "test-write-guards",
+  "description": "Test-category execution skill. Add or strengthen automated tests that act as real regression guards. Do not use for direct feature implementation, fake CI-only coverage, or diagnosing failures without a test-design intent.",
+  "purpose": "Add or improve regression-prevention tests with an explicit scenario matrix and execution evidence.",
+  "when_to_use": [
+    "Need to add or strengthen automated tests.",
+    "Need to convert a regression risk into concrete test protection.",
+    "Need a bounded test matrix plus implemented tests."
+  ],
+  "do_not_use": [
+    "Need only to analyze missing test gaps.",
+    "Need direct feature implementation unrelated to tests.",
+    "Need only the scenario matrix before writing tests.",
+    "Need to make CI green with low-value tests that do not protect real behavior."
+  ],
+  "required_inputs": [
+    {
+      "name": "TEST_GOAL",
+      "type": "regression|edge-case|failure-path|mixed",
+      "required": true,
+      "description": "Primary testing objective."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Scope under test."
+    },
+    {
+      "name": "TARGET_BEHAVIORS",
+      "type": "list",
+      "required": true,
+      "description": "Behaviors or scenarios to protect."
+    },
+    {
+      "name": "FAILURE_PATHS",
+      "type": "list",
+      "required": false,
+      "description": "Known unhappy paths to include."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_BEHAVIORS should describe observable behavior, not helper calls, private methods, or implementation structure.",
+    "FAILURE_PATHS should name user-visible or contract-visible failures when they matter.",
+    "If the target behaviors are still fuzzy, use `test-design-cases` first instead of guessing test shapes."
+  ],
+  "structured_outputs": [
+    {
+      "name": "TEST_MATRIX",
+      "type": "object",
+      "required": true,
+      "description": "Happy, edge, and failure-path scenario matrix."
+    },
+    {
+      "name": "ADDED_TESTS",
+      "type": "list",
+      "required": true,
+      "description": "Added or updated tests."
+    },
+    {
+      "name": "VERIFICATION_RESULTS",
+      "type": "list",
+      "required": true,
+      "description": "Executed test evidence."
+    }
+  ],
+  "output_contract_notes": [
+    "TEST_MATRIX should stay minimal and behavior-oriented; do not inflate it with low-value cases just to raise test count.",
+    "ADDED_TESTS should map back to explicit target behaviors or failure paths.",
+    "VERIFICATION_RESULTS should cite executed commands and observed pass/fail signals, not unrun claims."
+  ],
+  "artifacts_in": [
+    "test-design-cases.v1",
+    "test-gap-report.v1"
+  ],
+  "artifacts_out": [
+    "test-report.v1"
+  ],
+  "neutrality_rules": [
+    "Prefer observable behavior over implementation-detail coupling.",
+    "If a case is speculative, mark it optional instead of mandatory.",
+    "Do not imply coverage the suite does not provide."
+  ],
+  "execution_constraints": [
+    "Do not write tests only to satisfy the current implementation details, mock call counts, or branch shape unless the contract explicitly requires that level.",
+    "Do not add duplicate tests that restate already-proven behavior at the same layer.",
+    "If the code has no clean seam for a valuable test, surface that seam problem instead of hiding it behind a brittle test."
+  ],
+  "response_profile": "test_report",
+  "default_prompt": "$test-write-guards",
+  "default_program": "[stages: preflight>detect>analyze>plan>implement>verify>review>handoff>audit |\n scope: diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,security},deterministic-output |\n lens: kent-beck |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/test-write-guards",
+  "split_candidates": [
+    "test-design-cases",
+    "test-find-gaps"
+  ],
+  "primary_lens": "kent-beck",
+  "lens_rationale": "Test design should prefer small safe tests tied to explicit behavior and refactor confidence."
+}

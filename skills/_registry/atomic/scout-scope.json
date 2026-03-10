@@ -1,0 +1,84 @@
+{
+  "name": "scout-scope",
+  "title": "Scope Clarifier",
+  "layer": "atomic",
+  "family": "analysis",
+  "job_type": "scout-scope",
+  "description": "Use when requirements are vague and must be clarified into precise goal, scope, constraints, and acceptance criteria. Do not use when the primary task is implementation, debugging, or deep repository analysis. English triggers: clarify requirements, define scope, define done criteria.",
+  "purpose": "Turn vague requests into concrete goal, scope, constraints, and acceptance criteria.",
+  "when_to_use": [
+    "Requirements are ambiguous.",
+    "Completion criteria are missing or conflicting.",
+    "Need clarification questions before planning or implementation."
+  ],
+  "do_not_use": [
+    "Need direct implementation.",
+    "Need deep repository analysis rather than requirement clarification.",
+    "The immediate job is only to normalize scope contract."
+  ],
+  "required_inputs": [
+    {
+      "name": "REQUEST",
+      "type": "string",
+      "required": true,
+      "description": "Ambiguous request or work item."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|folder|repo|artifact",
+      "required": true,
+      "description": "Target scope under discussion."
+    },
+    {
+      "name": "KNOWN_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "description": "Explicit constraints, non-goals, or deadlines."
+    },
+    {
+      "name": "KNOWN_DONE_CONDITION",
+      "type": "list",
+      "required": false,
+      "description": "Any existing completion rule."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "CLARIFYING_QUESTIONS",
+      "type": "list",
+      "required": true,
+      "description": "Ordered clarification questions if needed."
+    },
+    {
+      "name": "DRAFT_SCOPE_CONTRACT",
+      "type": "object",
+      "required": true,
+      "description": "Goal, scope, constraints, and acceptance boundary draft."
+    },
+    {
+      "name": "OUT_OF_SCOPE",
+      "type": "list",
+      "required": true,
+      "description": "Explicit out-of-scope items."
+    }
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "clarify-contract.v1"
+  ],
+  "neutrality_rules": [
+    "Separate explicit user constraints from inferred assumptions.",
+    "If scope or done condition is unresolved, surface it as a question instead of deciding silently.",
+    "Keep clarification bounded to goal, scope, constraints, and acceptance boundary."
+  ],
+  "response_profile": "clarify_question",
+  "default_prompt": "$scout-scope",
+  "default_program": "[stages: preflight>detect>analyze>plan>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs},deterministic-output |\n lens: minto-pyramid |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/scout-scope",
+  "split_candidates": [
+    "scout-boundaries"
+  ],
+  "primary_lens": "minto-pyramid",
+  "lens_rationale": "Clarification should turn a vague request into an answer-first scope contract with grouped questions."
+}

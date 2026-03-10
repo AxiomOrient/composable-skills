@@ -1,0 +1,6 @@
+interface:
+  display_name: "Release Readiness"
+  short_description: "Use when assessing release safety, rollout risk, compatibility impact, and rollback readiness. This is the renamed release judgement skill; use it for GO/NO-GO analysis, not for publication execution."
+  default_prompt: "$ship-go-nogo"
+policy:
+  allow_implicit_invocation: true

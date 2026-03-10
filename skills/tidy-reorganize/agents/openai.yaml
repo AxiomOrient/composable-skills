@@ -1,0 +1,6 @@
+interface:
+  display_name: "Structure Refactor"
+  short_description: "Use when planning behavior-preserving structural refactoring, module-boundary cleanup, or dependency hygiene in a bounded scope. For broad complexity reduction (data model reshaping, naming/tree simplification, side-effect isolation), use simplifier instead. Do not use when adding new features or fixing production incidents. English triggers: refactor plan, structural cleanup, dependency hygiene."
+  default_prompt: "$tidy-reorganize"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,140 @@
+{
+  "name": "plan-why-build-this",
+  "title": "Product Brief",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "plan-why-build-this",
+  "description": "Use when turning a rough idea into a short product brief that names the user, problem, intended outcome, success signals, and non-goals before writing specs or design docs. Do not use for detailed feature requirements or technical solution design.",
+  "purpose": "Capture why the work matters, for whom it matters, and what success looks like before deeper specification begins.",
+  "when_to_use": [
+    "Need a high-level brief before feature spec or design work.",
+    "Need to make audience, problem, success signals, and non-goals explicit.",
+    "Need one short alignment document that prevents premature solution design."
+  ],
+  "do_not_use": [
+    "Need detailed functional requirements or edge-case behavior.",
+    "Need navigation structure or information hierarchy.",
+    "Need technical boundaries, data flow, or implementation trade-offs."
+  ],
+  "required_inputs": [
+    {
+      "name": "BRIEF_SCOPE",
+      "type": "feature|initiative|product|project",
+      "required": true,
+      "description": "Boundary the brief governs."
+    },
+    {
+      "name": "PROBLEM_STATEMENT",
+      "type": "string",
+      "required": true,
+      "description": "Plain-language statement of the problem worth solving."
+    },
+    {
+      "name": "TARGET_AUDIENCE",
+      "type": "list",
+      "required": true,
+      "shape": "{USER, CONTEXT}",
+      "description": "Primary users or stakeholder groups and the context they are in."
+    },
+    {
+      "name": "DESIRED_OUTCOMES",
+      "type": "list",
+      "required": true,
+      "shape": "{OUTCOME, WHY_IT_MATTERS}",
+      "description": "Intended outcomes and why each one matters."
+    },
+    {
+      "name": "SUCCESS_SIGNALS",
+      "type": "list",
+      "required": true,
+      "shape": "{SIGNAL, HOW_MEASURED}",
+      "description": "Observable signals or metrics that indicate the brief succeeded."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Explicit time, policy, compatibility, resource, or non-goal constraints."
+    },
+    {
+      "name": "KNOWN_NON_GOALS",
+      "type": "list",
+      "required": false,
+      "shape": "{NON_GOAL, WHY_OUT}",
+      "description": "Items that should stay out of scope even if adjacent to the problem."
+    }
+  ],
+  "input_contract_notes": [
+    "PROBLEM_STATEMENT should stay problem-first and avoid embedding a preferred solution.",
+    "TARGET_AUDIENCE should be specific enough that a later spec can make trade-offs for real users rather than a generic 'everyone'.",
+    "SUCCESS_SIGNALS should be observable. If exact metrics are unknown, use proxy signals rather than aspirational language.",
+    "KNOWN_NON_GOALS should be explicit when adjacent asks are likely to create scope creep."
+  ],
+  "structured_outputs": [
+    {
+      "name": "BRIEF_SUMMARY",
+      "type": "string",
+      "required": true,
+      "description": "One short summary of the problem, target user, and intended outcome."
+    },
+    {
+      "name": "USER_JOBS",
+      "type": "list",
+      "required": true,
+      "shape": "{USER, JOB, PAIN}",
+      "description": "User jobs and pain points implied by the brief."
+    },
+    {
+      "name": "OUTCOME_PRIORITIES",
+      "type": "list",
+      "required": true,
+      "shape": "{OUTCOME, SIGNAL, PRIORITY}",
+      "description": "Ranked outcomes and the signal that will show whether each one improved."
+    },
+    {
+      "name": "NON_GOALS",
+      "type": "list",
+      "required": true,
+      "shape": "{NON_GOAL, WHY_OUT}",
+      "description": "Explicitly excluded work or expectations."
+    },
+    {
+      "name": "OPEN_ASSUMPTIONS",
+      "type": "list",
+      "required": true,
+      "shape": "{ASSUMPTION, WHY_IT_MATTERS}",
+      "description": "Assumptions that later spec or validation work must confirm."
+    }
+  ],
+  "output_contract_notes": [
+    "BRIEF_SUMMARY should stay short enough that it can anchor later spec work without becoming a long concept document.",
+    "USER_JOBS should describe user needs, not solution ideas dressed up as needs.",
+    "OUTCOME_PRIORITIES should rank what matters most instead of treating every goal as equally critical.",
+    "OPEN_ASSUMPTIONS should stay explicit rather than being buried in prose."
+  ],
+  "artifacts_in": [
+    "scope-contract.v1"
+  ],
+  "artifacts_out": [
+    "plan-why-build-this.v1"
+  ],
+  "neutrality_rules": [
+    "Separate user problem from preferred solution.",
+    "Do not invent business impact or certainty that the inputs do not support.",
+    "Keep non-goals and open assumptions visible instead of implying universal buy-in."
+  ],
+  "execution_constraints": [
+    "Do not turn this skill into a detailed feature spec or technical design document.",
+    "Prefer the smallest brief that still makes user, outcome, and scope boundaries explicit.",
+    "If the audience or success signal is unclear, surface it as an assumption rather than guessing silently."
+  ],
+  "response_profile": "brief_contract",
+  "default_prompt": "$plan-why-build-this",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: christensen-jtbd |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$plan-why-build-this\nBRIEF_SCOPE: feature\nPROBLEM_STATEMENT: 신규 사용자가 첫 로그인 후 설정 화면에서 길을 잃는다\nTARGET_AUDIENCE:\n  - USER: 신규 관리자\n    CONTEXT: 팀 워크스페이스 첫 설정 직후\nDESIRED_OUTCOMES:\n  - OUTCOME: 첫 설정 완료 시간을 줄인다\n    WHY_IT_MATTERS: 초기 이탈을 줄여야 한다\nSUCCESS_SIGNALS:\n  - SIGNAL: 첫 설정 완료율 증가\n    HOW_MEASURED: 7일 cohort 완료율",
+  "source_path": "skills/plan-why-build-this",
+  "primary_lens": "christensen-jtbd",
+  "lens_rationale": "A product brief should clarify the user job, pain, and desired progress before the team writes detailed requirements or solution documents."
+}

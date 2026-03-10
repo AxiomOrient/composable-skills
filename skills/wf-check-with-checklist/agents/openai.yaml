@@ -1,0 +1,6 @@
+interface:
+  display_name: "Review Checklist Workflow"
+  short_description: "Workflow skill that combines `wf-check-full-review` with the full 9-item `check-quality-scan` pass. Use when the user explicitly wants both narrow review scans and checklist coverage."
+  default_prompt: "$wf-check-with-checklist"
+policy:
+  allow_implicit_invocation: true

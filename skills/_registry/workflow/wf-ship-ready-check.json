@@ -1,0 +1,190 @@
+{
+  "name": "wf-ship-ready-check",
+  "title": "Release Check Workflow",
+  "layer": "workflow",
+  "family": "release-workflow",
+  "job_type": "wf-ship-ready-check",
+  "description": "Workflow skill that verifies repository reality, release hygiene, and final release readiness before publication. Use when the user wants a transparent release review instead of a single vague 'can we ship?' prompt.",
+  "purpose": "Compose repository prechecks, release hygiene gates, and GO/NO-GO release judgement into one explicit release review workflow.",
+  "when_to_use": [
+    "Need release review built from explicit repository, hygiene, and readiness subchecks.",
+    "Need document-upgrade and legacy-removal gates checked before shipping.",
+    "Need a named release-review workflow that can still be extended with check-delivered or release-publish.",
+    "Need release judgement only, while keeping branch, tag, and publish mutation outside the current run."
+  ],
+  "do_not_use": [
+    "Need direct branch, tag, or GitHub release mutation; use release-publish instead.",
+    "Need the default review-plus-publish release flow; use wf-ship-it instead.",
+    "Need only one narrow release concern rather than a combined release review.",
+    "Need runtime implementation or debugging rather than release gating."
+  ],
+  "required_inputs": [
+    {
+      "name": "RELEASE_SCOPE",
+      "type": "diff|repo|deployment-slice",
+      "required": true,
+      "allowed_values": [
+        "diff",
+        "repo",
+        "deployment-slice"
+      ],
+      "description": "Release slice to judge after repository and hygiene gates are checked."
+    },
+    {
+      "name": "TARGET_BRANCHES",
+      "type": "list",
+      "required": true,
+      "shape": "{BRANCH, ROLE}",
+      "description": "Branches involved in the release, such as source/dev and target/main."
+    },
+    {
+      "name": "HYGIENE_SCOPE",
+      "type": "diff|repo",
+      "required": true,
+      "allowed_values": [
+        "diff",
+        "repo"
+      ],
+      "description": "Scope for release hygiene checks."
+    },
+    {
+      "name": "ROLLOUT_PLAN",
+      "type": "string",
+      "required": true,
+      "description": "Intended rollout path."
+    },
+    {
+      "name": "ROLLBACK_PATH",
+      "type": "string",
+      "required": true,
+      "description": "Rollback or stop strategy."
+    },
+    {
+      "name": "REQUIRED_DOCS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH, WHY_REQUIRED}",
+      "description": "Release-blocking docs that must be upgraded."
+    },
+    {
+      "name": "LEGACY_PATTERNS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATTERN, WHY_BLOCKING}",
+      "description": "Legacy names or files that must not survive the release."
+    },
+    {
+      "name": "REMOTE_NAME",
+      "type": "string",
+      "required": false,
+      "description": "Remote expected to receive release refs when publish is likely to follow."
+    },
+    {
+      "name": "TAG_INTENT",
+      "type": "string",
+      "required": false,
+      "description": "Candidate version tag to check during repo and release review."
+    },
+    {
+      "name": "KNOWN_GATES",
+      "type": "list",
+      "required": false,
+      "shape": "{GATE, STATUS, EVIDENCE}",
+      "description": "Known release gate signals."
+    },
+    {
+      "name": "SURFACE_CONTRACTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONTRACT, SOURCE}",
+      "description": "Public-surface contracts such as registry/docs parity or root README ownership."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_BRANCHES should identify real release branch roles before the workflow runs.",
+    "RELEASE_SCOPE should match the actual candidate being judged; do not overload HYGIENE_SCOPE to imply rollout scope.",
+    "Use REQUIRED_DOCS only for docs that block shipping when stale or missing.",
+    "Use SURFACE_CONTRACTS when release hygiene depends on explicit public-surface rules instead of implicit taste.",
+    "This workflow composes explicit release subchecks; it should not hide them behind a single opaque verdict."
+  ],
+  "structured_outputs": [
+    {
+      "name": "REPO_RELEASE_STATUS",
+      "type": "ready|blocked|inconclusive",
+      "required": true,
+      "allowed_values": [
+        "ready",
+        "blocked",
+        "inconclusive"
+      ],
+      "description": "Repository precondition status."
+    },
+    {
+      "name": "HYGIENE_SUMMARY",
+      "type": "list",
+      "required": true,
+      "shape": "{AREA, STATUS, EVIDENCE}",
+      "description": "Release hygiene summary including docs and public-surface sync."
+    },
+    {
+      "name": "CHECK_REPORTS",
+      "type": "list",
+      "required": true,
+      "shape": "{CHECK, SUMMARY, OUTPUT_REF}",
+      "description": "Underlying subcheck reports that support the final release decision."
+    },
+    {
+      "name": "RELEASE_DECISION",
+      "type": "go|no-go|blocked",
+      "required": true,
+      "allowed_values": [
+        "go",
+        "no-go",
+        "blocked"
+      ],
+      "description": "Final release judgement."
+    },
+    {
+      "name": "EXPANDED_ATOMIC_PATH",
+      "type": "list",
+      "required": true,
+      "shape": "{SKILL}",
+      "description": "Actual atomic path executed by the workflow."
+    }
+  ],
+  "output_contract_notes": [
+    "HYGIENE_SUMMARY should expose docs and public-surface gate status explicitly instead of hiding them inside prose.",
+    "CHECK_REPORTS should preserve the underlying repo, hygiene, and readiness subcheck identities.",
+    "RELEASE_DECISION should remain traceable to both readiness evidence and the explicit subchecks.",
+    "EXPANDED_ATOMIC_PATH must preserve actual workflow order."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "release-review-report.v1"
+  ],
+  "neutrality_rules": [
+    "Preserve the neutrality rules of the underlying repository, hygiene, and readiness checks.",
+    "Do not invent blockers when underlying subchecks are clean.",
+    "Expose release review as the sum of explicit subchecks."
+  ],
+  "execution_constraints": [
+    "Do not mutate branches, tags, remotes, or release hosts from this workflow.",
+    "If a required subcheck cannot be verified, surface that gap instead of pretending full release coverage.",
+    "Keep document gate status explicit because stale docs can block release."
+  ],
+  "response_profile": "release_decision",
+  "default_prompt": "$wf-ship-ready-check",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff | policy: evidence,safety-gates,quality-gates{docs,release,tests,security},deterministic-output | lens: release-gatekeeper | output: md(contract=v1)]",
+  "explicit_only": false,
+  "expands_to": [
+    "$ship-check-repo",
+    "$ship-check-hygiene",
+    "$ship-go-nogo"
+  ],
+  "mandatory_rules": [
+    "Expose repository, hygiene, and readiness subchecks explicitly.",
+    "Treat missing release docs as a real gate when REQUIRED_DOCS says they are blocking."
+  ],
+  "example_invocation": "$wf-ship-ready-check\nRELEASE_SCOPE: repo\nTARGET_BRANCHES:\n  - {BRANCH: codex/dev, ROLE: source}\n  - {BRANCH: main, ROLE: target}\nHYGIENE_SCOPE: repo\nROLLOUT_PLAN: staging 확인 후 production\nROLLBACK_PATH: git revert 후 재배포",
+  "source_path": "skills/wf-ship-ready-check"
+}

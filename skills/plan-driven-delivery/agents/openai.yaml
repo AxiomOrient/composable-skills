@@ -1,0 +1,6 @@
+interface:
+  display_name: "Plan Driven Delivery"
+  short_description: "Use when enforcing markdown-first planning and synchronized implementation execution. Treat implementation-plan and tasks documents as primary data artifacts. This skill does not create the plan; it synchronizes execution against an existing plan. English triggers: plan-driven, markdown-first delivery, plan-task synchronization."
+  default_prompt: "$plan-driven-delivery"
+policy:
+  allow_implicit_invocation: true

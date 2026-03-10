@@ -1,0 +1,6 @@
+interface:
+  display_name: "Test Guards"
+  short_description: "Test-category execution skill. Add or strengthen automated tests that act as real regression guards."
+  default_prompt: "$test-write-guards"
+policy:
+  allow_implicit_invocation: true

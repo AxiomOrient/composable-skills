@@ -1,0 +1,139 @@
+{
+  "name": "doc-publish-readme",
+  "title": "Project Readme Localize",
+  "layer": "atomic",
+  "family": "docs",
+  "job_type": "doc-publish-readme",
+  "description": "Create or refresh the repo root README as a GitHub-friendly project entrypoint, then publish easy-to-read localized entry docs under docs/i18n/<lang>/. Use when the target is a project repo and readers need a root landing doc plus language-specific entrypoints.",
+  "purpose": "Publish the project root README and localized project entry docs with audience-level, plain-language explanations.",
+  "when_to_use": [
+    "Need to create or refresh the repo root README.",
+    "Need GitHub-style project onboarding with links to deeper docs.",
+    "Need localized project entry docs under a stable language folder."
+  ],
+  "do_not_use": [
+    "Need only non-root guide writing.",
+    "Need only hierarchical module, library, or paper index docs.",
+    "Need documentation inventory or cleanup without publishing the root entry docs."
+  ],
+  "required_inputs": [
+    {
+      "name": "PROJECT_SCOPE",
+      "type": "repo",
+      "required": true,
+      "description": "Project repository root to publish."
+    },
+    {
+      "name": "README_GOAL",
+      "type": "github-overview|onboarding|usage-entry|mixed",
+      "required": true,
+      "description": "Primary goal of the root README."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|operator|mixed",
+      "required": true,
+      "description": "Primary audience for the root README and localized entry docs."
+    },
+    {
+      "name": "AUDIENCE_LEVEL",
+      "type": "general|intermediate|expert",
+      "required": false,
+      "description": "Difficulty level. Default is general-reader language when omitted."
+    },
+    {
+      "name": "PRIMARY_LANGUAGE",
+      "type": "string",
+      "required": false,
+      "description": "Primary authoring language for the root README and source portal. Default is en."
+    },
+    {
+      "name": "TARGET_LANGUAGES",
+      "type": "list",
+      "required": false,
+      "shape": "{LANG}",
+      "description": "Languages to publish under docs/i18n/<lang>/. Default localized set is ko, es, zh when omitted."
+    },
+    {
+      "name": "SOURCE_DOCS",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, ROLE}",
+      "description": "Docs or evidence-backed pages that the root README and localized entry docs must summarize and link."
+    }
+  ],
+  "input_contract_notes": [
+    "This skill owns the repo root README and the docs/i18n/<lang>/ publishing surface.",
+    "If AUDIENCE_LEVEL is omitted, explain the project as if the reader is a general but capable newcomer.",
+    "PRIMARY_LANGUAGE defaults to en when omitted.",
+    "TARGET_LANGUAGES defaults to ko, es, zh when omitted, and user-requested extra languages should be appended unless the user explicitly narrows the language set."
+  ],
+  "structured_outputs": [
+    {
+      "name": "ROOT_README_PATH",
+      "type": "string",
+      "required": true,
+      "description": "Root README path created or updated by this skill."
+    },
+    {
+      "name": "LANGUAGE_DOCS",
+      "type": "list",
+      "required": true,
+      "shape": "{LANG, PATH, SOURCE_REF, COVERAGE}",
+      "description": "Localized docs created or updated under docs/i18n/<lang>/."
+    },
+    {
+      "name": "LANGUAGE_SELECTOR_LINKS",
+      "type": "list",
+      "required": true,
+      "shape": "{LANG, TARGET}",
+      "description": "Language selector links exposed from the root README."
+    },
+    {
+      "name": "DOC_PORTAL_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{ENTRY, LINKS_TO}",
+      "description": "How the root README and localized entry docs connect to deeper guides."
+    }
+  ],
+  "output_contract_notes": [
+    "ROOT_README_PATH should stay GitHub-first: fast overview, quickstart, and links to deeper docs before detailed internals.",
+    "LANGUAGE_DOCS should live under docs/i18n/<lang>/ so readers can switch languages predictably.",
+    "LANGUAGE_SELECTOR_LINKS should let readers choose their language from the root README without searching.",
+    "The root README should be authored in English by default unless PRIMARY_LANGUAGE explicitly overrides it."
+  ],
+  "artifacts_in": [
+    "documentation-report.v1",
+    "knowledge-index-docset.v1"
+  ],
+  "artifacts_out": [
+    "project-readme-portal.v1"
+  ],
+  "neutrality_rules": [
+    "Do not claim capabilities or workflows that the source docs and repository evidence do not support.",
+    "If a source doc is incomplete, preserve that gap instead of fabricating localized content.",
+    "Keep translation and simplification faithful to the source meaning."
+  ],
+  "execution_constraints": [
+    "Author the root README in English by default unless PRIMARY_LANGUAGE explicitly overrides it.",
+    "Always place localized entry docs under docs/i18n/<lang>/.",
+    "Default localized entry docs to ko, es, zh and append extra user-requested languages when provided.",
+    "Keep the root README readable on GitHub with a short first scan path before deeper details.",
+    "Define technical terms in plain words before using jargon when AUDIENCE_LEVEL is general or omitted.",
+    "Link the root README to language-specific entry docs and link those entry docs back to the root README or portal."
+  ],
+  "mandatory_rules": [
+    "Only this skill should modify the repo root README in the documentation pack.",
+    "Publish ko, es, and zh entry docs by default unless the user explicitly narrows the language set.",
+    "Every target language must receive at least one entry doc under docs/i18n/<lang>/."
+  ],
+  "response_profile": "documentation_report",
+  "default_prompt": "$doc-publish-readme",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: feynman-teaching |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$doc-publish-readme\nPROJECT_SCOPE: repo\nREADME_GOAL: github-overview\nAUDIENCE: general\nPRIMARY_LANGUAGE: en\nTARGET_LANGUAGES: ko, es, zh",
+  "source_path": "skills/doc-publish-readme",
+  "primary_lens": "feynman-teaching",
+  "lens_rationale": "Project entry docs should explain the project plainly first, then layer detail and language variants without losing accuracy."
+}

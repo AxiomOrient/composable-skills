@@ -1,0 +1,6 @@
+interface:
+  display_name: "Question Scaffold"
+  short_description: "Break one big question into a prioritized question stack using first principles and explicit data/control framing. Use when the scope is too broad or multiple goals are tangled together."
+  default_prompt: "$ask-break-it-down"
+policy:
+  allow_implicit_invocation: true

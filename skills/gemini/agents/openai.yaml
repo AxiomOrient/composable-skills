@@ -1,0 +1,6 @@
+interface:
+  display_name: "Gemini"
+  short_description: "Use when the user explicitly requests Gemini CLI as a sub-agent for large-context analysis or web research, including session resume. Do not run Gemini implicitly. English triggers: gemini, gemini cli, external research delegation."
+  default_prompt: "$gemini"
+policy:
+  allow_implicit_invocation: true

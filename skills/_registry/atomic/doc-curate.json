@@ -1,0 +1,112 @@
+{
+  "name": "doc-curate",
+  "layer": "atomic",
+  "family": "docs",
+  "job_type": "doc-curate",
+  "description": "Use when repository docs below the repo root README must be indexed, structured, linked, de-duplicated, and stale-doc-cleaned based on actual file evidence. Build non-root entry docs and navigation with MECE structure, but leave root README authoring to doc-publish-readme. Do not modify runtime code.",
+  "purpose": "Reorganize non-root docs with explicit inventory, entry-structure planning, navigation graph, and cleanup actions.",
+  "when_to_use": [
+    "Need documentation inventory, navigation, and cleanup planning.",
+    "Need to reorganize folder-level entry docs and guide entrypoints below the repo root.",
+    "Need doc curation without runtime code changes."
+  ],
+  "do_not_use": [
+    "Need to write architecture or usage content only.",
+    "Need runtime code changes.",
+    "Need repo root README writing or multilingual publishing.",
+    "Need only documentation inventory without curation guidance."
+  ],
+  "required_inputs": [
+    {
+      "name": "CURATION_GOAL",
+      "type": "cleanup|navigation|de-duplication|mixed",
+      "required": true,
+      "description": "Primary curation objective."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "docs-folder|repo|subtree",
+      "required": true,
+      "description": "Doc scope to curate."
+    },
+    {
+      "name": "ENTRY_DOC_STYLE",
+      "type": "guide|reference|index|mixed",
+      "required": false,
+      "description": "Preferred style for non-root entry docs. Default is index when omitted."
+    },
+    {
+      "name": "INVENTORY_SCOPE",
+      "type": "root-only|folder-tree|repo-wide",
+      "required": true,
+      "description": "How broad the inventory should be."
+    }
+  ],
+  "input_contract_notes": [
+    "This skill owns non-root entry structure planning and navigation cleanup.",
+    "ENTRY_DOC_STYLE defaults to index when omitted and should describe the entry-doc role, not the prose difficulty.",
+    "Use doc-publish-readme when the repo root README or language portal must change."
+  ],
+  "structured_outputs": [
+    {
+      "name": "DOC_INVENTORY",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, STATUS, EVIDENCE}",
+      "description": "Evidence-backed document inventory."
+    },
+    {
+      "name": "DOC_ENTRY_STRUCTURE",
+      "type": "list",
+      "required": true,
+      "shape": "{ENTRY_PATH, ENTRY_KIND, COVERS, EVIDENCE_REF}",
+      "description": "Planned non-root entry docs and the scope each one covers."
+    },
+    {
+      "name": "DOC_NAVIGATION_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{FROM, TO, PURPOSE}",
+      "description": "Navigation graph across non-root entry docs and key supporting docs."
+    },
+    {
+      "name": "CLEANUP_ACTIONS",
+      "type": "list",
+      "required": true,
+      "shape": "{ACTION, TARGET, WHY, CONFIDENCE}",
+      "description": "Keep, merge, move, archive, or delete-candidate actions."
+    }
+  ],
+  "output_contract_notes": [
+    "DOC_INVENTORY should reflect observed doc state before proposing cleanup.",
+    "DOC_ENTRY_STRUCTURE should stay bounded to non-root entry docs that materially improve navigation.",
+    "CLEANUP_ACTIONS may be empty when the current non-root doc surface is already coherent."
+  ],
+  "artifacts_in": [
+    "doc-inventory.v1"
+  ],
+  "artifacts_out": [
+    "doc-curation-report.v1"
+  ],
+  "neutrality_rules": [
+    "Read docs before classifying them stale or duplicate.",
+    "Keep delete recommendations tentative until evidence is explicit.",
+    "Separate navigation issues from content duplication issues."
+  ],
+  "execution_constraints": [
+    "Do not author or rewrite the repo root README from this skill.",
+    "Treat non-root entry docs generically; do not assume they must be named README unless the local structure calls for it.",
+    "Keep cleanup actions separate from content-writing recommendations.",
+    "Prefer stable folder and guide entrypoints over scattered cross-links."
+  ],
+  "response_profile": "documentation_report",
+  "default_prompt": "$doc-curate",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/doc-curate",
+  "split_candidates": [
+    "doc-find-all"
+  ],
+  "primary_lens": "nielsen-norman",
+  "lens_rationale": "Doc curation should optimize findability, navigation, and information scent."
+}

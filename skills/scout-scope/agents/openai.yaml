@@ -1,0 +1,6 @@
+interface:
+  display_name: "Scope Clarifier"
+  short_description: "Use when requirements are vague and must be clarified into precise goal, scope, constraints, and acceptance criteria. Do not use when the primary task is implementation, debugging, or deep repository analysis. English triggers: clarify requirements, define scope, define done criteria."
+  default_prompt: "$scout-scope"
+policy:
+  allow_implicit_invocation: true

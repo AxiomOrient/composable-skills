@@ -1,0 +1,95 @@
+{
+  "name": "plan-verify-order",
+  "title": "Verification Map Plan",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "plan-verify-order",
+  "description": "Define the narrow-to-broad verification map before changing code. Use when the immediate job is to decide how success will be verified, not to implement the change yet.",
+  "purpose": "Lock a concrete verification path before implementation work starts.",
+  "when_to_use": [
+    "Need to define how a code change will be verified before patching.",
+    "Need narrow-to-broad verification steps for a bounded task.",
+    "Need to separate smoke checks from broader quality gates."
+  ],
+  "do_not_use": [
+    "Implementation is already complete and only execution evidence is needed.",
+    "Need a general plan rather than verification design.",
+    "There is no bounded target change yet.",
+    "Need an exhaustive happy, edge, and failure case inventory rather than verification order and stop conditions."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope of the planned change."
+    },
+    {
+      "name": "CHANGE_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Behavior or structure that will change."
+    },
+    {
+      "name": "RISK_AREAS",
+      "type": "list",
+      "required": false,
+      "shape": "{RISK, WHY_IT_MATTERS}",
+      "description": "Known regression or safety concerns."
+    }
+  ],
+  "input_contract_notes": [
+    "CHANGE_GOAL should describe the bounded change being prepared, not the implementation method.",
+    "RISK_AREAS should identify concrete regression or safety concerns instead of broad anxiety terms such as `quality`."
+  ],
+  "structured_outputs": [
+    {
+      "name": "NARROW_CHECKS",
+      "type": "list",
+      "required": true,
+      "shape": "{CHECK, PURPOSE, PASS_SIGNAL}",
+      "description": "Cheapest local checks that confirm the change."
+    },
+    {
+      "name": "BROADER_CHECKS",
+      "type": "list",
+      "required": true,
+      "shape": "{CHECK, PURPOSE, PASS_SIGNAL}",
+      "description": "Broader tests or validations to run after local checks."
+    },
+    {
+      "name": "STOP_CONDITIONS",
+      "type": "list",
+      "required": true,
+      "shape": "{CONDITION, WHY_BLOCKING}",
+      "description": "Conditions that should block claiming success."
+    }
+  ],
+  "output_contract_notes": [
+    "NARROW_CHECKS should come first in execution order and should be the cheapest checks that can falsify the planned change quickly.",
+    "BROADER_CHECKS should cover wider confidence only after the narrow checks pass.",
+    "Use STOP_CONDITIONS for explicit block claims, not for generic caution notes."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "verification-map.v1"
+  ],
+  "neutrality_rules": [
+    "Do not mark a check sufficient if it does not cover the claimed change risk.",
+    "Separate required checks from optional confidence checks.",
+    "Keep verification steps executable and bounded."
+  ],
+  "execution_constraints": [
+    "Do not turn this skill into a full regression test inventory; focus on ordered verification path and stop conditions.",
+    "Prefer the smallest discriminating checks before broad suites or manual confidence work.",
+    "Keep each check directly tied to the stated change goal or risk area."
+  ],
+  "response_profile": "planning_doc",
+  "default_prompt": "$plan-verify-order",
+  "default_program": "[stages: preflight>detect>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: kent-beck | output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$plan-verify-order\nTARGET_SCOPE: src/auth\nCHANGE_GOAL: persist session across refresh",
+  "source_path": "skills/plan-verify-order",
+  "primary_lens": "kent-beck",
+  "lens_rationale": "Verification mapping should stage narrow checks before broader gates to keep feedback fast and safe."
+}

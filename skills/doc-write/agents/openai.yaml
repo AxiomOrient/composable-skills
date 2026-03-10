@@ -1,0 +1,6 @@
+interface:
+  display_name: "Write Docs"
+  short_description: "Documentation-only skill. Produce or refresh non-root documentation such as concept guides, architecture notes, usage docs, and module docs from evidence. Root README, GitHub-style onboarding, and multilingual publishing belong to doc-publish-readme. Do not implement code or perform review verdicts. English triggers: documentation, guide writing, architecture docs, docs generation."
+  default_prompt: "$doc-write"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,144 @@
+{
+  "name": "plan-how-to-build",
+  "title": "Technical Design Doc",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "plan-how-to-build",
+  "description": "Use when turning approved requirements into a buildable technical design with explicit boundaries, data and control flow, decisions, trade-offs, and verification paths. Do not use for product briefs, IA maps, or pure feature requirements.",
+  "purpose": "Translate approved product and feature intent into a buildable technical design that makes boundaries, flows, decisions, and verification explicit.",
+  "when_to_use": [
+    "Need a technical design before implementation starts.",
+    "Need to make component boundaries, data flow, and trade-offs explicit.",
+    "Need one design document that engineers can implement against and review."
+  ],
+  "do_not_use": [
+    "Need only high-level product framing or user problem definition.",
+    "Need only feature behavior, scope, and acceptance scenarios.",
+    "Need only information hierarchy or navigation structure.",
+    "Need only bounded dependency direction rules without a broader technical mechanism."
+  ],
+  "required_inputs": [
+    {
+      "name": "DESIGN_SCOPE",
+      "type": "feature|service|module|system",
+      "required": true,
+      "description": "Boundary the technical design governs."
+    },
+    {
+      "name": "IMPLEMENTATION_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Core behavior or capability the design must enable."
+    },
+    {
+      "name": "REQUIREMENT_SOURCES",
+      "type": "list",
+      "required": true,
+      "shape": "{REF, WHY_RELEVANT}",
+      "description": "Briefs, specs, or contracts that the design must satisfy."
+    },
+    {
+      "name": "SYSTEM_BOUNDARIES",
+      "type": "list",
+      "required": false,
+      "shape": "{BOUNDARY, RESPONSIBILITY}",
+      "description": "Known components or boundaries that must appear in the design."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Compatibility, performance, migration, policy, or operational constraints."
+    },
+    {
+      "name": "ROLLBACK_OR_MIGRATION",
+      "type": "list",
+      "required": false,
+      "shape": "{STEP, WHY}",
+      "description": "Rollback, migration, or rollout-sensitive steps that affect the design."
+    }
+  ],
+  "input_contract_notes": [
+    "REQUIREMENT_SOURCES should point to explicit upstream artifacts instead of relying on memory or broad verbal summaries.",
+    "SYSTEM_BOUNDARIES may be partial, but the final design must still surface the real responsibilities it introduces or touches.",
+    "CONSTRAINTS should name non-negotiable realities such as latency budgets, compatibility rules, or migration limits.",
+    "Use ROLLBACK_OR_MIGRATION only when it materially shapes the design, not as a catch-all implementation checklist."
+  ],
+  "structured_outputs": [
+    {
+      "name": "DESIGN_SUMMARY",
+      "type": "string",
+      "required": true,
+      "description": "One concise summary of the proposed design and its central trade-off."
+    },
+    {
+      "name": "BOUNDARY_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{BOUNDARY, RESPONSIBILITY}",
+      "description": "Components or boundaries and the responsibility each one owns."
+    },
+    {
+      "name": "DATA_AND_CONTROL_FLOW",
+      "type": "list",
+      "required": true,
+      "shape": "{FLOW, INPUT, OUTPUT}",
+      "description": "Important data or control flows that make the design understandable."
+    },
+    {
+      "name": "DECISIONS_AND_TRADEOFFS",
+      "type": "list",
+      "required": true,
+      "shape": "{DECISION, CHOSEN_OPTION, TRADEOFF}",
+      "description": "Key design decisions and what each decision costs or protects."
+    },
+    {
+      "name": "RISKS_AND_VERIFICATION",
+      "type": "list",
+      "required": true,
+      "shape": "{RISK, CHECK}",
+      "description": "Main implementation or rollout risks and the check that reduces each one."
+    },
+    {
+      "name": "MIGRATION_AND_ROLLBACK",
+      "type": "list",
+      "required": true,
+      "shape": "{STEP, WHY}",
+      "description": "Migration or rollback-sensitive steps that the design must respect."
+    }
+  ],
+  "output_contract_notes": [
+    "BOUNDARY_MAP should identify real ownership boundaries rather than generic layer names with no responsibilities.",
+    "DATA_AND_CONTROL_FLOW should make the main mechanism visible enough that reviewers can reason about correctness and cost.",
+    "DECISIONS_AND_TRADEOFFS should describe what was chosen and what was given up, not just restate the happy path.",
+    "RISKS_AND_VERIFICATION should connect each risk to the cheapest meaningful check."
+  ],
+  "artifacts_in": [
+    "plan-why-build-this.v1",
+    "spec-contract.v1",
+    "ia-map.v1"
+  ],
+  "artifacts_out": [
+    "plan-how-to-build.v1"
+  ],
+  "neutrality_rules": [
+    "Separate upstream requirements from the chosen solution mechanism.",
+    "Do not invent architectural complexity when a simpler mechanism satisfies the stated constraints.",
+    "If a design decision cannot be justified from the sources and constraints, mark it as an open decision instead of pretending it is settled."
+  ],
+  "execution_constraints": [
+    "Do not restate the entire product brief or feature spec; focus on how the system will satisfy the approved contract.",
+    "Do not reduce this skill to a dependency-rule checklist when the only missing artifact is target dependency direction.",
+    "Prefer the smallest design that satisfies the requirement sources and explicit constraints.",
+    "Keep boundaries, side effects, and trade-offs explicit instead of hiding them in polished prose."
+  ],
+  "response_profile": "design_contract",
+  "default_prompt": "$plan-how-to-build",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$plan-how-to-build\nDESIGN_SCOPE: feature\nIMPLEMENTATION_GOAL: 비밀번호 재설정 토큰 검증과 새 비밀번호 저장을 안전하게 처리한다\nREQUIREMENT_SOURCES:\n  - REF: docs/specs/password-reset.md\n    WHY_RELEVANT: 기능 요구사항과 예외 조건의 기준\nCONSTRAINTS:\n  - CONSTRAINT: 기존 사용자 테이블 스키마는 유지한다",
+  "source_path": "skills/plan-how-to-build",
+  "primary_lens": "hickey-carmack",
+  "lens_rationale": "Technical design docs should make boundaries, data flow, side effects, and trade-offs explicit enough that implementation can stay simple and reviewable."
+}

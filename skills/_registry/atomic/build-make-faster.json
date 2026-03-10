@@ -1,0 +1,86 @@
+{
+  "name": "build-make-faster",
+  "title": "Performance Optimizer",
+  "layer": "atomic",
+  "family": "implementation",
+  "job_type": "build-make-faster",
+  "description": "Use when performance bottlenecks require measurement, optimization, and before/after verification. Do not use when the task is general feature implementation or optimization guesses without measurement. English triggers: performance optimization, profiling, latency, memory optimization.",
+  "purpose": "Measure and improve a bounded performance bottleneck with comparable before/after evidence.",
+  "when_to_use": [
+    "Need measured performance optimization.",
+    "Need baseline, bottleneck evidence, and after-result in one path.",
+    "Need to optimize a bounded hot path or memory issue."
+  ],
+  "do_not_use": [
+    "Need general feature implementation.",
+    "Need only baseline capture before optimization.",
+    "Need performance review without applying changes."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|route|repo",
+      "required": true,
+      "description": "Optimization target."
+    },
+    {
+      "name": "METRIC_NAME",
+      "type": "latency|throughput|memory|custom",
+      "required": true,
+      "description": "Primary metric."
+    },
+    {
+      "name": "PERFORMANCE_BUDGET",
+      "type": "string",
+      "required": true,
+      "description": "Target threshold or expected improvement."
+    },
+    {
+      "name": "BASELINE_EVIDENCE",
+      "type": "list",
+      "required": true,
+      "description": "Benchmark, profile, or measurement inputs."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "METRIC_BASELINE",
+      "type": "object",
+      "required": true,
+      "description": "Baseline metric snapshot."
+    },
+    {
+      "name": "BOTTLENECK_EVIDENCE",
+      "type": "list",
+      "required": true,
+      "description": "Evidence of the bottleneck and chosen fix."
+    },
+    {
+      "name": "BEFORE_AFTER_RESULTS",
+      "type": "object",
+      "required": true,
+      "description": "Comparable before/after measurement results."
+    }
+  ],
+  "artifacts_in": [
+    "perf-baseline.v1"
+  ],
+  "artifacts_out": [
+    "performance-report.v1"
+  ],
+  "neutrality_rules": [
+    "No optimization claim without comparable before/after evidence.",
+    "Separate baseline capture from optimization ideas.",
+    "If measurements are noisy or incompatible, mark them insufficient."
+  ],
+  "response_profile": "performance_report",
+  "default_prompt": "$build-make-faster",
+  "default_program": "[stages: preflight>detect>analyze>plan>implement>verify>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,security},perf-aware,safety-gates,deterministic-output |\n lens: goldratt-toc |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/build-make-faster",
+  "split_candidates": [
+    "scout-baseline"
+  ],
+  "primary_lens": "goldratt-toc",
+  "lens_rationale": "Performance work should identify the bottleneck, measure it, and optimize the real constraint first."
+}

@@ -1,0 +1,143 @@
+{
+  "name": "ask-fix-prompt",
+  "title": "Answer Repair",
+  "layer": "atomic",
+  "family": "question",
+  "job_type": "ask-fix-prompt",
+  "description": "Diagnose why an answer was wrong, shallow, or structurally weak, then produce the minimum prompt repair. Trigger when the user says the answer is wrong, missed something, or needs a feedback-and-repair loop. Do not trigger for first-pass answering or coding work.",
+  "purpose": "Turn a failed answer into a controlled repair loop that explains the failure and proposes the smallest useful question change.",
+  "when_to_use": [
+    "Already received a weak, wrong, or structurally off-target answer.",
+    "Need to explain what was missing before retrying.",
+    "Need the minimum question or prompt delta instead of a full redesign."
+  ],
+  "do_not_use": [
+    "Have not yet asked the original question.",
+    "Need code editing, repository analysis, or implementation.",
+    "Need a first-pass question design rather than repair."
+  ],
+  "required_inputs": [
+    {
+      "name": "TOPIC",
+      "type": "string",
+      "required": true,
+      "description": "Original topic."
+    },
+    {
+      "name": "QUESTION_OR_STACK",
+      "type": "string|question-stack.v1",
+      "required": true,
+      "description": "Original question or question stack."
+    },
+    {
+      "name": "BAD_ANSWER",
+      "type": "string",
+      "required": true,
+      "description": "Answer that failed."
+    },
+    {
+      "name": "GOAL",
+      "type": "repair-after-failure",
+      "required": true,
+      "description": "Repair intent."
+    }
+  ],
+  "input_contract_notes": [
+    "BAD_ANSWER should contain the actual failed answer, not only a complaint about it.",
+    "QUESTION_OR_STACK should preserve the original ask so the repair can stay minimal.",
+    "GOAL is fixed to repair-after-failure and should not be overloaded with broader redesign intent."
+  ],
+  "structured_outputs": [
+    {
+      "name": "FAILURE_CLASS",
+      "type": "scope-miss|evidence-gap|format-mismatch|reasoning-gap|inconclusive",
+      "required": true,
+      "allowed_values": [
+        "scope-miss",
+        "evidence-gap",
+        "format-mismatch",
+        "reasoning-gap",
+        "inconclusive"
+      ],
+      "description": "Failure class from the repair playbook."
+    },
+    {
+      "name": "WHY_WRONG",
+      "type": "string",
+      "required": true,
+      "description": "Why the answer failed."
+    },
+    {
+      "name": "WHAT_WAS_MISSING",
+      "type": "list",
+      "required": true,
+      "shape": "{MISSING, WHY_IT_MATTERS}",
+      "description": "Missing terms, disagreements, evidence, or output constraints."
+    },
+    {
+      "name": "MINIMAL_QUESTION_DELTA",
+      "type": "list",
+      "required": true,
+      "shape": "{CHANGE, WHY}",
+      "description": "Smallest question-level changes likely to fix the failure."
+    },
+    {
+      "name": "REPAIRED_PROMPT",
+      "type": "string",
+      "required": true,
+      "description": "Repaired prompt or repaired question stack."
+    },
+    {
+      "name": "RE_RUN_RECOMMENDATION",
+      "type": "string",
+      "required": true,
+      "description": "Whether to re-run ask, map, or broader question redesign."
+    }
+  ],
+  "output_contract_notes": [
+    "Use FAILURE_CLASS=inconclusive when the supplied BAD_ANSWER does not provide enough evidence to diagnose a specific failure mode.",
+    "MINIMAL_QUESTION_DELTA may be an empty list when the original question is still sound and the failure came from answer execution rather than prompt shape.",
+    "REPAIRED_PROMPT should preserve useful parts of the original question instead of rewriting everything by default."
+  ],
+  "artifacts_in": [
+    "question-stack.v1"
+  ],
+  "artifacts_out": [
+    "repair-playbook.v2"
+  ],
+  "neutrality_rules": [
+    "Explain the failure before proposing a fix.",
+    "Prefer the smallest prompt delta that addresses the failure.",
+    "Preserve useful parts of the original question instead of redesigning by default.",
+    "If the failure evidence is weak, say inconclusive instead of inventing missing requirements."
+  ],
+  "execution_constraints": [
+    "Do not escalate to a broader redesign unless the failure is clearly structural.",
+    "Keep the repair delta narrowly tied to the observed failure mode.",
+    "Do not smuggle a new preferred answer into the repaired prompt."
+  ],
+  "response_profile": "repair_report",
+  "default_prompt": "$ask-fix-prompt",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: feynman | output: md(contract=v1)]",
+  "explicit_only": false,
+  "required_refs": [
+    "references/repair-playbook.md",
+    "references/question-quality-rubric.md"
+  ],
+  "procedure": [
+    "Classify the failure using the repair playbook.",
+    "State why the answer failed and what was missing.",
+    "Produce the minimum question change likely to fix the failure.",
+    "Emit a repaired prompt only if a minimal delta is insufficient by itself.",
+    "Recommend the narrowest upstream step that should be re-run."
+  ],
+  "mandatory_rules": [
+    "Always explain why the answer failed before proposing a fix.",
+    "Keep the repair delta as small as possible.",
+    "Re-run broader question design only when the failure is structural."
+  ],
+  "example_invocation": "$ask-fix-prompt\nTOPIC: RAG vs long context\nGOAL: repair-after-failure\nQUESTION_OR_STACK: <previous prompt>\nBAD_ANSWER: <model answer>",
+  "source_path": "skills/ask-fix-prompt",
+  "primary_lens": "feynman",
+  "lens_rationale": "Repair by explaining plainly why the answer failed and what minimum corrective question delta is needed."
+}

@@ -1,0 +1,87 @@
+{
+  "name": "doc-find-all",
+  "title": "Doc Inventory Scan",
+  "layer": "atomic",
+  "family": "docs",
+  "job_type": "doc-find-all",
+  "description": "Inventory documentation files, classify their status, and expose orphan, duplicate, or stale docs before curation. Use when the immediate job is inventory, not rewriting docs yet.",
+  "purpose": "Create an evidence-backed documentation inventory before curation or refresh work.",
+  "when_to_use": [
+    "Need to know which docs are active, stale, duplicate, or orphaned.",
+    "Need a bounded documentation inventory before curation.",
+    "Need evidence before recommending merges, moves, or deletes."
+  ],
+  "do_not_use": [
+    "Need to write the README or guide content directly.",
+    "Need runtime code changes.",
+    "The target scope contains no documentation set to inventory."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|docs-folder|repo",
+      "required": true,
+      "description": "Documentation scope to inventory."
+    },
+    {
+      "name": "INVENTORY_GOAL",
+      "type": "cleanup|navigation|coverage|mixed",
+      "required": true,
+      "description": "Why the inventory is being created."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_SCOPE should be a real documentation set, not a broad repo area with no docs boundary.",
+    "INVENTORY_GOAL should explain why the inventory is being created so stale, duplicate, and coverage signals can be prioritized correctly."
+  ],
+  "structured_outputs": [
+    {
+      "name": "DOC_INVENTORY",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, STATUS, EVIDENCE}",
+      "description": "Document records with status and evidence."
+    },
+    {
+      "name": "ORPHAN_OR_DUPLICATE_SET",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, ISSUE, EVIDENCE}",
+      "description": "Docs that appear stale, orphaned, or duplicated."
+    },
+    {
+      "name": "NEXT_CURATION_TARGETS",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, WHY_NEXT}",
+      "description": "Highest-value docs to curate next."
+    }
+  ],
+  "output_contract_notes": [
+    "DOC_INVENTORY should distinguish observed status from inferred cleanup priority.",
+    "ORPHAN_OR_DUPLICATE_SET may be empty when the current doc set is clean enough.",
+    "NEXT_CURATION_TARGETS should stay bounded to the immediate next doc work instead of a generic backlog."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "doc-inventory.v1"
+  ],
+  "neutrality_rules": [
+    "Read docs before classifying them stale or duplicate.",
+    "Keep delete or archive conclusions tentative until evidence is explicit.",
+    "Separate navigation problems from content-quality problems."
+  ],
+  "execution_constraints": [
+    "Do not rewrite docs from this skill; inventory only.",
+    "Keep stale or duplicate classifications tied to explicit evidence such as overlap, missing links, or outdated references.",
+    "Prefer the smallest useful inventory that supports the stated inventory goal."
+  ],
+  "response_profile": "documentation_report",
+  "default_prompt": "$doc-find-all",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: nielsen-norman | output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$doc-find-all\nTARGET_SCOPE: docs\nINVENTORY_GOAL: cleanup",
+  "source_path": "skills/doc-find-all",
+  "primary_lens": "nielsen-norman",
+  "lens_rationale": "Doc inventory should focus on discoverability, duplication, and navigation gaps."
+}

@@ -1,0 +1,149 @@
+{
+  "name": "plan-task-breakdown",
+  "title": "Task Breakdown Planner",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "plan-task-breakdown",
+  "description": "Planning-only skill. Generate/update implementation plan and tasks documents. Do not implement or review code here. English triggers: implementation planning, plan document, task breakdown.",
+  "purpose": "Create execution-ready plan and task artifacts with stable task ids and explicit verification paths.",
+  "when_to_use": [
+    "Need implementation-ready plan and task documents.",
+    "Need execution phases, decision gates, and verification strategy before coding.",
+    "Need to update existing plan/task artifacts in place."
+  ],
+  "do_not_use": [
+    "Need direct code changes.",
+    "Need only scope normalization before planning.",
+    "Need review verdicts or release judgement.",
+    "Need product framing, information architecture, feature specification, or technical design as the primary artifact."
+  ],
+  "required_inputs": [
+    {
+      "name": "PLANNING_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "What the work must deliver."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo|artifact",
+      "required": true,
+      "description": "Bounded scope of the planned work."
+    },
+    {
+      "name": "DONE_CONDITION",
+      "type": "list",
+      "required": true,
+      "shape": "{CONDITION}",
+      "description": "Observable completion contract."
+    },
+    {
+      "name": "PLAN_OUTPUT_PATH",
+      "type": "path",
+      "required": true,
+      "description": "Exact path where the implementation plan must be created or updated."
+    },
+    {
+      "name": "TASKS_OUTPUT_PATH",
+      "type": "path",
+      "required": true,
+      "description": "Exact path where the task table must be created or updated."
+    },
+    {
+      "name": "ARTIFACT_MODE",
+      "type": "create|update",
+      "required": true,
+      "allowed_values": [
+        "create",
+        "update"
+      ],
+      "description": "Whether the planning artifacts are being created from scratch or updated in place."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Compatibility, rollout, time, safety, and non-goal constraints."
+    },
+    {
+      "name": "EXISTING_ARTIFACTS",
+      "type": "list",
+      "required": false,
+      "required_when": "ARTIFACT_MODE=update",
+      "shape": "{PATH, ROLE}",
+      "description": "Existing planning docs that must be updated in place."
+    }
+  ],
+  "input_contract_notes": [
+    "PLANNING_GOAL should describe one bounded delivery target, not a mixed roadmap.",
+    "DONE_CONDITION should contain observable completion checks rather than implementation ideas.",
+    "When ARTIFACT_MODE=update, EXISTING_ARTIFACTS should point to the exact plan or task files that must be edited in place.",
+    "DONE_CONDITION should reflect the core user-visible or contract-visible outcome, not optional polish or aesthetic cleanup.",
+    "Use planner for execution artifacts only; if the primary missing artifact is a brief, IA map, feature spec, or technical design doc, create that upstream document first."
+  ],
+  "structured_outputs": [
+    {
+      "name": "IMPLEMENTATION_PLAN_PATH",
+      "type": "string",
+      "required": true,
+      "description": "Saved path to the implementation plan."
+    },
+    {
+      "name": "TASKS_ARTIFACT_PATH",
+      "type": "string",
+      "required": true,
+      "description": "Saved path to the task artifact."
+    },
+    {
+      "name": "TASK_ROWS",
+      "type": "list",
+      "required": true,
+      "shape": "{TASK_ID, ACTION, DONE_WHEN, EVIDENCE_REQUIRED, DEPENDS_ON}",
+      "description": "Stable task rows with done criteria and evidence expectations."
+    },
+    {
+      "name": "DECISION_GATES",
+      "type": "list",
+      "required": true,
+      "shape": "{GATE_NAME, CHECK, PASS_CONDITION, ON_FAIL}",
+      "description": "Decision points and verification gates for the work."
+    }
+  ],
+  "output_contract_notes": [
+    "TASK_ROWS should remain stable enough that downstream execution can refer to TASK_ID without renumbering during one delivery cycle.",
+    "DECISION_GATES should mark only true go/no-go checks, not generic reminders.",
+    "IMPLEMENTATION_PLAN_PATH must match the actual saved artifact path used by the planning run.",
+    "TASKS_ARTIFACT_PATH must match the actual saved task artifact path used by the planning run.",
+    "TASK_ROWS should prioritize the shortest path to DONE_CONDITION and push non-essential cleanup out of the critical path unless it is required for correctness or clarity."
+  ],
+  "artifacts_in": [
+    "scope-contract.v1"
+  ],
+  "artifacts_out": [
+    "implementation-plan.md.v1",
+    "tasks.md.v1"
+  ],
+  "neutrality_rules": [
+    "Separate explicit requirements from planning assumptions.",
+    "If scope or done condition is unresolved, keep it as an open edge instead of guessing.",
+    "Keep task breakdown bounded to the stated goal and constraints."
+  ],
+  "execution_constraints": [
+    "Do not implement code or issue review verdicts from this skill; planning artifacts only.",
+    "If scope, done condition, or constraints are unresolved, leave an explicit open edge instead of smoothing it away.",
+    "Keep the task table bounded to the supplied goal and constraints rather than expanding into adjacent backlog.",
+    "Prefer the simplest plan that satisfies the explicit goal and core user outcome; avoid adding tasks that improve taste but not the delivery contract."
+  ],
+  "response_profile": "planning_doc",
+  "default_prompt": "$plan-task-breakdown",
+  "default_program": "[stages: preflight>detect>analyze@panel(3)>plan>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: eisenhower |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/plan-task-breakdown",
+  "split_candidates": [
+    "scout-boundaries",
+    "plan-verify-order"
+  ],
+  "primary_lens": "eisenhower",
+  "lens_rationale": "Planning should expose priority, critical path, and decision gates before execution."
+}

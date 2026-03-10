@@ -1,0 +1,105 @@
+{
+  "name": "wf-ask-sharpen",
+  "title": "Sharpen Question Workflow",
+  "layer": "workflow",
+  "family": "question-workflow",
+  "job_type": "wf-ask-sharpen",
+  "description": "Workflow skill that turns a fuzzy topic into a clear problem statement, a usable question stack, and two challenge questions. Use when the user wants a question that is actually worth asking, not just a longer prompt.",
+  "purpose": "Compose the core question-design path into one explicit ready-to-ask workflow.",
+  "when_to_use": [
+    "Need a question that is ready to ask, not just a rough draft.",
+    "Need assumption-challenging reframing after the first question stack is built.",
+    "Need a stable named workflow for practical question design."
+  ],
+  "do_not_use": [
+    "Already have a clear question and only need repair after a failed answer.",
+    "Need repair-after-failure rather than first-pass question preparation.",
+    "Need code or repository work."
+  ],
+  "required_inputs": [
+    {
+      "name": "TOPIC",
+      "type": "string",
+      "required": true,
+      "description": "Raw topic or rough thought to prepare into a strong question."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "string",
+      "required": true,
+      "description": "Target reader or decision-maker for the future answer."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "description": "Scope, evidence, time, or deliverable constraints."
+    }
+  ],
+  "input_contract_notes": [
+    "TOPIC can be rough; this workflow exists to turn it into a sharper ask.",
+    "CONSTRAINTS should be real limits that change the shape of the question, not a long wishlist."
+  ],
+  "structured_outputs": [
+    {
+      "name": "PROBLEM_STATEMENT",
+      "type": "string",
+      "required": true,
+      "description": "Single clear problem-definition sentence."
+    },
+    {
+      "name": "CORE_QUESTION",
+      "type": "string",
+      "required": true,
+      "description": "Main question to ask first."
+    },
+    {
+      "name": "CHALLENGE_QUESTIONS",
+      "type": "list",
+      "required": true,
+      "shape": "{QUESTION, WHY_IT_CHANGES_THE_VIEW}",
+      "description": "Two challenge questions that test or widen the framing."
+    },
+    {
+      "name": "EXPANDED_ATOMIC_PATH",
+      "type": "list",
+      "required": true,
+      "shape": "{SKILL}",
+      "description": "Expanded atomic path used by the workflow."
+    }
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "ask-find-question.v1",
+    "question-stack.v1",
+    "ask-flip-assumption.v1"
+  ],
+  "neutrality_rules": [
+    "Preserve the neutrality rules of each underlying atomic skill.",
+    "Do not present the question as answer-worthy if the workflow still exposes major framing confusion.",
+    "Keep workflow output explicit enough for downstream repair loops."
+  ],
+  "output_contract_notes": [
+    "CHALLENGE_QUESTIONS should force the user to test assumptions rather than decorate the prompt.",
+    "EXPANDED_ATOMIC_PATH must preserve the real execution order."
+  ],
+  "execution_constraints": [
+    "Keep the final question set short enough that a user can ask it immediately.",
+    "Prefer challenge questions that materially change the answer over stylistic rewording."
+  ],
+  "response_profile": "question_stack",
+  "default_prompt": "$wf-ask-sharpen",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: popper-falsification | output: md(contract=v1)]",
+  "explicit_only": false,
+  "expands_to": [
+    "$ask-find-question",
+    "$ask-break-it-down",
+    "$ask-flip-assumption"
+  ],
+  "mandatory_rules": [
+    "Expose the expanded atomic path explicitly.",
+    "Keep the final output askable without requiring another redesign pass."
+  ],
+  "example_invocation": "$wf-ask-sharpen\nTOPIC: 우리 팀에 AI 코드 리뷰 도구를 도입하면 실제로 생산성이 좋아질까?\nAUDIENCE: engineering manager",
+  "source_path": "skills/wf-ask-sharpen"
+}

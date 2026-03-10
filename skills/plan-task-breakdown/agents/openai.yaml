@@ -1,0 +1,6 @@
+interface:
+  display_name: "Task Breakdown Planner"
+  short_description: "Planning-only skill. Generate/update implementation plan and tasks documents. Do not implement or review code here. English triggers: implementation planning, plan document, task breakdown."
+  default_prompt: "$plan-task-breakdown"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Duplication Scan"
+  short_description: "Find behavior-level, structure-level, or logic-level duplication in a bounded scope. Use when a module, folder, or repo needs explicit duplication analysis before simplification or refactoring."
+  default_prompt: "$tidy-find-copies"
+policy:
+  allow_implicit_invocation: true

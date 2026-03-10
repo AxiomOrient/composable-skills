@@ -1,0 +1,79 @@
+{
+  "name": "tidy-find-copies",
+  "title": "Duplication Scan",
+  "layer": "atomic",
+  "family": "check-merge-ready",
+  "job_type": "tidy-find-copies",
+  "description": "Find behavior-level, structure-level, or logic-level duplication in a bounded scope. Use when a module, folder, or repo needs explicit duplication analysis before simplification or refactoring.",
+  "purpose": "Identify duplicated logic or structure that can be consolidated without changing behavior.",
+  "when_to_use": [
+    "Need evidence-backed duplication findings before simplification or refactoring.",
+    "Need to know whether similar code is accidental copy-paste or justified variation.",
+    "Need a bounded duplication report for one module, folder, or repo."
+  ],
+  "do_not_use": [
+    "Need a general review without duplication focus.",
+    "Need to implement refactoring immediately without first identifying duplication boundaries.",
+    "The target scope is too broad to compare meaningfully without narrowing."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Where to scan for duplication."
+    },
+    {
+      "name": "DUPLICATION_KIND",
+      "type": "logic|structure|flow|mixed",
+      "required": true,
+      "description": "Which kind of duplication to prioritize."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "DUPLICATION_CLUSTERS",
+      "type": "list",
+      "required": true,
+      "description": "Grouped duplication candidates with evidence locations."
+    },
+    {
+      "name": "SAFE_MERGE_OPPORTUNITIES",
+      "type": "list",
+      "required": true,
+      "description": "Clusters likely safe to consolidate."
+    },
+    {
+      "name": "KEEP_SEPARATE_REASONS",
+      "type": "list",
+      "required": true,
+      "description": "Reasons similar-looking code should remain separate."
+    }
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "duplication-report.v1"
+  ],
+  "neutrality_rules": [
+    "Treat similar code as duplication only when behavior or structure truly overlaps.",
+    "Separate safe merge opportunities from look-alike but justified variation.",
+    "Do not recommend abstraction when it would hide useful domain differences."
+  ],
+  "response_profile": "review_findings",
+  "default_prompt": "$tidy-find-copies",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "explicit_only": false,
+  "procedure": [
+    "Identify repeated flows, logic blocks, or structurally parallel modules in the target scope.",
+    "Group them into duplication clusters based on behavior, not only syntax.",
+    "Separate clusters that are safe to consolidate from cases where domain differences matter."
+  ],
+  "mandatory_rules": [
+    "Report evidence locations for every duplication cluster.",
+    "Do not call parallel structure a bug by default."
+  ],
+  "example_invocation": "$tidy-find-copies\nTARGET_SCOPE: src/payments\nDUPLICATION_KIND: flow",
+  "source_path": "skills/tidy-find-copies",
+  "primary_lens": "hickey-carmack",
+  "lens_rationale": "Duplication scanning should distinguish real duplication from justified variation."
+}

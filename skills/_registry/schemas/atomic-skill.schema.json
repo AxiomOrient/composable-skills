@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Atomic Skill",
+  "type": "object",
+  "required": [
+    "name",
+    "layer",
+    "family",
+    "job_type",
+    "description",
+    "purpose",
+    "when_to_use",
+    "do_not_use",
+    "required_inputs",
+    "structured_outputs",
+    "artifacts_in",
+    "artifacts_out",
+    "neutrality_rules",
+    "primary_lens",
+    "lens_rationale",
+    "response_profile",
+    "default_prompt",
+    "explicit_only"
+  ],
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "layer": { "const": "atomic" },
+    "family": { "type": "string", "minLength": 1 },
+    "job_type": { "type": "string", "minLength": 1 },
+    "description": { "type": "string", "minLength": 1 },
+    "purpose": { "type": "string", "minLength": 1 },
+    "when_to_use": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+    "do_not_use": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+    "required_inputs": { "$ref": "#/$defs/fieldList" },
+    "structured_outputs": { "$ref": "#/$defs/fieldList" },
+    "artifacts_in": { "type": "array", "items": { "type": "string" } },
+    "artifacts_out": { "type": "array", "items": { "type": "string" } },
+    "neutrality_rules": { "type": "array", "items": { "type": "string", "minLength": 1 }, "minItems": 1 },
+    "primary_lens": { "type": "string", "minLength": 1 },
+    "lens_rationale": { "type": "string", "minLength": 1 },
+    "response_profile": { "type": "string", "minLength": 1 },
+    "default_prompt": { "type": "string", "minLength": 1 },
+    "default_program": { "type": "string", "minLength": 1 },
+    "explicit_only": { "type": "boolean" },
+    "input_contract_notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "output_contract_notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "execution_constraints": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "required_refs": { "type": "array", "items": { "type": "string" } },
+    "asset_template": { "type": "string" },
+    "source_path": { "type": "string" },
+    "split_candidates": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "required": ["name", "type", "required", "description"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "type": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" },
+        "description": { "type": "string", "minLength": 1 },
+        "required_when": { "type": "string", "minLength": 1 },
+        "exclusive_with": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 },
+              "minItems": 1
+            }
+          ]
+        },
+        "allowed_values": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1
+        },
+        "shape": { "type": "string", "minLength": 1 }
+      }
+    },
+    "fieldList": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/field" },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": true
+}

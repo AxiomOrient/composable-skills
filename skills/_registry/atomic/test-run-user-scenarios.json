@@ -1,0 +1,140 @@
+{
+  "name": "test-run-user-scenarios",
+  "layer": "atomic",
+  "family": "test",
+  "job_type": "test-run-user-scenarios",
+  "description": "Test-category scenario validation skill. Simulate realistic users and agents running the framework through happy, failure, and weird cases, then report where the skill surface is confusing, brittle, or missing guardrails.",
+  "purpose": "Simulate real user and agent usage with concrete inputs and expected outputs, then expose where the framework breaks, confuses, or under-specifies behavior.",
+  "when_to_use": [
+    "Need to validate the framework against realistic use cases instead of only happy-path examples.",
+    "Need concrete user and agent scenarios with varied inputs, expected outputs, and observable pass/fail signals.",
+    "Need to include success cases, failure cases, and weird-but-plausible misuse cases before release or major refactors."
+  ],
+  "do_not_use": [
+    "Need unit or integration test code written directly.",
+    "Need only narrow test-gap analysis for one code path.",
+    "Need final contract verification after the work is already complete."
+  ],
+  "required_inputs": [
+    {
+      "name": "SYSTEM_UNDER_TEST",
+      "type": "skill|workflow|macro-surface|skill-pack",
+      "required": true,
+      "description": "Which framework surface is being exercised."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|folder|repo|artifact",
+      "required": true,
+      "description": "Exact area under test."
+    },
+    {
+      "name": "PRIMARY_USERS",
+      "type": "list",
+      "required": true,
+      "shape": "{ROLE, GOAL, CONTEXT}",
+      "description": "Realistic user or agent personas and the job each one is trying to finish."
+    },
+    {
+      "name": "SCENARIO_COUNT",
+      "type": "integer",
+      "required": false,
+      "description": "Target number of scenarios to generate and run. Default to 6 when omitted."
+    },
+    {
+      "name": "FAILURE_CLASSES",
+      "type": "list",
+      "required": false,
+      "shape": "{CLASS}",
+      "description": "Failure or misuse classes to force into the scenario set."
+    },
+    {
+      "name": "KNOWN_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Scope, release, or realism constraints for the scenario run."
+    }
+  ],
+  "input_contract_notes": [
+    "PRIMARY_USERS should be grounded in plausible roles and goals, not fictional filler personas with no concrete job.",
+    "SCENARIO_COUNT should stay small enough that each scenario can actually be exercised and observed.",
+    "FAILURE_CLASSES should force meaningful breakage or misuse paths, not random nonsense with no learning value."
+  ],
+  "structured_outputs": [
+    {
+      "name": "USE_CASE_MATRIX",
+      "type": "list",
+      "required": true,
+      "shape": "{SCENARIO, USER_ROLE, GOAL, INPUTS, EXPECTED_OUTPUT_SIGNAL}",
+      "description": "Concrete happy-path use cases with explicit inputs and expected signals."
+    },
+    {
+      "name": "FAILURE_CASES",
+      "type": "list",
+      "required": true,
+      "shape": "{SCENARIO, BAD_INPUT_OR_CONTEXT, EXPECTED_BREAKPOINT}",
+      "description": "Realistic failure or misuse scenarios that should reveal brittle behavior or bad affordances."
+    },
+    {
+      "name": "ODD_CASES",
+      "type": "list",
+      "required": true,
+      "shape": "{SCENARIO, WHY_PLAUSIBLE, WHAT_MIGHT_GO_WRONG}",
+      "description": "Weird but plausible scenarios worth exercising."
+    },
+    {
+      "name": "EXECUTION_LOG",
+      "type": "list",
+      "required": true,
+      "shape": "{SCENARIO, ACTION_TAKEN, OBSERVED_RESULT, STATUS}",
+      "description": "What was actually exercised and what happened."
+    },
+    {
+      "name": "USABILITY_FINDINGS",
+      "type": "list",
+      "required": true,
+      "shape": "{ISSUE, LOCATION, WHY_IT_CONFUSES_OR_FAILS}",
+      "description": "Framework surface problems found through scenario execution."
+    },
+    {
+      "name": "NEXT_FIXES",
+      "type": "list",
+      "required": true,
+      "shape": "{FIX, WHY_NOW, SMALLEST_CHECK_AFTER_FIX}",
+      "description": "Smallest fixes or follow-up checks that improve real-world usability."
+    }
+  ],
+  "output_contract_notes": [
+    "USE_CASE_MATRIX should use concrete prompts, macros, or inputs that a real caller could plausibly produce.",
+    "EXECUTION_LOG must separate observed results from expected results; do not backfill success without an actual run or observable signal.",
+    "FAILURE_CASES and ODD_CASES should exist even when the happy path passes."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "scenario-test-report.v1"
+  ],
+  "neutrality_rules": [
+    "Do not invent passing outcomes for scenarios that were not actually exercised.",
+    "Prefer plausible misuse and ambiguity over theatrical nonsense.",
+    "Separate framework confusion, skill-contract ambiguity, and parser/runtime failure."
+  ],
+  "execution_constraints": [
+    "Act as both caller and agent when constructing and exercising scenarios.",
+    "Include at least one happy-path, one failure-path, and one weird-but-plausible case in every run.",
+    "Prefer realistic prompts and inputs that a maintainer, contributor, or first-time user would actually type."
+  ],
+  "response_profile": "analysis_report",
+  "default_prompt": "$test-run-user-scenarios",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/test-run-user-scenarios",
+  "split_candidates": [
+    "test-design-cases",
+    "test-find-gaps",
+    "check-delivered"
+  ],
+  "primary_lens": "kahneman-tversky",
+  "lens_rationale": "Scenario testing should resist idealized happy-path bias and instead check what real callers are actually likely to do.",
+  "example_invocation": "$compose + $test-run-user-scenarios + @skills + [Simulate a first-time maintainer, a rushed releaser, and a confused docs contributor choosing skills for real work. Include happy, failure, and weird cases.]"
+}

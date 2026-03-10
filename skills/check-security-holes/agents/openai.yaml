@@ -1,0 +1,6 @@
+interface:
+  display_name: "Security"
+  short_description: "Use when running security audits, threat modeling, or vulnerability verification with prioritized findings. Do not use when non-security implementation, generic debugging, or pure performance analysis is the primary task. English triggers: security audit, vulnerability check, threat model."
+  default_prompt: "$check-security-holes"
+policy:
+  allow_implicit_invocation: true

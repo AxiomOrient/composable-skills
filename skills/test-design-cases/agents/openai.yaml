@@ -1,0 +1,6 @@
+interface:
+  display_name: "Test Design Cases"
+  short_description: "Test-category design skill. Define the exact happy-path, edge-case, and failure-path matrix before writing or extending tests."
+  default_prompt: "$test-design-cases"
+policy:
+  allow_implicit_invocation: true

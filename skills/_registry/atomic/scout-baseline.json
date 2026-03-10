@@ -1,0 +1,98 @@
+{
+  "name": "scout-baseline",
+  "title": "Scout Baseline",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "scout-baseline",
+  "description": "Capture the exact performance metric, baseline, and budget before optimization. Use when the immediate job is to define and record the baseline, not to optimize yet.",
+  "purpose": "Prevent measurement-free optimization by locking metric, budget, and baseline first.",
+  "when_to_use": [
+    "Need to capture a performance baseline before optimization.",
+    "Need a metric definition and budget for perf work.",
+    "Need repeatable before/after measurement inputs."
+  ],
+  "do_not_use": [
+    "Optimization is already measured and only code changes remain.",
+    "Need general performance review rather than baseline capture.",
+    "There is no concrete metric to optimize."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Optimization target."
+    },
+    {
+      "name": "METRIC_NAME",
+      "type": "latency|throughput|memory|custom",
+      "required": true,
+      "description": "Primary performance metric."
+    },
+    {
+      "name": "MEASUREMENT_METHOD",
+      "type": "command|benchmark|profile|custom",
+      "required": true,
+      "description": "How the baseline will be captured."
+    },
+    {
+      "name": "BUDGET_HINT",
+      "type": "string",
+      "required": false,
+      "description": "Known target budget or threshold if one already exists."
+    }
+  ],
+  "input_contract_notes": [
+    "METRIC_NAME should identify one primary metric so the baseline is comparable later.",
+    "MEASUREMENT_METHOD should be reproducible enough that before-and-after comparison is meaningful.",
+    "If no explicit budget exists yet, BUDGET_HINT may be omitted and the output budget should be marked provisional."
+  ],
+  "structured_outputs": [
+    {
+      "name": "METRIC_DEFINITION",
+      "type": "string",
+      "required": true,
+      "description": "Exact metric definition."
+    },
+    {
+      "name": "BASELINE_RESULT",
+      "type": "object",
+      "required": true,
+      "shape": "{VALUE, UNIT, METHOD, ENVIRONMENT}",
+      "description": "Baseline measurement result."
+    },
+    {
+      "name": "PERFORMANCE_BUDGET",
+      "type": "string",
+      "required": true,
+      "description": "Target budget or success threshold."
+    }
+  ],
+  "output_contract_notes": [
+    "BASELINE_RESULT should identify the environment and method so later measurements are comparable.",
+    "PERFORMANCE_BUDGET may be provisional when no explicit budget exists yet, but the basis should be stated.",
+    "METRIC_DEFINITION should stay specific enough that later optimization work does not quietly switch metrics."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "perf-baseline.v1"
+  ],
+  "neutrality_rules": [
+    "Keep metric definition and baseline separate from optimization ideas.",
+    "Mark noisy or unstable baseline measurements explicitly.",
+    "Do not compare incompatible metrics or environments."
+  ],
+  "execution_constraints": [
+    "Do not turn this skill into optimization planning or code change work.",
+    "Prefer one stable metric and one reproducible capture path over multiple loosely comparable numbers.",
+    "If the measurement is noisy, report the instability instead of pretending the baseline is precise."
+  ],
+  "response_profile": "performance_report",
+  "default_prompt": "$scout-baseline",
+  "default_program": "[stages: preflight>detect>analyze>verify>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,perf-aware,deterministic-output | lens: goldratt-toc | output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$scout-baseline\nTARGET_SCOPE: src/search\nMETRIC_NAME: latency\nMEASUREMENT_METHOD: benchmark",
+  "source_path": "skills/scout-baseline",
+  "primary_lens": "goldratt-toc",
+  "lens_rationale": "Capture the current constraint and throughput baseline before optimizing."
+}

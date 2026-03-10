@@ -1,0 +1,6 @@
+interface:
+  display_name: "Question Clarify"
+  short_description: "Turn fuzzy intent into one clear problem statement and a small question handle. Use when the user does not know how to ask yet, feels mentally foggy, or needs the question boundary tightened before deeper design."
+  default_prompt: "$ask-find-question"
+policy:
+  allow_implicit_invocation: true

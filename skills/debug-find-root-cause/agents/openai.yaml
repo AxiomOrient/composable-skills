@@ -1,0 +1,6 @@
+interface:
+  display_name: "Debug"
+  short_description: "Neutral debugging skill for concrete failures. Use when a concrete failure, bug, or crash requires reproducible debugging and root-cause analysis. Do not use when feature implementation, broad design planning, or non-failure analysis is the primary intent. English triggers: debug, crash analysis, root-cause."
+  default_prompt: "$debug-find-root-cause"
+policy:
+  allow_implicit_invocation: true

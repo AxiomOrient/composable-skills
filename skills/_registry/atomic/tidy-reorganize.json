@@ -1,0 +1,90 @@
+{
+  "name": "tidy-reorganize",
+  "title": "Structure Refactor",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "tidy-reorganize",
+  "description": "Use when planning behavior-preserving structural refactoring, module-boundary cleanup, or dependency hygiene in a bounded scope. For broad complexity reduction (data model reshaping, naming/tree simplification, side-effect isolation), use simplifier instead. Do not use when adding new features or fixing production incidents. English triggers: refactor plan, structural cleanup, dependency hygiene.",
+  "purpose": "Plan structure-preserving cleanup with explicit invariants, dependency rules, and rollback paths.",
+  "when_to_use": [
+    "Need a behavior-preserving refactor plan.",
+    "Need dependency hygiene or module-boundary cleanup in a bounded scope.",
+    "Need atomic refactor steps with rollback paths."
+  ],
+  "do_not_use": [
+    "Need direct code changes.",
+    "Need broad simplification rather than bounded refactor planning.",
+    "Need new feature design or incident debugging."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Scope to refactor."
+    },
+    {
+      "name": "REFACTOR_BOUNDARY",
+      "type": "module-boundary|dependency-hygiene|structure-preserving-cleanup",
+      "required": true,
+      "description": "Type of refactor being planned."
+    },
+    {
+      "name": "BEHAVIOR_INVARIANTS",
+      "type": "list",
+      "required": true,
+      "description": "What must remain unchanged."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "description": "Rollout, compatibility, and testing constraints."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "TARGET_DEPENDENCY_RULES",
+      "type": "list",
+      "required": true,
+      "description": "Allowed and forbidden dependency directions."
+    },
+    {
+      "name": "ATOMIC_REFACTOR_STEPS",
+      "type": "list",
+      "required": true,
+      "description": "Bounded refactor steps."
+    },
+    {
+      "name": "ROLLBACK_PATH",
+      "type": "list",
+      "required": true,
+      "description": "Rollback or stop conditions."
+    }
+  ],
+  "artifacts_in": [
+    "plan-dependency-rules.v1",
+    "boundary-contract-report.v1"
+  ],
+  "artifacts_out": [
+    "refactor-plan.v1"
+  ],
+  "neutrality_rules": [
+    "Keep behavior-preserving invariants explicit before proposing steps.",
+    "Do not smuggle feature work into refactor steps.",
+    "If the cleanup boundary is unclear, mark it as an open edge instead of widening scope silently."
+  ],
+  "response_profile": "implementation_delta",
+  "default_prompt": "$tidy-reorganize",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output |\n lens: fowler-strangler |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/tidy-reorganize",
+  "split_candidates": [
+    "plan-dependency-rules",
+    "tidy-find-copies",
+    "check-module-walls",
+    "tidy-find-magic-numbers"
+  ],
+  "primary_lens": "fowler-strangler",
+  "lens_rationale": "Refactoring should prefer staged structural change with rollback-friendly seams."
+}

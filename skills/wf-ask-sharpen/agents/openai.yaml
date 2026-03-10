@@ -1,0 +1,6 @@
+interface:
+  display_name: "Sharpen Question Workflow"
+  short_description: "Workflow skill that turns a fuzzy topic into a clear problem statement, a usable question stack, and two challenge questions. Use when the user wants a question that is actually worth asking, not just a longer prompt."
+  default_prompt: "$wf-ask-sharpen"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,87 @@
+{
+  "name": "tidy-cut-fat",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "tidy-cut-fat",
+  "description": "Use when complexity must be reduced without changing core behavior: oversized objects, unclear architecture, noisy folder trees, weak naming, hidden side effects, or accidental abstraction. Produce a minimal simplification blueprint focused on essentials only. Allow large structural change when it clearly removes accidental complexity. Do not use for net-new feature work or incident firefighting. English triggers: simplify architecture, simplify refactor, reduce complexity, remove indirection.",
+  "purpose": "Identify and propose the smallest useful complexity reduction without changing intended behavior.",
+  "when_to_use": [
+    "Need a simplification blueprint for a bounded scope.",
+    "Need to distinguish essential complexity from accidental complexity.",
+    "Need to reduce structural or naming noise before implementation."
+  ],
+  "do_not_use": [
+    "Need direct code changes.",
+    "Need security or release review rather than simplification planning.",
+    "Need a dependency-rule refactor plan rather than broad simplification."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Scope to simplify."
+    },
+    {
+      "name": "SIMPLIFICATION_GOAL",
+      "type": "naming|structure|side-effects|mixed",
+      "required": true,
+      "description": "Dimension of simplification to prioritize."
+    },
+    {
+      "name": "PRESERVE_BEHAVIOR",
+      "type": "yes|no-change-intent",
+      "required": true,
+      "description": "Behavior-preservation contract."
+    },
+    {
+      "name": "KNOWN_PAIN",
+      "type": "list",
+      "required": false,
+      "description": "Known hotspots or complexity symptoms."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "COMPLEXITY_INVENTORY",
+      "type": "list",
+      "required": true,
+      "description": "Essential versus accidental complexity findings."
+    },
+    {
+      "name": "SIMPLIFICATION_PLAN",
+      "type": "list",
+      "required": true,
+      "description": "Atomic simplification steps."
+    },
+    {
+      "name": "BEHAVIOR_GUARDS",
+      "type": "list",
+      "required": true,
+      "description": "Checks that preserve intended behavior."
+    }
+  ],
+  "artifacts_in": [
+    "tidy-why-complex.v1"
+  ],
+  "artifacts_out": [
+    "simplification-plan.v1"
+  ],
+  "neutrality_rules": [
+    "Separate essential complexity from accidental complexity.",
+    "Do not recommend abstraction unless it removes a proven complexity source.",
+    "Keep uncertain complexity causes as candidates, not conclusions."
+  ],
+  "response_profile": "implementation_delta",
+  "default_prompt": "$tidy-cut-fat",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/tidy-cut-fat",
+  "split_candidates": [
+    "tidy-why-complex",
+    "tidy-find-copies",
+    "tidy-find-magic-numbers"
+  ],
+  "primary_lens": "hickey-carmack",
+  "lens_rationale": "Simplification should remove hidden indirection and preserve only essential structure."
+}

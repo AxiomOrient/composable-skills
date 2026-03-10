@@ -1,0 +1,6 @@
+interface:
+  display_name: "Compose"
+  short_description: "Single entrypoint for deterministic orchestration with Stage x Policy x Lens from explicit macro syntax. English triggers: compose, composition, orchestration, workflow fusion."
+  default_prompt: "$compose"
+policy:
+  allow_implicit_invocation: true

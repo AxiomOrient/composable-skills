@@ -1,0 +1,6 @@
+interface:
+  display_name: "Complexity Inventory"
+  short_description: "Inventory essential versus accidental complexity in a bounded scope before simplification. Use when the immediate job is to identify complexity sources, not to plan the entire simplification yet."
+  default_prompt: "$tidy-why-complex"
+policy:
+  allow_implicit_invocation: true

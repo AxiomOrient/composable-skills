@@ -1,0 +1,98 @@
+{
+  "name": "test-design-cases",
+  "title": "Test Design Cases",
+  "layer": "atomic",
+  "family": "test",
+  "job_type": "test-design-cases",
+  "description": "Test-category design skill. Define the exact happy-path, edge-case, and failure-path matrix before or alongside test writing. Use when the immediate job is to map what must be tested, not to write all tests yet.",
+  "purpose": "Make regression test coverage explicit before test implementation.",
+  "when_to_use": [
+    "Need a test matrix before writing or extending tests.",
+    "Need to prioritize happy, edge, and failure-path scenarios.",
+    "Need to map missing regression protection precisely."
+  ],
+  "do_not_use": [
+    "Tests are already written and only execution evidence is needed.",
+    "Need a broad review rather than test-design output.",
+    "There is no bounded behavior or change target.",
+    "Need ordered verification steps and stop conditions rather than a case inventory."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Behavior or module under test."
+    },
+    {
+      "name": "TEST_GOAL",
+      "type": "regression|edge-case|failure-path|mixed",
+      "required": true,
+      "description": "Primary testing objective."
+    },
+    {
+      "name": "TARGET_BEHAVIORS",
+      "type": "list",
+      "required": true,
+      "shape": "{BEHAVIOR, WHY_IT_MATTERS}",
+      "description": "Behaviors or cases that must be covered."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_BEHAVIORS should describe observable behavior rather than implementation internals.",
+    "TEST_GOAL prioritizes the matrix focus but should not suppress other high-risk cases that are explicitly in scope.",
+    "Do not treat raw coverage percentage as a substitute for naming the exact behavior that must stay protected."
+  ],
+  "structured_outputs": [
+    {
+      "name": "HAPPY_PATH_CASES",
+      "type": "list",
+      "required": true,
+      "shape": "{CASE, EXPECTED_SIGNAL}",
+      "description": "Core success scenarios."
+    },
+    {
+      "name": "EDGE_CASES",
+      "type": "list",
+      "required": true,
+      "shape": "{CASE, EXPECTED_SIGNAL}",
+      "description": "Boundary conditions and atypical inputs."
+    },
+    {
+      "name": "FAILURE_CASES",
+      "type": "list",
+      "required": true,
+      "shape": "{CASE, EXPECTED_SIGNAL}",
+      "description": "Failure-path or error-handling scenarios."
+    }
+  ],
+  "output_contract_notes": [
+    "Use HAPPY_PATH_CASES, EDGE_CASES, and FAILURE_CASES to inventory the behavior matrix, not to prescribe execution order.",
+    "Cases may be empty in one bucket when the target behavior genuinely does not require that category.",
+    "Keep each case externally observable and suitable for regression protection.",
+    "Do not turn the matrix into an exhaustive cartesian product when risk does not justify it."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "test-design-cases.v1"
+  ],
+  "neutrality_rules": [
+    "List observable behavior, not implementation-detail assertions.",
+    "Do not inflate speculative cases into mandatory tests without risk evidence.",
+    "Keep the matrix bounded and actionable."
+  ],
+  "execution_constraints": [
+    "Do not turn this skill into a verification-sequencing plan; it owns case inventory only.",
+    "Prefer the smallest set of cases that protects real behavior under change.",
+    "Keep bucket labels honest rather than forcing every case into every category.",
+    "Do not prescribe framework-specific assertions or mock strategy here; that belongs to `test-write-guards`."
+  ],
+  "response_profile": "test_report",
+  "default_prompt": "$test-design-cases",
+  "default_program": "[stages: preflight>detect>analyze>plan>handoff>audit | scope: diff|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: kent-beck | output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$test-design-cases\nTARGET_SCOPE: src/auth\nTEST_GOAL: mixed\nTARGET_BEHAVIORS: login success, invalid token, session refresh",
+  "source_path": "skills/test-design-cases",
+  "primary_lens": "kent-beck",
+  "lens_rationale": "Regression planning should enumerate small safe cases that protect behavior during change."
+}

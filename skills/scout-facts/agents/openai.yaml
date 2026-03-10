@@ -1,0 +1,6 @@
+interface:
+  display_name: "Scout Facts"
+  short_description: "Neutral analysis-only skill. Produce evidence-based findings and option comparison reports only. Do not plan, implement, or review code here. English triggers: analysis report, cause analysis, option analysis."
+  default_prompt: "$scout-facts"
+policy:
+  allow_implicit_invocation: true

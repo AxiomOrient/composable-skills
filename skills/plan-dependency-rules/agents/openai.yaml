@@ -1,0 +1,6 @@
+interface:
+  display_name: "Dependency Rule Plan"
+  short_description: "Define target dependency rules and allowed module directions before bounded refactoring. Use when the immediate job is to make dependency rules explicit, not to plan the full refactor yet."
+  default_prompt: "$plan-dependency-rules"
+policy:
+  allow_implicit_invocation: true

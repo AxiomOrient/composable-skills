@@ -1,0 +1,6 @@
+interface:
+  display_name: "Debug Workflow"
+  short_description: "Workflow skill that narrows a failure surface, performs root-cause debugging, and checks regression protection. Use when the user wants an explicit debug loop rather than a broad 'fix the bug' instruction."
+  default_prompt: "$wf-debug-this"
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,92 @@
+{
+  "name": "scout-boundaries",
+  "title": "Scope Contract Map",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "scout-boundaries",
+  "description": "Define the exact goal, scope boundary, constraints, and done condition before planning or specification work. Use when the request is still too broad to turn directly into a plan or spec.",
+  "purpose": "Reduce a broad request to an explicit scope contract that downstream planning or spec skills can consume.",
+  "when_to_use": [
+    "Need to lock goal, scope, constraints, and done condition before planning.",
+    "Need to separate in-scope, out-of-scope, and acceptance boundary.",
+    "Need a bounded contract before writing specs or tasks."
+  ],
+  "do_not_use": [
+    "Already have a precise scope contract.",
+    "Need direct implementation or review work.",
+    "Need full planning artifacts rather than scope normalization only."
+  ],
+  "required_inputs": [
+    {
+      "name": "REQUEST",
+      "type": "string",
+      "required": true,
+      "description": "Original user request or work item."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo|artifact",
+      "required": true,
+      "description": "Bounded area under discussion."
+    },
+    {
+      "name": "KNOWN_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "description": "Explicit constraints or non-goals already known."
+    }
+  ],
+  "structured_outputs": [
+    {
+      "name": "GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Normalized goal statement."
+    },
+    {
+      "name": "IN_SCOPE",
+      "type": "list",
+      "required": true,
+      "description": "Items or paths inside the scope boundary."
+    },
+    {
+      "name": "OUT_OF_SCOPE",
+      "type": "list",
+      "required": true,
+      "description": "Items explicitly excluded."
+    },
+    {
+      "name": "DONE_CONDITION",
+      "type": "list",
+      "required": true,
+      "description": "Completion contract for downstream work."
+    }
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "scope-contract.v1"
+  ],
+  "neutrality_rules": [
+    "Separate explicit constraints from inferred assumptions.",
+    "Mark unresolved scope edges instead of silently deciding them.",
+    "Do not turn preference into scope without evidence."
+  ],
+  "response_profile": "planning_doc",
+  "default_prompt": "$scout-boundaries",
+  "default_program": "[stages: preflight>detect>analyze>plan>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: minto-pyramid | output: md(contract=v1)]",
+  "explicit_only": false,
+  "procedure": [
+    "Normalize the request into one clear goal statement.",
+    "Draw the in-scope and out-of-scope boundary explicitly.",
+    "Convert constraints into a concrete done condition.",
+    "Return a stable scope contract for planner or spec."
+  ],
+  "mandatory_rules": [
+    "Keep the output contract-first and compact.",
+    "Do not emit a full implementation plan here."
+  ],
+  "example_invocation": "$scout-boundaries\nREQUEST: simplify the auth module without behavior change\nTARGET_SCOPE: src/auth",
+  "source_path": "skills/scout-boundaries",
+  "primary_lens": "minto-pyramid",
+  "lens_rationale": "Scope contracts should state the answer first, then bound in-scope, out-of-scope, and done criteria."
+}

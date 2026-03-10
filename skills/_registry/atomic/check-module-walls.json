@@ -1,0 +1,96 @@
+{
+  "name": "check-module-walls",
+  "title": "Boundary Contract Check",
+  "layer": "atomic",
+  "family": "check-merge-ready",
+  "job_type": "check-module-walls",
+  "description": "Check whether module, API, or layer boundaries expose unclear contracts, hidden assumptions, or leaking responsibilities. Use when the goal is to verify boundaries rather than perform broad review.",
+  "purpose": "Verify that a bounded interface or module boundary has explicit contracts and does not leak hidden assumptions.",
+  "when_to_use": [
+    "Need to check whether a module or API boundary is explicit enough.",
+    "Need to verify ownership and responsibility separation across layers.",
+    "Need evidence of contract leaks before refactoring or review."
+  ],
+  "do_not_use": [
+    "Need a broad code review across unrelated concerns.",
+    "Need direct implementation rather than contract analysis.",
+    "Have no bounded interface or module boundary to inspect."
+  ],
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|api",
+      "required": true,
+      "description": "Boundary to inspect."
+    },
+    {
+      "name": "BOUNDARY_KIND",
+      "type": "module|api|service|layer",
+      "required": true,
+      "description": "Kind of boundary being checked."
+    }
+  ],
+  "input_contract_notes": [
+    "TARGET_SCOPE should identify one concrete interface, module, or boundary slice rather than a broad subsystem.",
+    "BOUNDARY_KIND should describe the actual contract surface being inspected, not the desired architecture outcome."
+  ],
+  "structured_outputs": [
+    {
+      "name": "BOUNDARY_CONTRACTS",
+      "type": "list",
+      "required": true,
+      "shape": "{CONTRACT, STATUS, EVIDENCE}",
+      "description": "Current explicit or implicit contracts found at the boundary."
+    },
+    {
+      "name": "LEAKED_ASSUMPTIONS",
+      "type": "list",
+      "required": true,
+      "shape": "{ASSUMPTION, LOCATION, WHY_LEAKING}",
+      "description": "Assumptions or responsibilities leaking across the boundary."
+    },
+    {
+      "name": "HARDENING_ACTIONS",
+      "type": "list",
+      "required": true,
+      "shape": "{ACTION, TARGET, WHY}",
+      "description": "Specific actions to make the contract more explicit."
+    }
+  ],
+  "output_contract_notes": [
+    "Describe the current boundary contract before calling it weak or ambiguous.",
+    "LEAKED_ASSUMPTIONS may be empty when the inspected boundary is already explicit enough.",
+    "HARDENING_ACTIONS should stay local to the boundary instead of expanding into a whole-system redesign."
+  ],
+  "artifacts_in": [],
+  "artifacts_out": [
+    "boundary-contract-report.v1"
+  ],
+  "neutrality_rules": [
+    "Describe the current contract before judging it weak or unclear.",
+    "Separate proven contract leaks from speculative design concerns.",
+    "Recommend only the hardening needed to clarify the boundary."
+  ],
+  "execution_constraints": [
+    "Keep the check bounded to the named boundary and its immediate callers or callees.",
+    "Do not turn general naming or style preferences into boundary defects without contract evidence.",
+    "Prefer explicit contract hardening over architectural expansion."
+  ],
+  "response_profile": "review_findings",
+  "default_prompt": "$check-module-walls",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: uncle-bob | output: md(contract=v1)]",
+  "explicit_only": false,
+  "procedure": [
+    "List the explicit inputs, outputs, and invariants at the target boundary.",
+    "Identify hidden assumptions, side-channel coupling, or leaked ownership.",
+    "Return concrete hardening actions that clarify the contract without redesigning the whole system."
+  ],
+  "mandatory_rules": [
+    "Do not label a boundary broken without evidence of leakage or ambiguity.",
+    "Keep recommendations bounded to the inspected contract."
+  ],
+  "example_invocation": "$check-module-walls\nTARGET_SCOPE: src/api/user-service.ts\nBOUNDARY_KIND: service",
+  "source_path": "skills/check-module-walls",
+  "primary_lens": "uncle-bob",
+  "lens_rationale": "Boundary checks should focus on dependency direction, contract clarity, and leak prevention."
+}

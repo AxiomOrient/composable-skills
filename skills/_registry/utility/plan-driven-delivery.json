@@ -1,0 +1,115 @@
+{
+  "name": "plan-driven-delivery",
+  "layer": "utility",
+  "family": "execution-governance",
+  "job_type": "plan-driven-delivery",
+  "description": "Use when enforcing markdown-first planning and synchronized implementation execution. Treat implementation-plan and tasks documents as primary data artifacts. This skill does not create the plan; it synchronizes execution against an existing plan. English triggers: plan-driven, markdown-first delivery, plan-task synchronization.",
+  "purpose": "Synchronize planning artifacts, task lifecycle, and implementation evidence in one run without replacing the planner.",
+  "when_to_use": [
+    "Need execution governed by docs/IMPLEMENTATION-PLAN.md and docs/TASKS.md.",
+    "Need task selection and status changes tied to explicit TASK-ID rows.",
+    "Need implementation and plan/task document updates kept in sync."
+  ],
+  "do_not_use": [
+    "Need to create the plan or task breakdown from scratch; use planner instead.",
+    "Need a standalone domain analysis or review without task tracking.",
+    "Have no plan/task artifacts and do not want markdown-first execution control.",
+    "Need implicit next actions not linked to explicit TASK-ID rows."
+  ],
+  "required_inputs": [
+    {
+      "name": "IMPLEMENTATION_PLAN_PATH",
+      "type": "path",
+      "required": true,
+      "description": "Path to docs/IMPLEMENTATION-PLAN.md."
+    },
+    {
+      "name": "TASKS_PATH",
+      "type": "path",
+      "required": true,
+      "description": "Path to docs/TASKS.md."
+    },
+    {
+      "name": "SELECTED_TASK_IDS",
+      "type": "list",
+      "required": false,
+      "shape": "{TASK_ID}",
+      "description": "Explicit task ids selected for the current run."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{SOURCE, NOTE}",
+      "description": "Tests, logs, diffs, or prior outputs that support task progress."
+    },
+    {
+      "name": "IMPLEMENTATION_EVIDENCE_NOTES",
+      "type": "list",
+      "required": false,
+      "shape": "{TASK_ID, NOTE, EVIDENCE}",
+      "description": "Implementation-local evidence notes emitted by $build-write-code before markdown synchronization."
+    }
+  ],
+  "input_contract_notes": [
+    "IMPLEMENTATION_PLAN_PATH and TASKS_PATH should point to the source-of-truth markdown artifacts for the current delivery run.",
+    "SELECTED_TASK_IDS should be omitted only when the utility is expected to infer the active task set from explicit evidence in the docs.",
+    "IMPLEMENTATION_EVIDENCE_NOTES must already reference stable TASK_ID rows before synchronization starts."
+  ],
+  "structured_outputs": [
+    {
+      "name": "TASK_LINK_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{TASK_ID, LINKED_EVIDENCE, LINK_STATUS}",
+      "description": "Mapping from selected work items to TASK-ID rows."
+    },
+    {
+      "name": "TASK_STATUS_UPDATES",
+      "type": "list",
+      "required": true,
+      "shape": "{TASK_ID, FROM, TO, EVIDENCE}",
+      "description": "Explicit task status transitions and evidence."
+    },
+    {
+      "name": "SYNC_STATUS",
+      "type": "synced|blocked|partial",
+      "required": true,
+      "allowed_values": ["synced", "blocked", "partial"],
+      "description": "Overall synchronization state such as synced or blocked."
+    }
+  ],
+  "output_contract_notes": [
+    "TASK_LINK_MAP should make missing or ambiguous task linkage explicit instead of silently guessing matches.",
+    "TASK_STATUS_UPDATES should describe only actual markdown truth changes, not proposed future transitions.",
+    "SYNC_STATUS=`partial` is for mixed outcomes where some task links succeeded and some remained blocked."
+  ],
+  "artifacts_in": [
+    "implementation-plan.v1",
+    "tasks-table.v1",
+    "implementation-delta.v1"
+  ],
+  "artifacts_out": [
+    "task-sync-report.v1"
+  ],
+  "neutrality_rules": [
+    "Treat plan and task documents as the source of execution truth.",
+    "If task linkage is missing, report blocked instead of guessing mappings.",
+    "Keep document truth separate from AI-proposed next actions or interpretations."
+  ],
+  "execution_constraints": [
+    "Do not create new tasks or rewrite plan strategy here; synchronize only against existing markdown truth.",
+    "If evidence cannot be linked to an explicit task row, keep the sync blocked or partial instead of inventing a mapping.",
+    "Keep runtime code untouched from this utility."
+  ],
+  "mandatory_rules": [
+    "Do not create new project plans here; planner owns plan creation.",
+    "Only synchronize work that can be linked to explicit task rows or explicit evidence.",
+    "Do not change runtime code here; synchronize markdown truth only."
+  ],
+  "response_profile": "implementation_delta",
+  "default_prompt": "$plan-driven-delivery",
+  "default_program": "[stages: preflight>detect>plan>review>audit |\n scope: paths(docs/IMPLEMENTATION-PLAN.md,docs/TASKS.md) |\n policy: evidence,correctness-first,quality-gates{tests,docs,security},safety-gates,approval-gates{explicit,no-fallback},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/plan-driven-delivery"
+}

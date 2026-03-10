@@ -1,0 +1,6 @@
+interface:
+  display_name: "Improvement Map Workflow"
+  short_description: "Workflow skill that maps concrete simplification and commonization opportunities before structural improvement work. Use when the user wants an explicit improvement map rather than a vague 'make it better' request."
+  default_prompt: "$wf-tidy-find-improvements"
+policy:
+  allow_implicit_invocation: true

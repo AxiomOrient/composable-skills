@@ -1,0 +1,132 @@
+{
+  "name": "doc-write",
+  "title": "Write Docs",
+  "layer": "atomic",
+  "family": "docs",
+  "job_type": "doc-write",
+  "description": "Documentation-only skill. Produce or refresh non-root documentation such as concept guides, architecture notes, usage docs, and module docs from evidence. Root README, GitHub-style onboarding, and multilingual publishing belong to doc-publish-readme. Do not implement code or perform review verdicts. English triggers: documentation, guide writing, architecture docs, docs generation.",
+  "purpose": "Write or refresh non-root documentation from repository evidence with audience-aware difficulty control.",
+  "when_to_use": [
+    "Need to create or refresh non-root guides, architecture docs, usage docs, or module notes.",
+    "Need to turn upstream stage payloads into documentation artifacts.",
+    "Need documentation changes without runtime code changes."
+  ],
+  "do_not_use": [
+    "Need runtime code changes.",
+    "Need documentation inventory or cleanup only.",
+    "Need repo root README, GitHub landing docs, or multilingual publishing.",
+    "Need review verdicts rather than docs."
+  ],
+  "required_inputs": [
+    {
+      "name": "DOC_GOAL",
+      "type": "concept-guide|architecture-guide|usage-guide|api-guide|module-note|mixed",
+      "required": true,
+      "description": "Documentation objective."
+    },
+    {
+      "name": "DOC_FORM",
+      "type": "guide|tutorial|reference|concept-note|paper-summary|survey|mixed",
+      "required": false,
+      "description": "Document form. Default is guide when omitted."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "folder|module|artifact|docs-subtree",
+      "required": true,
+      "description": "Scope to document."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|operator|maintainer|mixed",
+      "required": true,
+      "description": "Primary audience."
+    },
+    {
+      "name": "AUDIENCE_LEVEL",
+      "type": "general|intermediate|expert",
+      "required": false,
+      "description": "Difficulty level. Default is general-reader language when omitted."
+    },
+    {
+      "name": "EVIDENCE_LINKS",
+      "type": "list",
+      "required": true,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Files, commands, logs, or upstream payloads supporting the docs."
+    }
+  ],
+  "input_contract_notes": [
+    "AUDIENCE should identify the primary reader who must act on the document, not every possible reader at once.",
+    "DOC_GOAL should describe the reader's main task or decision, not a grab-bag of optional sections.",
+    "DOC_FORM controls the document genre such as guide versus paper-summary; use lens override only when the mental model must change, not as a substitute for genre selection.",
+    "When DOC_FORM is `guide` or `tutorial`, optimize for a newcomer who wants to know when to use the doc, what they will get from it, and what to do next.",
+    "When DOC_FORM is `reference`, `survey`, or `paper-summary`, optimize for scanability and lookup speed rather than tutorial-style narration.",
+    "EVIDENCE_LINKS should point only to real sources that support the written claims.",
+    "This skill does not modify the repo root README; use doc-publish-readme when the root entry doc or multilingual publish surface must change.",
+    "If AUDIENCE_LEVEL is omitted, explain terms for a general reader first and introduce jargon only after a plain-language definition."
+  ],
+  "structured_outputs": [
+    {
+      "name": "DOC_PLAN",
+      "type": "list",
+      "required": true,
+      "shape": "{SECTION, READER_NEED, EVIDENCE_REF}",
+      "description": "Sections or docs that will be written."
+    },
+    {
+      "name": "WRITTEN_DOCS",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, CHANGE_KIND, AUDIENCE, FORM}",
+      "description": "Docs created or updated."
+    },
+    {
+      "name": "EVIDENCE_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{SECTION, CLAIM, EVIDENCE}",
+      "description": "Evidence supporting each section."
+    }
+  ],
+  "output_contract_notes": [
+    "DOC_PLAN should prioritize the shortest path to the audience's primary question or task before secondary context.",
+    "WRITTEN_DOCS should stay proportional to DOC_GOAL; omit decorative sections that do not help the stated audience.",
+    "WRITTEN_DOCS and DOC_PLAN should reflect DOC_FORM explicitly when a paper-summary, survey, tutorial, or reference structure is requested.",
+    "For `guide` or `tutorial`, the first scan path should answer three things quickly: what this is, when to read it, and what action the reader can take next.",
+    "For `reference`, `survey`, or `paper-summary`, prefer tables, bullets, and compact lookup blocks over long tutorial-style prose.",
+    "EVIDENCE_MAP should let a reader trace each major claim back to a concrete source.",
+    "WRITTEN_DOCS should exclude the repo root README."
+  ],
+  "artifacts_in": [
+    "doc-curation-report.v1"
+  ],
+  "artifacts_out": [
+    "documentation-report.v1"
+  ],
+  "neutrality_rules": [
+    "Write only claims grounded in repository evidence or upstream payloads.",
+    "If a section lacks support, mark it as needing confirmation instead of guessing.",
+    "Keep documentation structure separate from implementation or review advice."
+  ],
+  "execution_constraints": [
+    "Prefer the minimum useful document structure that helps the stated audience understand, use, or operate the target.",
+    "Do not add sections for completeness theater when they do not change the reader's decision or next action.",
+    "Keep the document focused on the explicit scope and audience instead of mixing multiple doc goals into one artifact.",
+    "For guide-like docs, open with a plain-language orientation path before deeper explanation.",
+    "For reference-like docs, compress aggressively and bias toward scanable structure instead of narrative completeness.",
+    "Define technical terms in plain words before using shorthand or deeper jargon when AUDIENCE_LEVEL is general or omitted.",
+    "Do not modify the repo root README from this skill."
+  ],
+  "response_profile": "documentation_report",
+  "default_prompt": "$doc-write",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: feynman-teaching |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "source_path": "skills/doc-write",
+  "split_candidates": [
+    "doc-build-index",
+    "doc-publish-readme"
+  ],
+  "primary_lens": "feynman-teaching",
+  "lens_rationale": "General documentation should explain the core idea plainly first, then layer detail only as needed for the reader level."
+}

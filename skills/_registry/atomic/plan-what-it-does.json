@@ -1,0 +1,137 @@
+{
+  "name": "plan-what-it-does",
+  "title": "Feature Spec",
+  "layer": "atomic",
+  "family": "planning",
+  "job_type": "plan-what-it-does",
+  "description": "Use when writing implementation-ready feature specifications with explicit scope, required behavior, acceptance scenarios, and edge cases. Do not use for high-level product briefs, information architecture, or technical solution design. English triggers: feature spec, requirements spec, functional specification.",
+  "purpose": "Write feature specifications that make required behavior, non-requirements, acceptance scenarios, and edge cases explicit before implementation.",
+  "when_to_use": [
+    "Need a build-ready feature or flow specification.",
+    "Need explicit functional requirements, non-requirements, and acceptance scenarios.",
+    "Need to lock edge cases and failure expectations before implementation starts."
+  ],
+  "do_not_use": [
+    "Need direct code changes.",
+    "Need only high-level problem framing before requirements are known.",
+    "Need information architecture or technical solution design rather than feature behavior.",
+    "Need only verification sequencing or exhaustive test case inventory."
+  ],
+  "required_inputs": [
+    {
+      "name": "FEATURE_SCOPE",
+      "type": "feature|screen|flow|api|module",
+      "required": true,
+      "description": "Boundary the feature spec governs."
+    },
+    {
+      "name": "USER_OUTCOME",
+      "type": "string",
+      "required": true,
+      "description": "Core user-visible or contract-visible outcome the feature must enable."
+    },
+    {
+      "name": "REQUIRED_BEHAVIORS",
+      "type": "list",
+      "required": true,
+      "shape": "{ID, BEHAVIOR, WHY}",
+      "description": "Concrete in-scope behaviors the implementation must satisfy."
+    },
+    {
+      "name": "ACCEPTANCE_SCENARIOS",
+      "type": "list",
+      "required": true,
+      "shape": "{SCENARIO, EXPECTED_RESULT}",
+      "description": "Observable acceptance scenarios and expected results."
+    },
+    {
+      "name": "OUT_OF_SCOPE",
+      "type": "list",
+      "required": false,
+      "shape": "{ITEM, WHY_OUT}",
+      "description": "Explicit exclusions so the feature boundary stays stable."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Compatibility, rollout, performance, policy, or non-goal constraints."
+    }
+  ],
+  "input_contract_notes": [
+    "USER_OUTCOME should describe one core outcome, not a blended roadmap.",
+    "REQUIRED_BEHAVIORS should stay implementation-neutral unless a contract requires a specific interface or protocol.",
+    "ACCEPTANCE_SCENARIOS should be externally observable and testable, not vague quality wishes.",
+    "Use OUT_OF_SCOPE to prevent adjacent nice-to-have work from silently entering the spec."
+  ],
+  "structured_outputs": [
+    {
+      "name": "SPEC_SUMMARY",
+      "type": "string",
+      "required": true,
+      "description": "One concise summary of the feature scope, outcome, and most important constraints."
+    },
+    {
+      "name": "FUNCTIONAL_REQUIREMENTS",
+      "type": "list",
+      "required": true,
+      "shape": "{ID, REQUIREMENT, WHY}",
+      "description": "Ordered functional requirements derived from the explicit in-scope behaviors."
+    },
+    {
+      "name": "ACCEPTANCE_CRITERIA",
+      "type": "list",
+      "required": true,
+      "shape": "{CHECK, SOURCE}",
+      "description": "Concrete checks that make implementation readiness and verification explicit."
+    },
+    {
+      "name": "EDGE_CASES",
+      "type": "list",
+      "required": true,
+      "shape": "{CASE, EXPECTED_BEHAVIOR}",
+      "description": "Important exception, failure, or edge cases that must be handled."
+    },
+    {
+      "name": "NON_REQUIREMENTS",
+      "type": "list",
+      "required": true,
+      "shape": "{ITEM, WHY_OUT}",
+      "description": "Explicitly excluded work or behaviors that must not be assumed from this spec."
+    }
+  ],
+  "output_contract_notes": [
+    "FUNCTIONAL_REQUIREMENTS should be testable statements, not vague aspirations or design slogans.",
+    "ACCEPTANCE_CRITERIA should map back to explicit behaviors or scenarios rather than inventing new scope.",
+    "EDGE_CASES should capture boundary and failure behavior without drifting into full technical design.",
+    "NON_REQUIREMENTS should stay visible so the document resists scope creep."
+  ],
+  "artifacts_in": [
+    "scope-contract.v1",
+    "plan-why-build-this.v1"
+  ],
+  "artifacts_out": [
+    "spec-contract.v1"
+  ],
+  "neutrality_rules": [
+    "Separate required behavior from optional design preference.",
+    "Mark unresolved spec edges explicitly.",
+    "Keep every requirement implementable and testable.",
+    "Do not imply architecture, IA, or rollout decisions unless the input evidence makes them explicit."
+  ],
+  "execution_constraints": [
+    "Do not write technical solution design or navigation structure from this skill; keep the document centered on feature behavior and acceptance boundaries.",
+    "Do not turn this skill into a verification-order plan or regression test matrix; reference those only when the spec requires them.",
+    "Prefer the smallest complete requirement set that satisfies the user outcome and explicit constraints.",
+    "If an important behavior cannot be specified precisely yet, record it as an open edge instead of smoothing it into confident prose."
+  ],
+  "response_profile": "spec_contract",
+  "default_prompt": "$plan-what-it-does",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>reflect>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: minto-pyramid |\n output: md(contract=v1)]",
+  "explicit_only": false,
+  "example_invocation": "$plan-what-it-does\nFEATURE_SCOPE: flow\nUSER_OUTCOME: 사용자가 이메일 링크로 비밀번호를 재설정할 수 있어야 한다\nREQUIRED_BEHAVIORS:\n  - ID: FR-1\n    BEHAVIOR: 유효한 토큰이면 새 비밀번호 입력 화면을 보여준다\n    WHY: 재설정 흐름 진입점이 필요하다\nACCEPTANCE_SCENARIOS:\n  - SCENARIO: 만료되지 않은 토큰으로 접근\n    EXPECTED_RESULT: 비밀번호 입력 폼이 노출된다",
+  "source_path": "skills/plan-what-it-does",
+  "primary_lens": "minto-pyramid",
+  "lens_rationale": "Feature specs should lead with the scope-defining answer, then group requirements, exclusions, and acceptance checks into one testable hierarchy."
+}

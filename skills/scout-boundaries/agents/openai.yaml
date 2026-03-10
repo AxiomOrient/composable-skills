@@ -1,0 +1,6 @@
+interface:
+  display_name: "Scope Contract Map"
+  short_description: "Define the exact goal, scope boundary, constraints, and done condition before planning or specification work. Use when the request is still too broad to turn directly into a plan or spec."
+  default_prompt: "$scout-boundaries"
+policy:
+  allow_implicit_invocation: true
