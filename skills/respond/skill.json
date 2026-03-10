@@ -1,0 +1,33 @@
+{
+  "name": "respond",
+  "layer": "utility",
+  "layer_badge": "Utility",
+  "response_profile": "generic",
+  "default_program": "[stages: handoff |\n scope: diff |\n policy: evidence,deterministic-output,response-contract{plain-korean,feynman-clear,actionable,core-first,short-sentences,plain-words,concrete-details} |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "RESPONSE_PROFILE",
+      "type": "response-profile.v1",
+      "required": true,
+      "description": "Resolved response profile with primary skill, profile id, and required sections."
+    },
+    {
+      "name": "STAGE_PAYLOADS",
+      "type": "list(stage-payload.v1)",
+      "required": true,
+      "description": "Finalized upstream payloads accumulated before rendering. Use only established facts from these payloads."
+    },
+    {
+      "name": "LANGUAGE_PREFERENCE",
+      "type": "ko|match-user|en",
+      "required": false,
+      "description": "Optional output language. Default is `ko`."
+    }
+  ],
+  "display_name": "Respond",
+  "browse_category": "utility",
+  "browse_priority": 90,
+  "is_category_default": false,
+  "codex_surface": "internal_control",
+  "starter_inputs": []
+}

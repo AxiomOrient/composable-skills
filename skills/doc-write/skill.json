@@ -1,0 +1,88 @@
+{
+  "name": "doc-write",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "documentation_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: feynman-teaching |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "DOC_GOAL",
+      "type": "concept-guide|architecture-guide|usage-guide|api-guide|module-note|mixed",
+      "required": true,
+      "description": "Documentation objective."
+    },
+    {
+      "name": "DOC_FORM",
+      "type": "guide|tutorial|reference|concept-note|paper-summary|survey|mixed",
+      "required": false,
+      "description": "Document form. Default is guide when omitted."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "folder|module|artifact|docs-subtree",
+      "required": true,
+      "description": "Scope to document."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|operator|maintainer|mixed",
+      "required": true,
+      "description": "Primary audience."
+    },
+    {
+      "name": "AUDIENCE_LEVEL",
+      "type": "general|intermediate|expert",
+      "required": false,
+      "description": "Difficulty level. Default is general-reader language when omitted."
+    },
+    {
+      "name": "EVIDENCE_LINKS",
+      "type": "list",
+      "required": true,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Files, commands, logs, or upstream payloads supporting the docs."
+    }
+  ],
+  "display_name": "Doc / Write",
+  "browse_category": "doc",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "문서 목표",
+      "required": true,
+      "maps_to": [
+        "DOC_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "문서화 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "주요 독자",
+      "required": true,
+      "maps_to": [
+        "AUDIENCE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "EVIDENCE",
+      "label": "근거 자료",
+      "required": true,
+      "maps_to": [
+        "EVIDENCE_LINKS"
+      ]
+    }
+  ]
+}

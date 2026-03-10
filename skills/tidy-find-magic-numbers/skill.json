@@ -1,0 +1,46 @@
+{
+  "name": "tidy-find-magic-numbers",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "review_findings",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Where to scan for extractable constants."
+    },
+    {
+      "name": "EXTRACTION_POLICY",
+      "type": "constants|config|shared-definition",
+      "required": true,
+      "description": "Preferred extraction destination style."
+    }
+  ],
+  "display_name": "Tidy / Find Magic Numbers",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디의 상수 후보를 볼지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "어디로 추출할지",
+      "required": true,
+      "maps_to": [
+        "EXTRACTION_POLICY"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

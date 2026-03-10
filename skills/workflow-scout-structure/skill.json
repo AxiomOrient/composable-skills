@@ -1,0 +1,100 @@
+{
+  "name": "workflow-scout-structure",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "analysis_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs,tests,security},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "REQUEST",
+      "type": "string",
+      "required": true,
+      "description": "Original request or analysis intent."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|folder|repo|artifact",
+      "required": true,
+      "description": "Bounded area to analyze."
+    },
+    {
+      "name": "QUESTION",
+      "type": "string",
+      "required": true,
+      "description": "Exact structure question to resolve."
+    },
+    {
+      "name": "MAP_FOCUS",
+      "type": "boundaries|responsibilities|interactions|mixed",
+      "required": false,
+      "description": "Primary structure lens for the map."
+    },
+    {
+      "name": "KNOWN_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "description": "Explicit constraints or non-goals already known."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Files, docs, commands, or notes already known."
+    }
+  ],
+  "display_name": "Workflow / Scout Structure",
+  "browse_category": "scout",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "무엇을 파악하고 싶은가",
+      "required": true,
+      "maps_to": [
+        "REQUEST"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "어디를 볼지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "QUESTION",
+      "label": "무슨 구조 질문을 풀지",
+      "required": true,
+      "maps_to": [
+        "QUESTION"
+      ]
+    },
+    {
+      "key": "EVIDENCE",
+      "label": "이미 가진 근거",
+      "required": false,
+      "maps_to": [
+        "KNOWN_EVIDENCE"
+      ]
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "지켜야 할 제약",
+      "required": false,
+      "maps_to": [
+        "KNOWN_CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ],
+  "expands_to": [
+    "$scout-scope",
+    "$scout-structure-map"
+  ]
+}

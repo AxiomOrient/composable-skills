@@ -1,0 +1,40 @@
+{
+  "name": "check-ship-risk",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "review_findings",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security,compat,style},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "AUDIT_GOAL",
+      "type": "regression-gate|release-risk|quality-gate-check",
+      "required": true,
+      "description": "Type of audit judgement required."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "diff|file|module|folder|repo",
+      "required": true,
+      "description": "Scope to audit."
+    },
+    {
+      "name": "CHANGE_INTENT",
+      "type": "string",
+      "required": true,
+      "description": "Claimed purpose of the change."
+    },
+    {
+      "name": "KNOWN_GATE_SIGNAL",
+      "type": "list",
+      "required": false,
+      "shape": "{SIGNAL, STATUS, SOURCE}",
+      "description": "Known test, security, compat, or CI signals."
+    }
+  ],
+  "display_name": "Check / Ship Risk",
+  "browse_category": "check",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

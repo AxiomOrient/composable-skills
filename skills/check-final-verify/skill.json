@@ -1,0 +1,42 @@
+{
+  "name": "check-final-verify",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "self_verify_report",
+  "default_program": "[stages: review>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security},deterministic-output |\n lens: contract-evidence-verifier |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "VERIFY_TARGETS",
+      "type": "list",
+      "required": true,
+      "shape": "{TARGET, TYPE}",
+      "description": "Files, docs, outputs, or artifacts to validate."
+    },
+    {
+      "name": "EXPECTED_CONTRACTS",
+      "type": "list",
+      "required": true,
+      "shape": "{CONTRACT, SOURCE}",
+      "description": "Sections, schemas, or invariants that must hold."
+    },
+    {
+      "name": "VERIFY_SCOPE",
+      "type": "diff|docs|path-set",
+      "required": true,
+      "description": "Verification scope."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Tests, logs, or prior checklist/review outputs."
+    }
+  ],
+  "display_name": "Check / Final Verify",
+  "browse_category": "check",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

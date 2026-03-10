@@ -1,0 +1,40 @@
+{
+  "name": "ship-release-verdict",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "release_decision",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: diff|repo |\n policy: evidence,safety-gates,quality-gates{compat,docs,security,tests},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "RELEASE_SCOPE",
+      "type": "diff|repo|deployment-slice",
+      "required": true,
+      "description": "Release scope under evaluation."
+    },
+    {
+      "name": "ROLLOUT_PLAN",
+      "type": "string",
+      "required": true,
+      "description": "Intended rollout path."
+    },
+    {
+      "name": "ROLLBACK_PATH",
+      "type": "string",
+      "required": true,
+      "description": "Rollback or stop strategy."
+    },
+    {
+      "name": "KNOWN_GATES",
+      "type": "list",
+      "required": false,
+      "shape": "{GATE, STATUS, EVIDENCE}",
+      "description": "Known tests, docs, approval, compatibility, or security signals."
+    }
+  ],
+  "display_name": "Ship / Release Verdict",
+  "browse_category": "ship",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

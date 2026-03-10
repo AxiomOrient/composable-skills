@@ -1,0 +1,55 @@
+{
+  "name": "plan-how-to-build",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "design_contract",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "DESIGN_SCOPE",
+      "type": "feature|service|module|system",
+      "required": true,
+      "description": "Boundary the technical design governs."
+    },
+    {
+      "name": "IMPLEMENTATION_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Core behavior or capability the design must enable."
+    },
+    {
+      "name": "REQUIREMENT_SOURCES",
+      "type": "list",
+      "required": true,
+      "shape": "{REF, WHY_RELEVANT}",
+      "description": "Briefs, specs, or contracts that the design must satisfy."
+    },
+    {
+      "name": "SYSTEM_BOUNDARIES",
+      "type": "list",
+      "required": false,
+      "shape": "{BOUNDARY, RESPONSIBILITY}",
+      "description": "Known components or boundaries that must appear in the design."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Compatibility, performance, migration, policy, or operational constraints."
+    },
+    {
+      "name": "ROLLBACK_OR_MIGRATION",
+      "type": "list",
+      "required": false,
+      "shape": "{STEP, WHY}",
+      "description": "Rollback, migration, or rollout-sensitive steps that affect the design."
+    }
+  ],
+  "display_name": "Plan / How To Build",
+  "browse_category": "plan",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

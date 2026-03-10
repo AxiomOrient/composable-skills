@@ -1,0 +1,150 @@
+{
+  "name": "workflow-ship-it",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "generic",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo | policy: evidence,safety-gates,quality-gates{docs,release,tests,security},approval-gates{explicit,no-fallback},deterministic-output | lens: release-gatekeeper | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_BRANCHES",
+      "type": "list",
+      "required": true,
+      "shape": "{BRANCH, ROLE}",
+      "description": "Branches involved in the release, such as source/dev and target/main."
+    },
+    {
+      "name": "ROLLOUT_PLAN",
+      "type": "string",
+      "required": true,
+      "description": "Intended rollout path."
+    },
+    {
+      "name": "ROLLBACK_PATH",
+      "type": "string",
+      "required": true,
+      "description": "Rollback or stop strategy."
+    },
+    {
+      "name": "RELEASE_BUMP",
+      "type": "patch|minor|explicit-tag",
+      "required": true,
+      "allowed_values": [
+        "patch",
+        "minor",
+        "explicit-tag"
+      ],
+      "description": "Requested version bump policy."
+    },
+    {
+      "name": "RELEASE_TAG",
+      "type": "string",
+      "required": false,
+      "required_when": "RELEASE_BUMP=explicit-tag",
+      "description": "Explicit tag to publish, such as `v1.0.0`."
+    },
+    {
+      "name": "RELEASE_SCOPE",
+      "type": "diff|repo|deployment-slice",
+      "required": false,
+      "allowed_values": [
+        "diff",
+        "repo",
+        "deployment-slice"
+      ],
+      "description": "Release slice to judge. Defaults to `repo`."
+    },
+    {
+      "name": "HYGIENE_SCOPE",
+      "type": "diff|repo",
+      "required": false,
+      "allowed_values": [
+        "diff",
+        "repo"
+      ],
+      "description": "Scope for release hygiene checks. Defaults to `repo`."
+    },
+    {
+      "name": "REQUIRED_DOCS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH, WHY_REQUIRED}",
+      "description": "Release-blocking docs that must be upgraded and kept public after the release."
+    },
+    {
+      "name": "LEGACY_PATTERNS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATTERN, WHY_BLOCKING}",
+      "description": "Legacy names or files that must not survive the release, including temporary implementation docs when they are delivery-only artifacts."
+    },
+    {
+      "name": "SURFACE_CONTRACTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONTRACT, SOURCE}",
+      "description": "Public-surface contracts such as skill-metadata/docs parity or root README ownership."
+    },
+    {
+      "name": "KNOWN_GATES",
+      "type": "list",
+      "required": false,
+      "shape": "{GATE, STATUS, EVIDENCE}",
+      "description": "Known release gate signals."
+    },
+    {
+      "name": "REQUIRED_CHECKS",
+      "type": "list",
+      "required": false,
+      "shape": "{NAME, COMMAND, REQUIRED}",
+      "description": "Checks that must pass before the release branch and tag are mutated."
+    },
+    {
+      "name": "PUBLISH_TARGET",
+      "type": "github|tag-only|local-only",
+      "required": false,
+      "allowed_values": [
+        "github",
+        "tag-only",
+        "local-only"
+      ],
+      "description": "Whether to stop at a local tag, push a tag only, or publish a GitHub release."
+    },
+    {
+      "name": "REMOTE_NAME",
+      "type": "string",
+      "required": false,
+      "description": "Remote expected to receive release refs. Default is origin."
+    },
+    {
+      "name": "RELEASE_NOTES_SOURCE",
+      "type": "generate|path|string",
+      "required": false,
+      "allowed_values": [
+        "generate",
+        "path",
+        "string"
+      ],
+      "description": "How release notes should be sourced."
+    },
+    {
+      "name": "RELEASE_NOTES_PATH",
+      "type": "path",
+      "required": false,
+      "required_when": "RELEASE_NOTES_SOURCE=path",
+      "description": "Path to release notes when using path mode."
+    }
+  ],
+  "display_name": "Workflow / Ship It",
+  "browse_category": "ship",
+  "browse_priority": 20,
+  "is_category_default": false,
+  "codex_surface": "internal_control",
+  "starter_inputs": [],
+  "expands_to": [
+    "$ship-check-repo",
+    "$ship-check-hygiene",
+    "$workflow-security-preflight",
+    "$ship-release-verdict",
+    "$release-publish"
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "name": "workflow-ship-ready-check",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "release_decision",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff | policy: evidence,safety-gates,quality-gates{docs,release,tests,security},deterministic-output | lens: release-gatekeeper | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "RELEASE_SCOPE",
+      "type": "diff|repo|deployment-slice",
+      "required": false,
+      "allowed_values": [
+        "diff",
+        "repo",
+        "deployment-slice"
+      ],
+      "description": "Release slice to judge after repository and hygiene gates are checked. Defaults to `repo` when omitted."
+    },
+    {
+      "name": "TARGET_BRANCHES",
+      "type": "list",
+      "required": true,
+      "shape": "{BRANCH, ROLE}",
+      "description": "Branches involved in the release, such as source/dev and target/main."
+    },
+    {
+      "name": "HYGIENE_SCOPE",
+      "type": "diff|repo",
+      "required": false,
+      "allowed_values": [
+        "diff",
+        "repo"
+      ],
+      "description": "Scope for release hygiene checks. Defaults to `repo` when omitted."
+    },
+    {
+      "name": "ROLLOUT_PLAN",
+      "type": "string",
+      "required": true,
+      "description": "Intended rollout path."
+    },
+    {
+      "name": "ROLLBACK_PATH",
+      "type": "string",
+      "required": true,
+      "description": "Rollback or stop strategy."
+    },
+    {
+      "name": "REQUIRED_DOCS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH, WHY_REQUIRED}",
+      "description": "Release-blocking docs that must be upgraded and kept public after the release."
+    },
+    {
+      "name": "LEGACY_PATTERNS",
+      "type": "list",
+      "required": false,
+      "shape": "{PATTERN, WHY_BLOCKING}",
+      "description": "Legacy names or files that must not survive the release, including temporary implementation docs when they are delivery-only artifacts."
+    },
+    {
+      "name": "REMOTE_NAME",
+      "type": "string",
+      "required": false,
+      "description": "Remote expected to receive release refs when publish is likely to follow."
+    },
+    {
+      "name": "TAG_INTENT",
+      "type": "string",
+      "required": false,
+      "description": "Candidate version tag to check during repo and release review."
+    },
+    {
+      "name": "KNOWN_GATES",
+      "type": "list",
+      "required": false,
+      "shape": "{GATE, STATUS, EVIDENCE}",
+      "description": "Known release gate signals."
+    },
+    {
+      "name": "SURFACE_CONTRACTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONTRACT, SOURCE}",
+      "description": "Public-surface contracts such as registry/docs parity or root README ownership."
+    }
+  ],
+  "display_name": "Workflow / Ship Ready Check",
+  "browse_category": "ship",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "릴리즈 범위",
+      "required": true,
+      "maps_to": [
+        "RELEASE_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "DONE",
+      "label": "롤아웃 계획",
+      "required": true,
+      "maps_to": [
+        "ROLLOUT_PLAN"
+      ]
+    },
+    {
+      "key": "EXPECTED",
+      "label": "롤백 경로",
+      "required": true,
+      "maps_to": [
+        "ROLLBACK_PATH"
+      ]
+    }
+  ],
+  "expands_to": [
+    "$ship-check-repo",
+    "$ship-check-hygiene",
+    "$workflow-security-preflight",
+    "$ship-release-verdict"
+  ]
+}

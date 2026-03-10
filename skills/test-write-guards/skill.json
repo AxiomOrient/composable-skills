@@ -1,0 +1,86 @@
+{
+  "name": "test-write-guards",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "test_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>implement>verify>review>handoff>audit |\n scope: diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,security},deterministic-output |\n lens: kent-beck |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TEST_GOAL",
+      "type": "regression|edge-case|failure-path|mixed",
+      "required": true,
+      "description": "Primary testing objective."
+    },
+    {
+      "name": "TEST_LAYER",
+      "type": "unit|integration|contract|scenario",
+      "required": false,
+      "allowed_values": [
+        "unit",
+        "integration",
+        "contract",
+        "scenario"
+      ],
+      "description": "Where the regression guard should live. Default to the cheapest layer that still protects the stated behavior."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Scope under test."
+    },
+    {
+      "name": "TARGET_BEHAVIORS",
+      "type": "list",
+      "required": true,
+      "description": "Behaviors or scenarios to protect."
+    },
+    {
+      "name": "FAILURE_PATHS",
+      "type": "list",
+      "required": false,
+      "description": "Known unhappy paths to include."
+    }
+  ],
+  "display_name": "Test / Write Guards",
+  "browse_category": "test",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "테스트 목표",
+      "required": true,
+      "maps_to": [
+        "TEST_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "테스트 대상 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "보호할 동작",
+      "required": true,
+      "maps_to": [
+        "TARGET_BEHAVIORS"
+      ]
+    },
+    {
+      "key": "EXPECTED",
+      "label": "실패 경로",
+      "required": false,
+      "maps_to": [
+        "FAILURE_PATHS"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "ship-check-repo",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "analysis_report",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo |\n policy: evidence,safety-gates,quality-gates{release,git},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_BRANCHES",
+      "type": "list",
+      "required": true,
+      "shape": "{BRANCH, ROLE}",
+      "description": "Branches involved in the release, such as source/dev and target/main."
+    },
+    {
+      "name": "REMOTE_NAME",
+      "type": "string",
+      "required": false,
+      "description": "Remote expected to receive the release refs. Default is origin."
+    },
+    {
+      "name": "TAG_INTENT",
+      "type": "string",
+      "required": false,
+      "description": "Candidate tag or version label to validate for collisions."
+    },
+    {
+      "name": "REPO_EXPECTATIONS",
+      "type": "list",
+      "required": false,
+      "shape": "{CHECK}",
+      "description": "Extra repository preconditions such as clean worktree, tracking branch, or remote push access."
+    }
+  ],
+  "display_name": "Ship / Check Repo",
+  "browse_category": "ship",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

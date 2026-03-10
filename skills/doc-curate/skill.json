@@ -1,0 +1,58 @@
+{
+  "name": "doc-curate",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "documentation_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "CURATION_GOAL",
+      "type": "cleanup|navigation|de-duplication|mixed",
+      "required": true,
+      "description": "Primary curation objective."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "docs-folder|repo|subtree",
+      "required": true,
+      "description": "Doc scope to curate."
+    },
+    {
+      "name": "ENTRY_DOC_STYLE",
+      "type": "guide|reference|index|mixed",
+      "required": false,
+      "description": "Preferred style for non-root entry docs. Default is index when omitted."
+    },
+    {
+      "name": "INVENTORY_SCOPE",
+      "type": "root-only|folder-tree|repo-wide",
+      "required": true,
+      "description": "How broad the inventory should be."
+    }
+  ],
+  "display_name": "Doc / Curate",
+  "browse_category": "doc",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "문서 정리 목표",
+      "required": true,
+      "maps_to": [
+        "CURATION_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "문서 정리 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

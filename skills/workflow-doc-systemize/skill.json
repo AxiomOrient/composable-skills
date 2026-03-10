@@ -1,0 +1,87 @@
+{
+  "name": "workflow-doc-systemize",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "documentation_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs,compat},deterministic-output | lens: nielsen-norman | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|docs-folder|repo|subtree",
+      "required": true,
+      "description": "Documentation scope to systemize."
+    },
+    {
+      "name": "INVENTORY_GOAL",
+      "type": "cleanup|navigation|coverage|mixed",
+      "required": false,
+      "description": "Why the inventory is being created. Defaults to `mixed` when omitted."
+    },
+    {
+      "name": "DOC_GOAL",
+      "type": "concept-guide|architecture-guide|usage-guide|api-guide|module-note|mixed",
+      "required": true,
+      "description": "Documentation objective for the writing stage."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|operator|maintainer|mixed",
+      "required": true,
+      "description": "Primary audience."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Documentation constraints or non-goals."
+    }
+  ],
+  "display_name": "Workflow / Doc Systemize",
+  "browse_category": "doc",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "문서 작업 목표",
+      "required": true,
+      "maps_to": [
+        "DOC_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "문서 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "주요 독자",
+      "required": true,
+      "maps_to": [
+        "AUDIENCE"
+      ]
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "문서 제약",
+      "required": false,
+      "maps_to": [
+        "CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ],
+  "expands_to": [
+    "$doc-find-all",
+    "$doc-curate",
+    "$doc-write"
+  ]
+}

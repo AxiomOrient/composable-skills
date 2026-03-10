@@ -1,0 +1,94 @@
+{
+  "name": "release-publish",
+  "layer": "utility",
+  "layer_badge": "Utility",
+  "response_profile": "generic",
+  "default_program": "[stages: preflight>detect>plan>review>handoff>audit |\n scope: repo |\n policy: evidence,safety-gates,quality-gates{docs,tests,surface-sync,release},approval-gates{explicit,no-fallback},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "SOURCE_BRANCH",
+      "type": "string",
+      "required": true,
+      "description": "Branch that holds the validated release candidate changes."
+    },
+    {
+      "name": "TARGET_BRANCH",
+      "type": "string",
+      "required": true,
+      "description": "Branch that should receive the release-only commit."
+    },
+    {
+      "name": "RELEASE_BUMP",
+      "type": "patch|minor|explicit-tag",
+      "required": true,
+      "allowed_values": [
+        "patch",
+        "minor",
+        "explicit-tag"
+      ],
+      "description": "Requested version bump policy."
+    },
+    {
+      "name": "RELEASE_TAG",
+      "type": "string",
+      "required": false,
+      "required_when": "RELEASE_BUMP=explicit-tag",
+      "description": "Explicit tag to publish, such as v1.2.0."
+    },
+    {
+      "name": "REQUIRED_CHECKS",
+      "type": "list",
+      "required": false,
+      "shape": "{NAME, COMMAND, REQUIRED}",
+      "description": "Checks that must pass before the release branch and tag are mutated."
+    },
+    {
+      "name": "PUBLISH_TARGET",
+      "type": "github|tag-only|local-only",
+      "required": false,
+      "allowed_values": [
+        "github",
+        "tag-only",
+        "local-only"
+      ],
+      "description": "Whether to stop at a local tag, push a tag only, or publish a GitHub release."
+    },
+    {
+      "name": "REMOTE_NAME",
+      "type": "string",
+      "required": false,
+      "description": "Remote to push the release branch and tag to. Default is origin."
+    },
+    {
+      "name": "LEGACY_CLEANUP_SCOPE",
+      "type": "list",
+      "required": false,
+      "shape": "{AREA, RULE}",
+      "description": "Optional cleanup expectations such as removed legacy skills, deleted stale docs, temporary implementation-doc removal, or public-surface sync."
+    },
+    {
+      "name": "RELEASE_NOTES_SOURCE",
+      "type": "generate|path|string",
+      "required": false,
+      "allowed_values": [
+        "generate",
+        "path",
+        "string"
+      ],
+      "description": "How release notes should be sourced."
+    },
+    {
+      "name": "RELEASE_NOTES_PATH",
+      "type": "path",
+      "required": false,
+      "required_when": "RELEASE_NOTES_SOURCE=path",
+      "description": "Path to release notes when using path mode."
+    }
+  ],
+  "display_name": "Release / Publish",
+  "browse_category": "utility",
+  "browse_priority": 90,
+  "is_category_default": false,
+  "codex_surface": "internal_control",
+  "starter_inputs": []
+}

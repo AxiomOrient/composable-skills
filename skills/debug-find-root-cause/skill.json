@@ -1,0 +1,46 @@
+{
+  "name": "debug-find-root-cause",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "debug_report",
+  "default_program": "[stages: preflight>detect>analyze>implement>verify>audit |\n scope: diff|repo |\n lens: feynman |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "FAILURE_SYMPTOM",
+      "type": "string",
+      "required": true,
+      "description": "Observed failure symptom."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|command|test|repo",
+      "required": true,
+      "description": "Scope in which the failure appears."
+    },
+    {
+      "name": "EXPECTED_BEHAVIOR",
+      "type": "string",
+      "required": true,
+      "description": "What should have happened."
+    },
+    {
+      "name": "REPRO_STATUS",
+      "type": "yes|no|partial",
+      "required": true,
+      "description": "Whether a reproduction already exists."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Stack traces, logs, failing tests, or repro commands."
+    }
+  ],
+  "display_name": "Debug / Find Root Cause",
+  "browse_category": "debug",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

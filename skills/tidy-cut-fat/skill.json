@@ -1,0 +1,58 @@
+{
+  "name": "tidy-cut-fat",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "planning_doc",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Scope to simplify."
+    },
+    {
+      "name": "SIMPLIFICATION_GOAL",
+      "type": "naming|structure|side-effects|mixed",
+      "required": true,
+      "description": "Dimension of simplification to prioritize."
+    },
+    {
+      "name": "PRESERVE_BEHAVIOR",
+      "type": "yes|no-change-intent",
+      "required": true,
+      "description": "Behavior-preservation contract."
+    },
+    {
+      "name": "KNOWN_PAIN",
+      "type": "list",
+      "required": false,
+      "description": "Known hotspots or complexity symptoms."
+    }
+  ],
+  "display_name": "Tidy / Cut Fat",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디를 단순화할지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "어떤 복잡도를 줄일지",
+      "required": true,
+      "maps_to": [
+        "SIMPLIFICATION_GOAL"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

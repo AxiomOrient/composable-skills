@@ -1,0 +1,56 @@
+{
+  "name": "plan-screen-map",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "ia_contract",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,ux},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "IA_SCOPE",
+      "type": "site|app|section|feature",
+      "required": true,
+      "description": "Boundary the information architecture governs."
+    },
+    {
+      "name": "PRIMARY_USERS",
+      "type": "list",
+      "required": true,
+      "shape": "{USER, GOAL}",
+      "description": "Primary user groups and the goal each one is trying to accomplish."
+    },
+    {
+      "name": "CONTENT_OBJECTS",
+      "type": "list",
+      "required": true,
+      "shape": "{ITEM, PURPOSE}",
+      "description": "Pages, screens, content groups, or entities that must exist in the structure."
+    },
+    {
+      "name": "ENTRY_POINTS",
+      "type": "list",
+      "required": true,
+      "shape": "{ENTRY, USER_NEED}",
+      "description": "Where users enter the structure and what they expect to do from there."
+    },
+    {
+      "name": "KNOWN_FLOWS",
+      "type": "list",
+      "required": false,
+      "shape": "{FLOW, START, END}",
+      "description": "Known start-to-end flows that the IA must support."
+    },
+    {
+      "name": "NAV_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Constraints such as platform limits, route rules, localization needs, or compliance requirements."
+    }
+  ],
+  "display_name": "Plan / Screen Map",
+  "browse_category": "plan",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

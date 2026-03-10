@@ -1,0 +1,39 @@
+{
+  "name": "ship-commit",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "commit_proposal",
+  "default_program": "[stages: preflight>detect>analyze>handoff>audit |\n scope: diff |\n policy: evidence,deterministic-output |\n lens: minto-pyramid |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "DIFF_SUMMARY",
+      "type": "diff|change-summary",
+      "required": true,
+      "description": "Diff or structured summary of the completed changes."
+    },
+    {
+      "name": "CHANGE_INTENT",
+      "type": "string",
+      "required": true,
+      "description": "What the change was meant to accomplish."
+    },
+    {
+      "name": "SCOPE_HINT",
+      "type": "string",
+      "required": false,
+      "description": "Optional conventional-commit scope hint."
+    },
+    {
+      "name": "BREAKING_CHANGE",
+      "type": "yes|no|uncertain",
+      "required": false,
+      "description": "Breaking-change status if already known."
+    }
+  ],
+  "display_name": "Ship / Commit",
+  "browse_category": "ship",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

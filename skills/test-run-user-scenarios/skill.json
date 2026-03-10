@@ -1,0 +1,54 @@
+{
+  "name": "test-run-user-scenarios",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "analysis_report",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "SYSTEM_UNDER_TEST",
+      "type": "skill|workflow|macro-surface",
+      "required": true,
+      "description": "Which framework surface is being exercised."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|folder|repo|artifact",
+      "required": true,
+      "description": "Exact area under test."
+    },
+    {
+      "name": "PRIMARY_USERS",
+      "type": "list",
+      "required": true,
+      "shape": "{ROLE, GOAL, CONTEXT}",
+      "description": "Realistic user or agent personas and the job each one is trying to finish."
+    },
+    {
+      "name": "SCENARIO_COUNT",
+      "type": "integer",
+      "required": false,
+      "description": "Target number of scenarios to generate and run. Default to 6 when omitted."
+    },
+    {
+      "name": "FAILURE_CLASSES",
+      "type": "list",
+      "required": false,
+      "shape": "{CLASS}",
+      "description": "Failure or misuse classes to force into the scenario set."
+    },
+    {
+      "name": "KNOWN_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Scope, release, or realism constraints for the scenario run."
+    }
+  ],
+  "display_name": "Test / Run User Scenarios",
+  "browse_category": "test",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

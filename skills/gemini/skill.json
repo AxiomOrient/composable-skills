@@ -1,0 +1,39 @@
+{
+  "name": "gemini",
+  "layer": "utility",
+  "layer_badge": "Utility",
+  "response_profile": "external_verification",
+  "default_program": "[stages: preflight>detect>analyze>verify>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,safety-gates,deterministic-output |\n lens: feynman |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "GEMINI_MODE",
+      "type": "new|resume|apply",
+      "required": true,
+      "description": "Execution mode for Gemini CLI."
+    },
+    {
+      "name": "GEMINI_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Exact analysis or verification goal for Gemini."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|folder|repo",
+      "required": true,
+      "description": "Bounded target scope for Gemini."
+    },
+    {
+      "name": "SESSION_ID",
+      "type": "string",
+      "required": false,
+      "description": "Explicit Gemini session id for resume mode."
+    }
+  ],
+  "display_name": "Gemini",
+  "browse_category": "utility",
+  "browse_priority": 90,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

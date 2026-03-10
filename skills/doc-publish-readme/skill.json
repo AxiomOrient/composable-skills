@@ -1,0 +1,59 @@
+{
+  "name": "doc-publish-readme",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "documentation_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: feynman-teaching |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "PROJECT_SCOPE",
+      "type": "repo",
+      "required": true,
+      "description": "Project repository root to publish."
+    },
+    {
+      "name": "README_GOAL",
+      "type": "github-overview|onboarding|usage-entry|mixed",
+      "required": true,
+      "description": "Primary goal of the root README."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|operator|mixed",
+      "required": true,
+      "description": "Primary audience for the root README and localized entry docs."
+    },
+    {
+      "name": "AUDIENCE_LEVEL",
+      "type": "general|intermediate|expert",
+      "required": false,
+      "description": "Difficulty level. Default is general-reader language when omitted."
+    },
+    {
+      "name": "PRIMARY_LANGUAGE",
+      "type": "string",
+      "required": false,
+      "description": "Primary authoring language for the root README and source portal. Default is en."
+    },
+    {
+      "name": "TARGET_LANGUAGES",
+      "type": "list",
+      "required": false,
+      "shape": "{LANG}",
+      "description": "Languages to publish under docs/i18n/<lang>/. Default localized set is ko, es, zh when omitted."
+    },
+    {
+      "name": "SOURCE_DOCS",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH, ROLE}",
+      "description": "Docs or evidence-backed pages that the root README and localized entry docs must summarize and link."
+    }
+  ],
+  "display_name": "Doc / Publish README",
+  "browse_category": "doc",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

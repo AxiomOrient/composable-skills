@@ -1,0 +1,48 @@
+{
+  "name": "plan-sync-tasks",
+  "layer": "utility",
+  "layer_badge": "Utility",
+  "response_profile": "implementation_delta",
+  "default_program": "[stages: preflight>detect>plan>review>audit |\n scope: paths(plans/IMPLEMENTATION-PLAN.md,plans/TASKS.md) |\n policy: evidence,correctness-first,quality-gates{tests,docs,security},safety-gates,approval-gates{explicit,no-fallback},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "IMPLEMENTATION_PLAN_PATH",
+      "type": "path",
+      "required": true,
+      "description": "Path to plans/IMPLEMENTATION-PLAN.md."
+    },
+    {
+      "name": "TASKS_PATH",
+      "type": "path",
+      "required": true,
+      "description": "Path to plans/TASKS.md."
+    },
+    {
+      "name": "SELECTED_TASK_IDS",
+      "type": "list",
+      "required": false,
+      "shape": "{TASK_ID}",
+      "description": "Explicit task ids selected for the current run."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{SOURCE, NOTE}",
+      "description": "Tests, logs, diffs, or prior outputs that support task progress."
+    },
+    {
+      "name": "IMPLEMENTATION_EVIDENCE_NOTES",
+      "type": "list",
+      "required": false,
+      "shape": "{TASK_ID, NOTE, EVIDENCE}",
+      "description": "Implementation-local evidence notes emitted by $build-write-code before markdown synchronization."
+    }
+  ],
+  "display_name": "Plan / Sync Tasks",
+  "browse_category": "utility",
+  "browse_priority": 90,
+  "is_category_default": false,
+  "codex_surface": "internal_control",
+  "starter_inputs": []
+}

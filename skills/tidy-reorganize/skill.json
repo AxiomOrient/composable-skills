@@ -1,0 +1,39 @@
+{
+  "name": "tidy-reorganize",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "planning_doc",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output |\n lens: fowler-strangler |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Scope to refactor."
+    },
+    {
+      "name": "REFACTOR_BOUNDARY",
+      "type": "module-boundary|dependency-hygiene|structure-preserving-cleanup",
+      "required": true,
+      "description": "Type of refactor being planned."
+    },
+    {
+      "name": "BEHAVIOR_INVARIANTS",
+      "type": "list",
+      "required": true,
+      "description": "What must remain unchanged."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "description": "Rollout, compatibility, and testing constraints."
+    }
+  ],
+  "display_name": "Tidy / Reorganize",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

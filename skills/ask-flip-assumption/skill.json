@@ -1,0 +1,53 @@
+{
+  "name": "ask-flip-assumption",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "analysis_report",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: popper-falsification | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "CORE_QUESTION",
+      "type": "string",
+      "required": true,
+      "description": "Current main question to challenge."
+    },
+    {
+      "name": "ASSUMPTIONS",
+      "type": "list",
+      "required": false,
+      "shape": "{ASSUMPTION}",
+      "description": "Assumptions already identified by the user."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Known scope, evidence, or domain limits."
+    }
+  ],
+  "display_name": "Ask / Flip Assumption",
+  "browse_category": "ask",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "QUESTION",
+      "label": "뒤집어 볼 핵심 질문",
+      "required": true,
+      "maps_to": [
+        "CORE_QUESTION"
+      ]
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "지켜야 할 제약",
+      "required": false,
+      "maps_to": [
+        "CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "name": "workflow-build-implement-and-guard",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "implementation_delta",
+  "default_program": "[stages: preflight>detect>implement>verify>review>audit | scope: diff|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,security},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "CHANGE_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Core behavior or structure to change."
+    },
+    {
+      "name": "IMPLEMENTATION_MODE",
+      "type": "bugfix|feature|refactor|integration|cleanup",
+      "required": false,
+      "description": "Implementation mode. Defaults to the narrowest mode implied by the change goal."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Scope of the code changes."
+    },
+    {
+      "name": "TASK_IDS",
+      "type": "list",
+      "required": false,
+      "shape": "{TASK_ID}",
+      "description": "Task ids to implement or synthesized adhoc ids when no task ledger exists."
+    },
+    {
+      "name": "VERIFICATION_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{CHECK, ORDER, PASS_CONDITION}",
+      "description": "Narrow-to-broad verification steps."
+    },
+    {
+      "name": "TARGET_BEHAVIORS",
+      "type": "list",
+      "required": true,
+      "description": "Behaviors that the guard tests must protect."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Safety, rollout, compatibility, or non-goal constraints."
+    }
+  ],
+  "display_name": "Workflow / Build & Guard",
+  "browse_category": "build",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "무엇을 바꿀지",
+      "required": true,
+      "maps_to": [
+        "CHANGE_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "어디를 바꿀지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "DONE",
+      "label": "검증 기준",
+      "required": true,
+      "maps_to": [
+        "VERIFICATION_MAP"
+      ]
+    },
+    {
+      "key": "CONTEXT",
+      "label": "보호할 동작",
+      "required": true,
+      "maps_to": [
+        "TARGET_BEHAVIORS"
+      ]
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "제약",
+      "required": false,
+      "maps_to": [
+        "CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ],
+  "expands_to": [
+    "$build-write-code",
+    "$test-write-guards"
+  ]
+}

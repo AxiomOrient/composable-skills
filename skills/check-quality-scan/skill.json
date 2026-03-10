@@ -1,0 +1,67 @@
+{
+  "name": "check-quality-scan",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "review_findings",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security,perf,compat,style},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "CHECK_SCOPE",
+      "type": "diff|file|module|folder",
+      "required": true,
+      "description": "Scope to inspect."
+    },
+    {
+      "name": "CHANGE_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Intended behavior or maintenance goal."
+    },
+    {
+      "name": "TARGET_AREA",
+      "type": "security|perf|duplication|constants|general-quality",
+      "required": false,
+      "description": "Optional emphasis area."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Tests, benchmarks, issue context, or supporting evidence."
+    }
+  ],
+  "display_name": "Check / Quality Scan",
+  "browse_category": "check",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디를 체크할지",
+      "required": true,
+      "maps_to": [
+        "CHECK_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "변경의 핵심 목표",
+      "required": true,
+      "maps_to": [
+        "CHANGE_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "EVIDENCE",
+      "label": "이미 가진 근거",
+      "required": false,
+      "maps_to": [
+        "KNOWN_EVIDENCE"
+      ]
+    }
+  ]
+}

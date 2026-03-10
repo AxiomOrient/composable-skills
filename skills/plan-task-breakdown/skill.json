@@ -1,0 +1,71 @@
+{
+  "name": "plan-task-breakdown",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "planning_doc",
+  "default_program": "[stages: preflight>detect>analyze@panel(3)>plan>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: eisenhower |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "PLANNING_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "What the work must deliver."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo|artifact",
+      "required": true,
+      "description": "Bounded scope of the planned work."
+    },
+    {
+      "name": "DONE_CONDITION",
+      "type": "list",
+      "required": true,
+      "shape": "{CONDITION}",
+      "description": "Observable completion contract."
+    },
+    {
+      "name": "PLAN_OUTPUT_PATH",
+      "type": "path",
+      "required": false,
+      "description": "Path where the implementation plan must be created or updated. Defaults to `plans/IMPLEMENTATION-PLAN.md` when omitted. The plans/ directory is created if it does not exist."
+    },
+    {
+      "name": "TASKS_OUTPUT_PATH",
+      "type": "path",
+      "required": false,
+      "description": "Path where the task table must be created or updated. Defaults to `plans/TASKS.md` when omitted. The plans/ directory is created if it does not exist."
+    },
+    {
+      "name": "ARTIFACT_MODE",
+      "type": "create|update",
+      "required": false,
+      "allowed_values": [
+        "create",
+        "update"
+      ],
+      "description": "Whether the planning artifacts are being created from scratch or updated in place. Defaults to `create` when omitted."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Compatibility, rollout, time, safety, and non-goal constraints."
+    },
+    {
+      "name": "EXISTING_ARTIFACTS",
+      "type": "list",
+      "required": false,
+      "required_when": "ARTIFACT_MODE=update",
+      "shape": "{PATH, ROLE}",
+      "description": "Existing planning docs that must be updated in place."
+    }
+  ],
+  "display_name": "Plan / Task Breakdown",
+  "browse_category": "plan",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

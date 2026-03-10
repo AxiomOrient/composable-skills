@@ -1,0 +1,47 @@
+{
+  "name": "debug-confirm-fix",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "debug_report",
+  "default_program": "[stages: preflight>detect>verify>review>audit | scope: diff|repo|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: contract-evidence-verifier | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope where the fix applies."
+    },
+    {
+      "name": "FIX_CANDIDATE",
+      "type": "string",
+      "required": true,
+      "description": "Fix or change being verified."
+    },
+    {
+      "name": "EXPECTED_BEHAVIOR",
+      "type": "string",
+      "required": true,
+      "description": "Expected behavior after the fix."
+    },
+    {
+      "name": "REPRO_STEPS",
+      "type": "list",
+      "required": true,
+      "shape": "{STEP, PURPOSE, EXPECTED_SIGNAL}",
+      "description": "Repro steps used to confirm the fix."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Tests, logs, or prior debug evidence already known."
+    }
+  ],
+  "display_name": "Debug / Confirm Fix",
+  "browse_category": "debug",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

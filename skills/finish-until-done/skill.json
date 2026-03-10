@@ -1,0 +1,116 @@
+{
+  "name": "finish-until-done",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "analysis_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>handoff>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,deterministic-output |\n lens: contract-evidence-verifier |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "MISSION_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "One bounded mission that should either finish or stop with a real blocker."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo|artifact",
+      "required": true,
+      "description": "Exact scope the mission is allowed to touch."
+    },
+    {
+      "name": "DONE_CONDITION",
+      "type": "list",
+      "required": true,
+      "shape": "{CONDITION, PROOF_REQUIRED}",
+      "description": "Explicit completion contract and the evidence required for each condition."
+    },
+    {
+      "name": "CURRENT_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Current outputs, notes, review results, docs, or observations from prior passes."
+    },
+    {
+      "name": "COMPANION_SKILLS",
+      "type": "list",
+      "required": false,
+      "allowed_values": [
+        "plan-sync-tasks",
+        "scout-structure-map",
+        "doc-write",
+        "check-merge-ready",
+        "check-quality-scan",
+        "plan-task-breakdown",
+        "check-final-verify"
+      ],
+      "shape": "{SKILL}",
+      "description": "Narrow non-code companion skills allowed for the next pass, such as scout-structure-map, doc-write, check-merge-ready, plan-task-breakdown, or check-final-verify."
+    },
+    {
+      "name": "MAX_PASSES",
+      "type": "integer",
+      "required": false,
+      "description": "Safety budget for same-turn iteration. Default to 3 when omitted."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Time, safety, approval, or non-goal constraints that limit the loop."
+    }
+  ],
+  "display_name": "Finish / Until Done",
+  "browse_category": "utility",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "internal_control",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "완수해야 할 미션",
+      "required": true,
+      "maps_to": [
+        "MISSION_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "작업 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "DONE",
+      "label": "완료 계약",
+      "required": true,
+      "maps_to": [
+        "DONE_CONDITION"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "EVIDENCE",
+      "label": "현재 근거",
+      "required": false,
+      "maps_to": [
+        "CURRENT_EVIDENCE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "지켜야 할 제약",
+      "required": false,
+      "maps_to": [
+        "CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

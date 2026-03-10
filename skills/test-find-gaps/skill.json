@@ -1,0 +1,27 @@
+{
+  "name": "test-find-gaps",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "review_findings",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: kent-beck | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope to inspect for missing tests."
+    },
+    {
+      "name": "TEST_FOCUS",
+      "type": "core-behavior|edge-cases|failure-paths|boundary-contracts|mixed",
+      "required": true,
+      "description": "Which test gap category to prioritize."
+    }
+  ],
+  "display_name": "Test / Find Gaps",
+  "browse_category": "test",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

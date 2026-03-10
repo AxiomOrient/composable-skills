@@ -1,0 +1,62 @@
+{
+  "name": "plan-why-build-this",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "brief_contract",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: christensen-jtbd |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "BRIEF_SCOPE",
+      "type": "feature|initiative|product|project",
+      "required": true,
+      "description": "Boundary the brief governs."
+    },
+    {
+      "name": "PROBLEM_STATEMENT",
+      "type": "string",
+      "required": true,
+      "description": "Plain-language statement of the problem worth solving."
+    },
+    {
+      "name": "TARGET_AUDIENCE",
+      "type": "list",
+      "required": true,
+      "shape": "{USER, CONTEXT}",
+      "description": "Primary users or stakeholder groups and the context they are in."
+    },
+    {
+      "name": "DESIRED_OUTCOMES",
+      "type": "list",
+      "required": true,
+      "shape": "{OUTCOME, WHY_IT_MATTERS}",
+      "description": "Intended outcomes and why each one matters."
+    },
+    {
+      "name": "SUCCESS_SIGNALS",
+      "type": "list",
+      "required": true,
+      "shape": "{SIGNAL, HOW_MEASURED}",
+      "description": "Observable signals or metrics that indicate the brief succeeded."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Explicit time, policy, compatibility, resource, or non-goal constraints."
+    },
+    {
+      "name": "KNOWN_NON_GOALS",
+      "type": "list",
+      "required": false,
+      "shape": "{NON_GOAL, WHY_OUT}",
+      "description": "Items that should stay out of scope even if adjacent to the problem."
+    }
+  ],
+  "display_name": "Plan / Why Build This",
+  "browse_category": "plan",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

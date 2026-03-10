@@ -1,0 +1,60 @@
+{
+  "name": "workflow-check-full-review",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "review_findings",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests,security},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Project, folder, or module to review."
+    },
+    {
+      "name": "REVIEW_FOCUS",
+      "type": "maintainability|risk|mixed",
+      "required": false,
+      "allowed_values": [
+        "maintainability",
+        "risk",
+        "mixed"
+      ],
+      "description": "Optional emphasis for the combined review."
+    }
+  ],
+  "display_name": "Workflow / Check Full Review",
+  "browse_category": "check",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디를 리뷰할지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "리뷰에서 특히 보고 싶은 것",
+      "required": false,
+      "maps_to": [
+        "REVIEW_FOCUS"
+      ],
+      "help": "maintainability, risk, mixed 중 하나를 권장한다."
+    }
+  ],
+  "expands_to": [
+    "$scout-structure-map",
+    "$tidy-find-magic-numbers",
+    "$tidy-find-copies",
+    "$check-module-bounds",
+    "$check-failure-paths",
+    "$test-find-gaps",
+    "$check-merge-ready"
+  ]
+}

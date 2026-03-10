@@ -1,0 +1,85 @@
+{
+  "name": "workflow-test-close-gaps",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "test_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>implement>verify>handoff>audit | scope: diff|paths(glob,...) | policy: evidence,quality-gates{tests,security},deterministic-output | lens: kent-beck | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope under test."
+    },
+    {
+      "name": "TEST_GOAL",
+      "type": "regression|edge-case|failure-path|mixed",
+      "required": true,
+      "description": "Primary testing objective."
+    },
+    {
+      "name": "TEST_LAYER",
+      "type": "unit|integration|contract|scenario",
+      "required": false,
+      "description": "Preferred layer for the written guard tests."
+    },
+    {
+      "name": "TARGET_BEHAVIORS",
+      "type": "list",
+      "required": true,
+      "description": "Behaviors that must be protected."
+    },
+    {
+      "name": "FAILURE_PATHS",
+      "type": "list",
+      "required": false,
+      "description": "Known unhappy paths to include."
+    }
+  ],
+  "display_name": "Workflow / Test Close Gaps",
+  "browse_category": "test",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "테스트 목표",
+      "required": true,
+      "maps_to": [
+        "TEST_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "테스트 대상 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "보호할 동작",
+      "required": true,
+      "maps_to": [
+        "TARGET_BEHAVIORS"
+      ]
+    },
+    {
+      "key": "EXPECTED",
+      "label": "실패 경로",
+      "required": false,
+      "maps_to": [
+        "FAILURE_PATHS"
+      ]
+    }
+  ],
+  "expands_to": [
+    "$test-find-gaps",
+    "$test-design-cases",
+    "$test-write-guards"
+  ]
+}

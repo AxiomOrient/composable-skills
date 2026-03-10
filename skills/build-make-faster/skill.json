@@ -1,0 +1,39 @@
+{
+  "name": "build-make-faster",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "performance_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>implement>verify>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,security},perf-aware,safety-gates,deterministic-output |\n lens: goldratt-toc |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|route|repo",
+      "required": true,
+      "description": "Optimization target."
+    },
+    {
+      "name": "METRIC_NAME",
+      "type": "latency|throughput|memory|custom",
+      "required": true,
+      "description": "Primary metric."
+    },
+    {
+      "name": "PERFORMANCE_BUDGET",
+      "type": "string",
+      "required": true,
+      "description": "Target threshold or expected improvement."
+    },
+    {
+      "name": "BASELINE_EVIDENCE",
+      "type": "list",
+      "required": true,
+      "description": "Benchmark, profile, or measurement inputs."
+    }
+  ],
+  "display_name": "Build / Make Faster",
+  "browse_category": "build",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

@@ -1,0 +1,39 @@
+{
+  "name": "debug-map-impact",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "analysis_report",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope in which the failure appears."
+    },
+    {
+      "name": "FAILURE_SYMPTOM",
+      "type": "string",
+      "required": true,
+      "description": "Observed failure symptom."
+    },
+    {
+      "name": "EXPECTED_BEHAVIOR",
+      "type": "string",
+      "required": true,
+      "description": "Expected behavior instead of the failure."
+    },
+    {
+      "name": "REPRO_HINTS",
+      "type": "list",
+      "required": false,
+      "description": "Known triggering inputs, timing, or environment hints."
+    }
+  ],
+  "display_name": "Debug / Map Impact",
+  "browse_category": "debug",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

@@ -1,0 +1,74 @@
+{
+  "name": "debug-capture-failure",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "analysis_report",
+  "default_program": "[stages: preflight>detect>analyze>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope in which the failure appears."
+    },
+    {
+      "name": "FAILURE_SYMPTOM",
+      "type": "string",
+      "required": true,
+      "description": "Observed failure symptom."
+    },
+    {
+      "name": "EXPECTED_BEHAVIOR",
+      "type": "string",
+      "required": true,
+      "description": "Expected behavior instead of the failure."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Logs, failing commands, traces, or notes already known."
+    }
+  ],
+  "display_name": "Debug / Capture Failure",
+  "browse_category": "debug",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디서 문제가 나는지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "QUESTION",
+      "label": "관찰된 문제",
+      "required": true,
+      "maps_to": [
+        "FAILURE_SYMPTOM"
+      ]
+    },
+    {
+      "key": "EXPECTED",
+      "label": "기대 동작",
+      "required": true,
+      "maps_to": [
+        "EXPECTED_BEHAVIOR"
+      ]
+    },
+    {
+      "key": "EVIDENCE",
+      "label": "이미 가진 근거",
+      "required": false,
+      "maps_to": [
+        "KNOWN_EVIDENCE"
+      ]
+    }
+  ]
+}

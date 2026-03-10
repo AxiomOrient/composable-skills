@@ -1,0 +1,64 @@
+{
+  "name": "doc-build-index",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "documentation_report",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "DOCSET_KIND",
+      "type": "module-tree|library|paper|mixed",
+      "required": true,
+      "description": "Primary kind of knowledge surface being documented."
+    },
+    {
+      "name": "DOC_FORM",
+      "type": "guide|reference|paper-summary|survey|mixed",
+      "required": false,
+      "description": "Document form for the generated analysis docs. Default is guide for module/library trees and paper-summary for paper targets when omitted."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "folder|module|library|paper|subtree",
+      "required": true,
+      "description": "Exact hierarchy or source set to document."
+    },
+    {
+      "name": "INDEX_DEPTH",
+      "type": "artifact-only|folder-tree|multi-level",
+      "required": true,
+      "description": "How deep the analysis and index hierarchy should go."
+    },
+    {
+      "name": "INDEX_LAYOUT",
+      "type": "docs-mirror|in-place-readme",
+      "required": false,
+      "description": "Where index files should live. Default is docs-mirror when omitted."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|researcher|mixed",
+      "required": true,
+      "description": "Primary audience for the resulting docset."
+    },
+    {
+      "name": "AUDIENCE_LEVEL",
+      "type": "general|intermediate|expert",
+      "required": false,
+      "description": "Difficulty level. Default is general-reader language when omitted."
+    },
+    {
+      "name": "EVIDENCE_LINKS",
+      "type": "list",
+      "required": true,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Files, library docs, papers, or other sources used to support the analysis docs."
+    }
+  ],
+  "display_name": "Doc / Build Index",
+  "browse_category": "doc",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

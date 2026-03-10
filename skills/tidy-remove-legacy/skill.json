@@ -1,0 +1,92 @@
+{
+  "name": "tidy-remove-legacy",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "response_profile": "implementation_delta",
+  "default_program": "[stages: preflight>detect>implement>verify>review>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,docs,compat},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": true,
+      "description": "Bounded scope allowed for the cleanup."
+    },
+    {
+      "name": "LEGACY_TARGETS",
+      "type": "list",
+      "required": true,
+      "shape": "{PATH_OR_PATTERN, WHY_LEGACY}",
+      "description": "Concrete unnecessary files, stale docs, completed plan artifacts, aliases, patterns, or surfaces to remove or collapse."
+    },
+    {
+      "name": "CLEANUP_MODE",
+      "type": "delete-only|delete-and-relink|collapse-alias|mixed",
+      "required": true,
+      "description": "Type of legacy cleanup to execute."
+    },
+    {
+      "name": "PRESERVE_SURFACE",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH_OR_CONTRACT, WHY_MUST_SURVIVE}",
+      "description": "Files, interfaces, or public surfaces that must remain intact."
+    },
+    {
+      "name": "VERIFICATION_MAP",
+      "type": "list",
+      "required": true,
+      "shape": "{CHECK, ORDER, PASS_CONDITION}",
+      "description": "Narrow-to-broad verification steps after cleanup."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Non-goals, compatibility rules, or rollout constraints."
+    }
+  ],
+  "display_name": "Tidy / Remove Legacy",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "정리할 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "무슨 레거시를 정리할지",
+      "required": true,
+      "maps_to": [
+        "LEGACY_TARGETS",
+        "CLEANUP_MODE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "EXPECTED",
+      "label": "남아야 할 표면",
+      "required": false,
+      "maps_to": [
+        "PRESERVE_SURFACE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "DONE",
+      "label": "검증 기준",
+      "required": true,
+      "maps_to": [
+        "VERIFICATION_MAP"
+      ]
+    }
+  ]
+}

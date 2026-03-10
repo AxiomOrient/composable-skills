@@ -1,0 +1,95 @@
+{
+  "name": "workflow-plan-build-ready",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "response_profile": "planning_doc",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs,compat},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "REQUEST",
+      "type": "string",
+      "required": true,
+      "description": "Original request or delivery target."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo|artifact",
+      "required": true,
+      "description": "Bounded scope of the work."
+    },
+    {
+      "name": "DONE_CONDITION",
+      "type": "list",
+      "required": true,
+      "shape": "{CONDITION}",
+      "description": "Observable completion contract."
+    },
+    {
+      "name": "PLAN_OUTPUT_PATH",
+      "type": "path",
+      "required": false,
+      "description": "Path where the implementation plan will be written. Defaults to `plans/IMPLEMENTATION-PLAN.md` when omitted."
+    },
+    {
+      "name": "TASKS_OUTPUT_PATH",
+      "type": "path",
+      "required": false,
+      "description": "Path where the task table will be written. Defaults to `plans/TASKS.md` when omitted."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Compatibility, rollout, time, or non-goal constraints."
+    }
+  ],
+  "display_name": "Workflow / Plan Build Ready",
+  "browse_category": "plan",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "무엇을 만들거나 바꿀지",
+      "required": true,
+      "maps_to": [
+        "REQUEST"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "계획 범위",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "DONE",
+      "label": "완료 기준",
+      "required": true,
+      "maps_to": [
+        "DONE_CONDITION"
+      ]
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "제약",
+      "required": false,
+      "maps_to": [
+        "CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ],
+  "expands_to": [
+    "$scout-boundaries",
+    "$plan-what-it-does",
+    "$plan-how-to-build",
+    "$plan-task-breakdown"
+  ]
+}
