@@ -49,7 +49,7 @@ It does not require `_registry`, `_core`, generated guides, a committed `catalog
 
 ## Start Here
 
-- Runtime guide: [`skills/README.md`](./skills/README.md)
+- Runtime guide and skill descriptions: [`skills/README.md`](./skills/README.md)
 
 ## Release Rules
 
