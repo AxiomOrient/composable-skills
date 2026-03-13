@@ -69,6 +69,7 @@ This skill uses `popper-falsification` because it keeps the work aligned with: P
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 List the three assumptions holding the current question in place.
 

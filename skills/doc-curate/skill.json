@@ -6,7 +6,7 @@
   "required_inputs": [
     {
       "name": "CURATION_GOAL",
-      "type": "cleanup|navigation|de-duplication|mixed",
+      "type": "lifecycle-governance|cleanup|surface-sync|mixed",
       "required": true,
       "description": "Primary curation objective."
     },
@@ -14,19 +14,26 @@
       "name": "TARGET_SCOPE",
       "type": "docs-folder|repo|subtree",
       "required": true,
-      "description": "Doc scope to curate."
-    },
-    {
-      "name": "ENTRY_DOC_STYLE",
-      "type": "guide|reference|index|mixed",
-      "required": false,
-      "description": "Preferred style for non-root entry docs. Default is index when omitted."
+      "description": "Doc scope to govern."
     },
     {
       "name": "INVENTORY_SCOPE",
-      "type": "root-only|folder-tree|repo-wide",
+      "type": "folder-tree|repo-wide|release-surface",
       "required": true,
-      "description": "How broad the inventory should be."
+      "description": "How broad the lifecycle inventory and cleanup judgement should be."
+    },
+    {
+      "name": "DECISION_MODE",
+      "type": "conservative|balanced|aggressive",
+      "required": false,
+      "description": "How readily delete or deprecate actions may be recommended. Defaults to `conservative` when omitted."
+    },
+    {
+      "name": "CANONICAL_SURFACES",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH, WHY_CANONICAL}",
+      "description": "Docs that define the maintained public surface and should be favored when deduplicating or redirecting content."
     }
   ],
   "display_name": "Doc / Curate",
@@ -37,7 +44,7 @@
   "starter_inputs": [
     {
       "key": "GOAL",
-      "label": "문서 정리 목표",
+      "label": "문서 거버넌스 목표",
       "required": true,
       "maps_to": [
         "CURATION_GOAL"

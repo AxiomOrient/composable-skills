@@ -66,17 +66,18 @@ This skill uses `kent-beck` because it keeps the work aligned with: Small safe i
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Show per-step outcome (step → result):
-- test-find-gaps → missing scenarios list
-- test-design-cases → case matrix (happy / edge / failure)
-- test-write-guards → tests added + verification results
+단계별 결과:
+- test-find-gaps → 빠진 시나리오 목록
+- test-design-cases → 케이스 목록 (정상 / 경계 / 실패)
+- test-write-guards → 추가된 테스트 + 검증 결과
 
-On failure at any step: stop and ask what is blocking.
+단계 실패 시: 멈추고 무엇이 막혔는지 질문.
 
-On success: show added tests and any remaining gaps.
+완료 시: 추가된 테스트와 남은 빈틈 표시.
 
-Ask: "Cover [specific remaining gap] now?"
+끝에: "[구체적인 남은 빈틈] 지금 처리할까요?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

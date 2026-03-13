@@ -1,0 +1,25 @@
+{
+  "name": "analyze-structure",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "file|module|folder|repo", "required": true, "description": "Bounded scope to analyze." },
+    { "name": "ANALYSIS_QUESTION", "type": "string", "required": false, "description": "Exact structure or coupling question to resolve." },
+    { "name": "ANALYSIS_FOCUS", "type": "coupling|data-flow|boundaries|hidden-state|mixed", "required": false, "allowed_values": ["coupling","data-flow","boundaries","hidden-state","mixed"], "description": "Primary analytical dimension." },
+    { "name": "KNOWN_EVIDENCE", "type": "list", "required": false, "shape": "{TYPE, REF, WHY_RELEVANT}", "description": "Existing files, docs, or traces." },
+    { "name": "CONSTRAINTS", "type": "list", "required": false, "shape": "{CONSTRAINT}", "description": "Scope or time limits." }
+  ],
+  "display_name": "Analyze / Structure",
+  "browse_category": "analyze",
+  "browse_priority": 10,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "어디를 분석할지", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "QUESTION", "label": "무슨 구조 질문을 풀지", "required": false, "maps_to": ["ANALYSIS_QUESTION"] },
+    { "key": "FOCUS", "label": "어떤 관점으로 분석할지 (coupling/data-flow/boundaries/hidden-state/mixed)", "required": false, "maps_to": ["ANALYSIS_FOCUS"], "derive_from_raw_request": true },
+    { "key": "EVIDENCE", "label": "이미 가진 근거", "required": false, "maps_to": ["KNOWN_EVIDENCE"] },
+    { "key": "CONSTRAINTS", "label": "지켜야 할 제약", "required": false, "maps_to": ["CONSTRAINTS"], "derive_from_raw_request": true }
+  ]
+}

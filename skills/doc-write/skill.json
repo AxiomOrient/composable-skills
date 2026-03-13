@@ -6,13 +6,13 @@
   "required_inputs": [
     {
       "name": "DOC_GOAL",
-      "type": "concept-guide|architecture-guide|usage-guide|api-guide|module-note|mixed",
+      "type": "refresh|concept-guide|architecture-guide|usage-guide|api-guide|module-note|deprecation-note|redirect-note|mixed",
       "required": true,
       "description": "Documentation objective."
     },
     {
       "name": "DOC_FORM",
-      "type": "guide|tutorial|reference|concept-note|paper-summary|survey|mixed",
+      "type": "guide|tutorial|reference|concept-note|redirect|deprecation-note|mixed",
       "required": false,
       "description": "Document form. Default is guide when omitted."
     },

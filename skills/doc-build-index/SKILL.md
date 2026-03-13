@@ -1,12 +1,12 @@
 ---
 name: doc-build-index
-description: "Analyze module trees, libraries, or papers into per-artifact explanation docs, local index files, and a guide index that links them together. Use when the target has hierarchy or external knowledge sources and readers need a navigable docset. Do not modify the repo root README."
+description: "Build recursive folder docsets where each parent folder gets a README-style overview and each child folder or project gets a focused project-info doc with explicit links. Use when the target is a folder tree or module tree and readers need summary-at-parent plus detail-at-child navigation. Do not modify the repo root README."
 ---
 
 # Doc / Build Index
 
 ## Purpose
-Build hierarchical analysis docs and index files from folders, modules, libraries, or papers without touching the repo root README.
+Build hierarchical folder docsets with parent overview pages and child detail pages, while keeping the hierarchy MECE and easy to navigate.
 
 ## Default Program
 ```text
@@ -18,86 +18,78 @@ Build hierarchical analysis docs and index files from folders, modules, librarie
 ```
 
 ## Lens Rationale
-This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+This skill uses `nielsen-norman` because it keeps the work aligned with: Reader-first hierarchy, scanning behavior, information scent, and navigable landing pages.
 
 ## Use When
-- Need per-folder, per-module, per-library, or per-paper explanation docs.
-- Need local README or index files that link analysis docs together.
-- Need one guide index that aggregates lower-level indexes without rewriting the repo root README.
+- Need a folder tree or module tree documented as parent overview pages plus child project or module info pages.
+- Need README-style summaries at folder boundaries without touching the repo root README.
+- Need one docset whose parent pages summarize and link while child pages hold focused project information.
 
 ## Do Not Use When
-- Need only a single guide or doc page with no hierarchy.
+- Need only a single guide page with no hierarchy.
 - Need repo root README authoring or multilingual publishing.
-- Need documentation inventory or cleanup only.
+- Need lifecycle governance only.
+- Need release notes, changelog entries, or migration docs for a release.
 
 ## Required Inputs
-- `DOCSET_KIND` (module-tree|library|paper|mixed; required): Primary kind of knowledge surface being documented.
-- `DOC_FORM` (guide|reference|paper-summary|survey|mixed; optional): Document form for the generated analysis docs. Default is guide for module/library trees and paper-summary for paper targets when omitted.
-- `TARGET_SCOPE` (folder|module|library|paper|subtree; required): Exact hierarchy or source set to document.
-- `INDEX_DEPTH` (artifact-only|folder-tree|multi-level; required): How deep the analysis and index hierarchy should go.
-- `INDEX_LAYOUT` (docs-mirror|in-place-readme; optional): Where index files should live. Default is docs-mirror when omitted.
-- `AUDIENCE` (general|developer|researcher|mixed; required): Primary audience for the resulting docset.
+- `DOCSET_KIND` (folder-tree|module-tree|project-tree; required): Primary hierarchy being documented.
+- `TREE_SCOPE` (folder|subtree; required): Exact hierarchy to document.
+- `INDEX_DEPTH` (one-level|recursive; required): How deep the parent/child docset should go.
+- `INDEX_LAYOUT` (docs-mirror|in-place-readme; optional): Where the overview pages should live. Defaults to `in-place-readme` when omitted.
+- `PARENT_ENTRY_STYLE` (readme-overview|index-page; optional): Parent-page style. Defaults to `readme-overview` when omitted.
+- `CHILD_DOC_STYLE` (project-info|module-info|mixed; optional): Child-page style. Defaults to `project-info` when omitted.
+- `AUDIENCE` (general|developer|maintainer|mixed; required): Primary audience for the resulting docset.
 - `AUDIENCE_LEVEL` (general|intermediate|expert; optional): Difficulty level. Default is general-reader language when omitted.
-- `EVIDENCE_LINKS` (list; required; shape: {TYPE, REF, WHY_RELEVANT}): Files, library docs, papers, or other sources used to support the analysis docs.
+- `EVIDENCE_LINKS` (list; optional; shape: {TYPE, REF, WHY_RELEVANT}): Extra files or sources that must be cited beyond the repo tree itself.
 
 ## Input Contract Notes
-- Use docs-mirror when you want doc files separated from the source tree; use in-place-readme only when local README files are the intended entrypoints.
-- This skill may create folder-level README or guide index files, but it must not modify the repo root README.
-- DOC_FORM controls whether the resulting analysis docs read like guides, references, surveys, or paper summaries; do not use lens choice alone to encode the output genre.
+- Use `in-place-readme` when the folder itself should expose the overview page as its entrypoint.
+- Each parent page should summarize only the scope it owns and link downward; it should not absorb every child detail.
+- Child pages should hold detailed project information without reintroducing the global overview verbatim.
 - If AUDIENCE_LEVEL is omitted, explain the hierarchy and key terms for a general reader first.
 
 ## Structured Outputs
-- `ANALYSIS_DOCS` (list; required; shape: {PATH, TARGET, FORM, SUMMARY, EVIDENCE_REF}): Analysis docs created or updated for specific folders, modules, libraries, or papers.
-- `LOCAL_INDEX_FILES` (list; required; shape: {PATH, COVERS, LINKS_TO}): Local README or index files that organize nearby analysis docs.
-- `GUIDE_INDEX_FILES` (list; required; shape: {PATH, COVERS, LINKS_TO}): Higher-level guide or index files that aggregate local indexes.
-- `COVERAGE_GAPS` (list; required; shape: {TARGET, GAP, NEXT_SOURCE}): Missing evidence or unsupported targets that prevent complete coverage.
+- `PARENT_ENTRY_DOCS` (list; required; shape: {PATH, COVERS, LINKS_TO}): Parent overview pages or local README files that summarize and link child docs.
+- `CHILD_INFO_DOCS` (list; required; shape: {PATH, TARGET, SUMMARY, EVIDENCE_REF}): Child project or module docs created or updated under the hierarchy.
+- `DOCSET_NAV_MAP` (list; required; shape: {FROM, TO, PURPOSE}): Navigation graph across parent pages and child detail pages.
+- `COVERAGE_GAPS` (list; required; shape: {TARGET, GAP, NEXT_SOURCE}): Missing evidence or unsupported targets that prevent complete child coverage.
 
 ## Output Contract Notes
-- ANALYSIS_DOCS should stay traceable to a specific target and evidence reference.
-- ANALYSIS_DOCS should reflect DOC_FORM explicitly so readers can tell whether each file is a guide, reference, survey, or paper summary.
-- LOCAL_INDEX_FILES should link readers downward to detailed docs and upward to the next guide level when both exist.
-- GUIDE_INDEX_FILES should aggregate the hierarchy without acting as a replacement for the repo root README.
+- PARENT_ENTRY_DOCS should read like overview pages: summary, key facts, and explicit links.
+- CHILD_INFO_DOCS should stay MECE relative to siblings and inherit shared context from the parent page instead of duplicating it.
+- DOCSET_NAV_MAP should show upward and downward navigation, not just a flat link list.
+- COVERAGE_GAPS should be used instead of inventing a child summary when evidence is weak.
 
 ## Primary Lens
 - `primary_lens`: `nielsen-norman`
-- `why`: Hierarchical docsets succeed when navigation, scanning order, and information scent stay explicit at every level.
+- `why`: Hierarchical docsets succeed when each landing page provides context, each child page has a distinct role, and navigation stays explicit.
 
 ## Artifacts
-- `artifacts_in`: doc-inventory.v1
-- `artifacts_out`: knowledge-index-docset.v1
+- `artifacts_in`: doc-inventory.v2
+- `artifacts_out`: knowledge-index-docset.v2
 
 ## Neutrality Rules
-- Write only claims grounded in the actual files, library docs, papers, or other cited sources.
-- If a target lacks enough evidence, record a coverage gap instead of inventing a summary.
-- Separate analysis-doc writing from repo root README authoring.
+- Write only claims grounded in the actual files or cited supporting sources.
+- If a folder has many children, group them in reader-meaningful clusters rather than an undifferentiated long list.
+- Keep parent overview text distinct from child detail text.
 
 ## Execution Constraints
-- Do not modify the repo root README from this skill.
-- Prefer a stable hierarchy: analysis doc -> local index -> guide index.
-- Define technical terms in plain words before using shorthand or specialist jargon when AUDIENCE_LEVEL is general or omitted.
+1. If a folder has child folders, the parent gets a README-style overview or index page with summary, scope, key facts, and child links.
+2. Each child folder or project gets a focused info doc that covers only its own responsibility, interfaces, dependencies, commands, and related docs as supported by evidence.
+3. Keep sibling child docs MECE; move shared context upward to the parent overview page.
+4. Do not modify the repo root README from this skill.
+5. Prefer stable hierarchy: parent overview -> child project info -> deeper evidence links.
 
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
 
 List what was written, grouped by level:
-- Analysis docs: file:section — target — form (guide/reference/paper-summary)
-- Local indexes: file — covers
-- Guide index: file — aggregates
+- Parent overview: file — covers — key links
+- Child info: file — target — main scope
 
-Flag coverage gaps: "Couldn't verify: [target] — missing: [source]"
+Flag coverage gaps:
+"Couldn't verify: [target] — missing: [source]"
 
-Ask: "Want to go deeper on [most complex or under-documented target]?"
-
-## Mandatory Rules
-- Keep every index file linked to the analysis docs it summarizes.
-- Do not collapse multiple unrelated modules, libraries, or papers into one vague summary page.
-
-## Example Invocation
-```text
-$doc-build-index
-DOCSET_KIND: module-tree
-TARGET_SCOPE: src/auth
-INDEX_DEPTH: multi-level
-AUDIENCE: general
-```
+Ask:
+"Want to recurse one level deeper, or is this hierarchy the right stop point?"

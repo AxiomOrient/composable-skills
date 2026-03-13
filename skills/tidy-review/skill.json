@@ -1,0 +1,49 @@
+{
+  "name": "tidy-review",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|repo|paths(glob,...) | policy: evidence,correctness-first,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|diff",
+      "required": true,
+      "description": "Bounded scope to inspect."
+    },
+    {
+      "name": "FOCUS",
+      "type": "reuse|quality|efficiency|all",
+      "required": false,
+      "allowed_values": ["reuse", "quality", "efficiency", "all"],
+      "description": "Which cleanup lens to apply. Defaults to all."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF}",
+      "description": "Existing test results, benchmarks, or prior review notes."
+    }
+  ],
+  "display_name": "Tidy / Review",
+  "browse_category": "tidy",
+  "browse_priority": 25,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "검사할 범위",
+      "required": true,
+      "maps_to": ["TARGET_SCOPE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "FOCUS",
+      "label": "검사 렌즈 (reuse/quality/efficiency/all)",
+      "required": false,
+      "maps_to": ["FOCUS"],
+      "derive_from_raw_request": true
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "name": "doc-write-release-docs",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat,release},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "RELEASE_SCOPE",
+      "type": "diff|tag|version|repo|deployment-slice",
+      "required": true,
+      "description": "Release slice being documented."
+    },
+    {
+      "name": "RELEASE_DOC_GOAL",
+      "type": "release-note|changelog-entry|upgrade-note|migration-guide|compatibility-note|rollback-note|mixed",
+      "required": true,
+      "description": "Release documentation objective."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "user|developer|operator|maintainer|mixed",
+      "required": true,
+      "description": "Primary release-doc audience."
+    },
+    {
+      "name": "RELEASE_VERSION",
+      "type": "string",
+      "required": false,
+      "description": "Version, tag, or release label to name in the docs when known."
+    },
+    {
+      "name": "BREAKING_CHANGE_POLICY",
+      "type": "highlight-all|highlight-breaking-only|none",
+      "required": false,
+      "description": "How prominently to surface compatibility-impact changes. Defaults to `highlight-all` when omitted."
+    },
+    {
+      "name": "RELEASE_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Diff, tag, issues, PRs, tests, commands, or docs supporting the release claims."
+    }
+  ],
+  "display_name": "Doc / Write Release Docs",
+  "browse_category": "doc",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "릴리즈 문서 목표",
+      "required": true,
+      "maps_to": [
+        "RELEASE_DOC_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "릴리즈 범위",
+      "required": true,
+      "maps_to": [
+        "RELEASE_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "문서 독자",
+      "required": true,
+      "maps_to": [
+        "AUDIENCE"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

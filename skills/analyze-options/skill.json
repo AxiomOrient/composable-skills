@@ -1,0 +1,27 @@
+{
+  "name": "analyze-options",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "file|module|folder|repo|artifact", "required": true, "description": "Bounded scope the decision applies to." },
+    { "name": "DECISION_QUESTION", "type": "string", "required": true, "description": "Exact choice to resolve." },
+    { "name": "OPTION_SET", "type": "list", "required": true, "shape": "{OPTION, DESCRIPTION}", "description": "Explicit options to compare." },
+    { "name": "DECISION_CRITERIA", "type": "list", "required": false, "shape": "{CRITERION, WEIGHT}", "description": "Criteria and relative weights for scoring." },
+    { "name": "KNOWN_EVIDENCE", "type": "list", "required": false, "shape": "{TYPE, REF, WHY_RELEVANT}", "description": "Files, docs, measurements, or prior notes." },
+    { "name": "CONSTRAINTS", "type": "list", "required": false, "shape": "{CONSTRAINT}", "description": "Hard limits that change the trade-off." }
+  ],
+  "display_name": "Analyze / Options",
+  "browse_category": "analyze",
+  "browse_priority": 20,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "어디에 적용되는 결정인지", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "QUESTION", "label": "무엇을 결정할지", "required": true, "maps_to": ["DECISION_QUESTION"], "derive_from_raw_request": true },
+    { "key": "OPTIONS", "label": "비교할 선택지 목록", "required": true, "maps_to": ["OPTION_SET"] },
+    { "key": "CRITERIA", "label": "평가 기준과 비중", "required": false, "maps_to": ["DECISION_CRITERIA"] },
+    { "key": "EVIDENCE", "label": "이미 가진 근거", "required": false, "maps_to": ["KNOWN_EVIDENCE"] },
+    { "key": "CONSTRAINTS", "label": "반드시 지켜야 할 제약", "required": false, "maps_to": ["CONSTRAINTS"], "derive_from_raw_request": true }
+  ]
+}

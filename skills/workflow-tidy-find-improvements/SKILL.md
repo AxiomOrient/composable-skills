@@ -67,14 +67,15 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Lead with direction: **SIMPLIFY**, **REFACTOR**, or **HOLD**.
+Lead with direction: **단순화**, **재구성**, or **보류**.
 
 Opportunities (evidence-backed, file:line cited):
 - [opportunity] — `file:line` — [recommended action and why]
 
-On HOLD: "No actionable duplication or complexity found — clean as-is."
-On SIMPLIFY/REFACTOR: "Start with [top opportunity] — or use workflow-tidy-simplify-this if you want the fixes applied now."
+On 보류: "No actionable duplication or complexity found — clean as-is."
+On 단순화/재구성: "Start with [top opportunity] — or use workflow-tidy-simplify-this if you want the fixes applied now."
 
 ## Mandatory Rules
 - Keep improvement findings tied to explicit scan evidence.

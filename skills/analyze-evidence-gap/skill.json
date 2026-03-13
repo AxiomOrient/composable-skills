@@ -1,0 +1,23 @@
+{
+  "name": "analyze-evidence-gap",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "file|module|folder|repo|artifact", "required": true, "description": "Bounded scope the claim depends on." },
+    { "name": "CLAIM_UNDER_CHECK", "type": "string", "required": true, "description": "Claim, assumption, or conclusion that may lack enough evidence." },
+    { "name": "KNOWN_EVIDENCE", "type": "list", "required": false, "shape": "{TYPE, REF, WHY_RELEVANT}", "description": "Current evidence already available." },
+    { "name": "CONSTRAINTS", "type": "list", "required": false, "shape": "{CONSTRAINT}", "description": "Time, scope, or cost limits." }
+  ],
+  "display_name": "Analyze / Evidence Gap",
+  "browse_category": "analyze",
+  "browse_priority": 30,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "주장이 관련된 범위", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "CLAIM", "label": "신뢰할 수 있는지 확인할 주장이나 가정", "required": true, "maps_to": ["CLAIM_UNDER_CHECK"], "derive_from_raw_request": true },
+    { "key": "EVIDENCE", "label": "이미 가진 근거", "required": false, "maps_to": ["KNOWN_EVIDENCE"] },
+    { "key": "CONSTRAINTS", "label": "확인 작업의 제약 (시간, 비용 등)", "required": false, "maps_to": ["CONSTRAINTS"] }
+  ]
+}

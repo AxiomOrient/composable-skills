@@ -1,98 +1,97 @@
 ---
 name: workflow-doc-systemize
-description: "Workflow skill that inventories docs, curates the non-root doc surface, and writes the needed documentation artifacts. Use when the user needs one default documentation entrypoint instead of manually chaining inventory, curation, and writing."
+description: "Workflow skill that inventories docs, classifies them by keep/update/deprecate/delete, and applies only the bounded doc updates or bridge docs that the lifecycle decision requires. Use when the user needs one default documentation governance entrypoint instead of manually chaining inventory, curation, and targeted writing."
 ---
 
 # Workflow / Doc Systemize
 
 ## Purpose
-Compose documentation inventory, curation, and writing into one default docs workflow.
+Compose documentation inventory, lifecycle governance, and targeted doc writing into one default docs workflow.
 
 ## Default Program
 ```text
-[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs,compat},deterministic-output | lens: nielsen-norman | output: md(contract=v1)]
+[stages: preflight>detect>analyze>plan>review>handoff>audit |
+ scope: repo|diff|paths(glob,...) |
+ policy: evidence,quality-gates{docs,compat},deterministic-output |
+ lens: nielsen-norman |
+ output: md(contract=v1)]
 ```
 
 ## Lens Rationale
-This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions, information scent, and explicit doc ownership before cleanup or rewriting.
 
 ## Use When
-- Need one default docs entrypoint for a repo or docs subtree.
-- Need inventory, curation, and writing to stay connected in one path.
+- Need one default docs entrypoint for broad documentation cleanup and governance.
+- Need inventory, lifecycle judgement, and targeted updates to stay connected in one path.
 - Need documentation work without runtime code changes.
 
 ## Do Not Use When
 - Need only root README publishing.
+- Need a recursive folder docset with parent README-style summaries and child project docs.
+- Need release notes, changelog entries, or upgrade docs for a release.
 - Need only one narrow documentation concern.
 - Need runtime code changes.
 
 ## Required Inputs
 - `TARGET_SCOPE` (path|docs-folder|repo|subtree; required): Documentation scope to systemize.
-- `INVENTORY_GOAL` (cleanup|navigation|coverage|mixed; optional): Why the inventory is being created. Defaults to `mixed` when omitted.
-- `DOC_GOAL` (concept-guide|architecture-guide|usage-guide|api-guide|module-note|mixed; required): Documentation objective for the writing stage.
-- `AUDIENCE` (general|developer|operator|maintainer|mixed; required): Primary audience.
-- `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Documentation constraints or non-goals.
+- `CURATION_GOAL` (lifecycle-governance|cleanup|surface-sync|mixed; required): Why the docs surface is being cleaned or governed.
+- `AUDIENCE` (general|developer|operator|maintainer|mixed; required): Primary reader of the maintained docs surface.
+- `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Documentation constraints, non-goals, or protected surfaces.
 
 ## Input Contract Notes
 - TARGET_SCOPE should be a real documentation surface, not a generic code subtree.
-- DOC_GOAL and INVENTORY_GOAL can differ; one guides cleanup while the other guides writing.
+- Use this workflow when the main decision is "what survives and how should it be maintained".
 - Use doc-publish-readme separately when the root README or publish surface must change.
-- When INVENTORY_GOAL is omitted, default to `mixed`.
 
 ## Structured Outputs
-- `DOC_INVENTORY` (list; required; shape: {PATH, STATUS, EVIDENCE}): Documentation inventory.
-- `DOC_NAVIGATION_MAP` (list; required; shape: {FROM, TO, PURPOSE}): Navigation map for the curated docs surface.
-- `WRITTEN_DOCS` (list; required; shape: {PATH, CHANGE_KIND, AUDIENCE, FORM}): Docs created or updated.
-- `EXPANDED_ATOMIC_PATH` (list; required; shape: {SKILL}): Actual atomic path executed by the workflow.
+- `DOC_INVENTORY` (list; required; shape: {PATH, DOC_KIND, STATUS, ROLE_HINT, AUDIENCE_HINT, EVIDENCE}): Documentation inventory.
+- `DOC_LIFECYCLE_MAP` (list; required; shape: {PATH, DECISION, CURRENT_READER, CURRENT_ROLE, EVIDENCE}): Lifecycle judgement across the docs surface.
+- `WRITTEN_DOCS` (list; required; shape: {PATH, CHANGE_KIND, AUDIENCE, FORM}): Docs created or updated as part of the chosen lifecycle actions.
+- `EXPANDED_ATOMIC_PATH` (list; required; shape: {SKILL}): Atomic path executed by the workflow.
 
 ## Output Contract Notes
 - DOC_INVENTORY should stay evidence based.
-- WRITTEN_DOCS should reflect the final writing work instead of only the cleanup plan.
+- DOC_LIFECYCLE_MAP should make keep/update/deprecate/delete explicit instead of burying it in prose.
+- WRITTEN_DOCS should reflect only bounded follow-up docs such as refreshes, redirects, or deprecation notices.
 - EXPANDED_ATOMIC_PATH must preserve execution order explicitly.
 
 ## Artifacts
 - `artifacts_in`: none
-- `artifacts_out`: doc-inventory.v1, doc-curation-report.v1, documentation-report.v1
+- `artifacts_out`: doc-inventory.v2, doc-curation-report.v2, documentation-report.v2
 
 ## Neutrality Rules
 - Preserve the neutrality rules of the underlying docs skills.
 - Do not imply runtime code changes from a docs-only workflow.
-- Keep inventory, curation, and writing outputs distinct.
+- Keep inventory, lifecycle judgement, and writing outputs distinct.
 
 ## Execution Constraints
-- Do not widen this workflow into root README publishing.
-- Prefer the smallest doc surface that improves findability and usefulness for the stated audience.
+- Do not widen this workflow into root README publishing or release-doc authoring.
+- Prefer explicit reader and role decisions over vague stale-doc labels.
+- Apply only the bounded doc updates required by the lifecycle decision; do not turn cleanup into a generic rewrite marathon.
 
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
 
-Show what was written and what's still missing — no chain commentary.
+Show lifecycle outcome first, then writing:
 
-```
+```text
+keep/update/deprecate/delete: `file` — [why]
 updated: `file` — [what changed and why]
-written: `file` — [new content added]
+written: `file` — [new bridge or replacement doc added]
 ```
 
-Gaps (couldn't verify or write):
-- `file` — [why — e.g., no source content, ambiguous scope]
+Gaps (couldn't verify or act yet):
+- `file` — [why — e.g., no source content, ambiguous current reader]
 
-Ask: "Anything important missing in [section with lowest confidence]?"
+Ask:
+"Any doc here should be treated as canonical even if it looks stale?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.
-- Keep root README publication outside this workflow.
+- Keep root README publication and release-doc authoring outside this workflow.
 
 ## Expansion
 - `$doc-find-all`
 - `$doc-curate`
 - `$doc-write`
-
-## Example Invocation
-```text
-$workflow-doc-systemize
-TARGET_SCOPE: docs
-INVENTORY_GOAL: cleanup
-DOC_GOAL: usage-guide
-AUDIENCE: maintainer
-```

@@ -1,0 +1,68 @@
+{
+  "name": "analyze-release-risk",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: diff | policy: evidence,quality-gates{tests,security,compat,style},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "diff|file|module|folder|repo",
+      "required": true,
+      "description": "Scope to analyze."
+    },
+    {
+      "name": "RISK_FOCUS",
+      "type": "regression|compatibility|security|performance|mixed",
+      "required": true,
+      "allowed_values": ["regression", "compatibility", "security", "performance", "mixed"],
+      "description": "Primary risk dimension."
+    },
+    {
+      "name": "CHANGE_INTENT",
+      "type": "string",
+      "required": true,
+      "description": "Claimed purpose of the change."
+    },
+    {
+      "name": "KNOWN_GATE_SIGNAL",
+      "type": "list",
+      "required": false,
+      "shape": "{SIGNAL, STATUS, SOURCE}",
+      "description": "Known test, security, compat, or CI signals."
+    }
+  ],
+  "display_name": "Analyze / Release Risk",
+  "browse_category": "analyze",
+  "browse_priority": 90,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "분석할 범위",
+      "required": true,
+      "maps_to": ["TARGET_SCOPE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "RISK_FOCUS",
+      "label": "주요 위험 관점 (regression/compatibility/security/performance/mixed)",
+      "required": true,
+      "maps_to": ["RISK_FOCUS"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CHANGE",
+      "label": "변경 목적 한 줄 설명",
+      "required": true,
+      "maps_to": ["CHANGE_INTENT"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GATE_SIGNALS",
+      "label": "이미 확인한 게이트 신호 (테스트 결과 등)",
+      "required": false,
+      "maps_to": ["KNOWN_GATE_SIGNAL"]
+    }
+  ]
+}

@@ -92,14 +92,15 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Lead with release decision: GO / NO-GO / BLOCKED.
+Lead with release decision: 출시 가능 / 출시 불가 / 중단.
 
 Show per-step outcome (step → result):
-- release-check-repo → READY / BLOCKED
+- release-check-repo → 준비됨 / 중단
 - release-check-hygiene → doc gate + surface sync
-- check-security-holes → PASS / BLOCKED
-- release-verdict → GO / NO-GO / BLOCKED
+- review-security → 통과 / 중단
+- release-verdict → 출시 가능 / 출시 불가 / 중단
 
 List any blockers with severity and what resolves each.
 
@@ -115,7 +116,7 @@ On GO: "All gates passed — ready to publish." No further question needed.
 
 - `$release-check-repo`
 - `$release-check-hygiene`
-- `$check-security-holes`
+- `$review-security`
 - `$release-verdict`
 
 ## Example Invocation

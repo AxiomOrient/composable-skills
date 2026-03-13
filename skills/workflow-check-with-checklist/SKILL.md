@@ -1,6 +1,6 @@
 ---
 name: workflow-check-with-checklist
-description: "Workflow skill that combines `workflow-review-change` with the full 9-item `check-quality-scan` pass. Use when the user explicitly wants both narrow review scans and checklist coverage."
+description: "Workflow skill that combines `workflow-review-change` with the full 9-item `review-quality` checklist pass. Use when the user explicitly wants both narrow review scans and checklist coverage."
 ---
 
 # Workflow / Check + Checklist
@@ -18,7 +18,7 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 
 ## Use When
 - Need both explicit narrow review scans and the full 9-item checklist.
-- Need a named workflow instead of repeatedly typing `$workflow-review-change + $check-quality-scan`.
+- Need a named workflow instead of repeatedly typing `$workflow-review-change + $review-quality`.
 - Need checklist-backed review output for a bounded project or module scope.
 
 ## Do Not Use When
@@ -50,7 +50,7 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 - `artifacts_out`: review-findings.v2, quality-checklist-report.v1
 
 ## Neutrality Rules
-- Preserve the neutrality rules of `workflow-review-change` and `check-quality-scan`.
+- Preserve the neutrality rules of `workflow-review-change` and `review-quality`.
 - Do not invent findings when both underlying workflows return no issue.
 - Keep checklist coverage explicit rather than hiding it inside the base review workflow.
 
@@ -62,17 +62,18 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Lead with verdict: **INTEGRATE** or **HOLD**.
+Lead with verdict: **병합 가능** or **보류**.
 
 Checklist summary (9 items):
 | # | Item | pass / risk / unknown | Key evidence |
 
-P0/P1 findings that block merge:
-- P0 `file:line` — [issue]
+긴급/중요 findings that block merge:
+- 긴급 `file:line` — [issue]
 - Risk item #N — [finding] → [required action]
 
-On HOLD: "Fix [top finding] first — or want all risk items listed?"
+On 보류: "Fix [top finding] first — or want all risk items listed?"
 On step failure: name the step and ask what blocked it.
 
 ## Mandatory Rules
@@ -81,7 +82,7 @@ On step failure: name the step and ask what blocked it.
 
 ## Expansion
 - `$workflow-review-change`
-- `$check-quality-scan`
+- `$review-quality`
 
 ## Example Invocation
 ```text

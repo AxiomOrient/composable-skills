@@ -57,6 +57,7 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 List extractable constants with evidence locations:
 - [value or family] — appears at: [file:line, file:line] — extract to: [constants/config/shared]

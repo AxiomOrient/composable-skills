@@ -1,0 +1,23 @@
+{
+  "name": "clarify-scope",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>plan>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: minto-pyramid | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "REQUEST", "type": "string", "required": true, "description": "Ambiguous request or work item in its original form." },
+    { "name": "TARGET_SCOPE", "type": "file|module|folder|repo|artifact", "required": true, "description": "Target scope under discussion." },
+    { "name": "KNOWN_CONSTRAINTS", "type": "list", "required": false, "shape": "{CONSTRAINT}", "description": "Explicit constraints, non-goals, or deadlines." },
+    { "name": "KNOWN_DONE_CONDITION", "type": "list", "required": false, "shape": "{CONDITION}", "description": "Any existing completion rules." }
+  ],
+  "display_name": "Clarify / Scope",
+  "browse_category": "clarify",
+  "browse_priority": 10,
+  "is_category_default": true,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "REQUEST", "label": "무엇을 해달라고 했는지 (원문 그대로)", "required": true, "maps_to": ["REQUEST"], "derive_from_raw_request": true },
+    { "key": "SCOPE", "label": "어디에 대한 요청인지", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "CONSTRAINTS", "label": "이미 아는 제약 조건", "required": false, "maps_to": ["KNOWN_CONSTRAINTS"] },
+    { "key": "DONE", "label": "완료 조건 (알고 있는 것)", "required": false, "maps_to": ["KNOWN_DONE_CONDITION"] }
+  ]
+}

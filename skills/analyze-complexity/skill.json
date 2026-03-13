@@ -1,0 +1,19 @@
+{
+  "name": "analyze-complexity",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "path|module|repo", "required": true, "description": "Where to analyze complexity." },
+    { "name": "COMPLEXITY_FOCUS", "type": "cyclomatic|coupling|cognitive|hidden-state|mixed", "required": false, "allowed_values": ["cyclomatic","coupling","cognitive","hidden-state","mixed"], "description": "Which complexity dimension to prioritize." }
+  ],
+  "display_name": "Analyze / Complexity",
+  "browse_category": "analyze",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "복잡도를 분석할 경로나 모듈", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "FOCUS", "label": "어떤 복잡도에 집중할지 (cyclomatic/coupling/cognitive/hidden-state/mixed)", "required": false, "maps_to": ["COMPLEXITY_FOCUS"], "derive_from_raw_request": true }
+  ]
+}

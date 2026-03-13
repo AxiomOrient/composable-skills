@@ -1,0 +1,21 @@
+{
+  "name": "analyze-module-bounds",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: uncle-bob | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "path|module|api", "required": true, "description": "Boundary to analyze." },
+    { "name": "BOUNDARY_KIND", "type": "module|api|service|layer", "required": true, "allowed_values": ["module","api","service","layer"], "description": "Kind of boundary being analyzed." },
+    { "name": "ANALYSIS_DEPTH", "type": "surface|full", "required": false, "allowed_values": ["surface","full"], "description": "Surface = contract interface only; full = includes internal ownership split." }
+  ],
+  "display_name": "Analyze / Module Bounds",
+  "browse_category": "analyze",
+  "browse_priority": 80,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "분석할 경계 (파일, 모듈, API)", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "BOUNDARY_KIND", "label": "경계 종류 (module/api/service/layer)", "required": true, "maps_to": ["BOUNDARY_KIND"], "derive_from_raw_request": true },
+    { "key": "DEPTH", "label": "분석 깊이 (surface/full)", "required": false, "maps_to": ["ANALYSIS_DEPTH"] }
+  ]
+}

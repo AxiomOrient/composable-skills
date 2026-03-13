@@ -52,13 +52,14 @@ This skill uses `fowler-strangler` because it keeps the work aligned with: Use s
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 Show target dependency rules: allowed and forbidden directions.
 
 Show atomic refactor steps:
 1. [step] — why: [what coupling it removes]
 
-Show rollback conditions: [condition] → [stop or revert action]
+Show 롤백(되돌리기) conditions: [condition] → [stop or revert action]
 
 If scope was constrained, say so plainly: "Stopped at [boundary] — [rest] would require a separate run."
 

@@ -1,0 +1,95 @@
+{
+  "name": "workflow-doc-release-package",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat,release},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "RELEASE_SCOPE",
+      "type": "diff|tag|version|repo|deployment-slice",
+      "required": true,
+      "description": "Release slice being documented."
+    },
+    {
+      "name": "RELEASE_DOC_GOAL",
+      "type": "release-note|changelog-entry|upgrade-note|migration-guide|compatibility-note|rollback-note|mixed",
+      "required": true,
+      "description": "Release documentation objective."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "user|developer|operator|maintainer|mixed",
+      "required": true,
+      "description": "Primary release-doc audience."
+    },
+    {
+      "name": "RELEASE_VERSION",
+      "type": "string",
+      "required": false,
+      "description": "Version, tag, or release label to name in the docs when known."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Constraints such as required doc paths, excluded audiences, or exact sections."
+    }
+  ],
+  "display_name": "Workflow / Doc Release Package",
+  "browse_category": "doc",
+  "browse_priority": 30,
+  "is_category_default": false,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "릴리즈 범위",
+      "required": true,
+      "maps_to": [
+        "RELEASE_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "릴리즈 문서 목표",
+      "required": true,
+      "maps_to": [
+        "RELEASE_DOC_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "문서 독자",
+      "required": true,
+      "maps_to": [
+        "AUDIENCE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "EXPECTED",
+      "label": "버전/릴리즈 라벨",
+      "required": false,
+      "maps_to": [
+        "RELEASE_VERSION"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "문서 제약",
+      "required": false,
+      "maps_to": [
+        "CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ],
+  "expands_to": [
+    "$doc-find-all",
+    "$doc-write-release-docs"
+  ]
+}

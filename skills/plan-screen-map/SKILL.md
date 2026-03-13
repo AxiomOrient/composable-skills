@@ -73,6 +73,7 @@ This skill uses `nielsen-norman` because it keeps the work aligned with: Usabili
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 Lead with the IA summary in one sentence: how the hierarchy is organized and why.
 

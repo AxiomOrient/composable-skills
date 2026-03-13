@@ -67,16 +67,17 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Output implementation and guard together.
+구현과 테스트를 함께 출력.
 
 ```
-changed: `file:line` — description
-guard: `test name` → ✓
+변경: `파일:줄` — 설명
+테스트: `테스트명` → ✓
 ```
 
-If the test fails, ask immediately:
-> "Guard failed: [reason] — continue anyway?"
+테스트 실패 시 즉시:
+> "테스트 실패: [이유] — 계속 진행할까요?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

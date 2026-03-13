@@ -62,17 +62,18 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Lead with verdict: **INTEGRATE** or **HOLD**.
+Lead with verdict: **병합 가능** or **보류**.
 
 Findings by severity (evidence-backed only):
-- P0 `file:line` — [what's wrong and why it must be fixed before merge]
-- P1 `file:line` — [should fix]
-- P2 — [consider]
+- 긴급 `file:line` — [what's wrong and why it must be fixed before merge]
+- 중요 `file:line` — [should fix]
+- 참고 — [consider]
 
 Clean subchecks: one line only if notable.
 
-On HOLD: "Fix [top P0] before merge — want the full list?"
+On 보류: "Fix [top 긴급] before merge — want the full list?"
 On step failure: "Stopped at [subcheck name] — [what blocked it]"
 
 ## Mandatory Rules
@@ -80,13 +81,13 @@ On step failure: "Stopped at [subcheck name] — [what blocked it]"
 - Use the workflow only as a transparent composition, not a hidden mega-review.
 
 ## Expansion
-- `$scout-structure-map`
+- `$analyze-structure`
 - `$tidy-find-magic-numbers`
 - `$tidy-find-copies`
-- `$check-module-bounds`
-- `$check-failure-paths`
+- `$analyze-module-bounds`
+- `$review-failure-paths`
 - `$test-find-gaps`
-- `$check-change-review`
+- `$review-change`
 
 ## Example Invocation
 ```text

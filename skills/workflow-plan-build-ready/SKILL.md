@@ -67,6 +67,7 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 Output the task table and open decisions — no chain commentary.
 
@@ -84,7 +85,7 @@ If a step produced a blocker: name it and ask what needs clarifying before conti
 - Keep the plan output bounded enough that build-write-code can execute against it.
 
 ## Expansion
-- `$scout-boundaries`
+- `$clarify-boundaries`
 - `$plan-what-it-does`
 - `$plan-how-to-build`
 - `$plan-task-breakdown`

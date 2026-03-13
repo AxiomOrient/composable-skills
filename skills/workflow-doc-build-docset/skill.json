@@ -1,0 +1,86 @@
+{
+  "name": "workflow-doc-build-docset",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TREE_SCOPE",
+      "type": "folder|subtree",
+      "required": true,
+      "description": "Folder tree to document."
+    },
+    {
+      "name": "DOCSET_KIND",
+      "type": "folder-tree|module-tree|project-tree",
+      "required": true,
+      "description": "Kind of hierarchy being documented."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "general|developer|maintainer|mixed",
+      "required": true,
+      "description": "Primary audience for the hierarchy."
+    },
+    {
+      "name": "INDEX_DEPTH",
+      "type": "one-level|recursive",
+      "required": false,
+      "description": "How deep the hierarchy should be. Defaults to `recursive` when omitted."
+    },
+    {
+      "name": "INDEX_LAYOUT",
+      "type": "docs-mirror|in-place-readme",
+      "required": false,
+      "description": "Where parent overview pages should live. Defaults to `in-place-readme` when omitted."
+    }
+  ],
+  "display_name": "Workflow / Doc Build Docset",
+  "browse_category": "doc",
+  "browse_priority": 20,
+  "is_category_default": false,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "문서화할 폴더 트리",
+      "required": true,
+      "maps_to": [
+        "TREE_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "문서 계층 종류",
+      "required": true,
+      "maps_to": [
+        "DOCSET_KIND"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "주요 독자",
+      "required": true,
+      "maps_to": [
+        "AUDIENCE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "깊이/배치 제약",
+      "required": false,
+      "maps_to": [
+        "INDEX_DEPTH",
+        "INDEX_LAYOUT"
+      ],
+      "derive_from_raw_request": true
+    }
+  ],
+  "expands_to": [
+    "$doc-find-all",
+    "$doc-build-index"
+  ]
+}

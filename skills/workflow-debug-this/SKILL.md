@@ -67,19 +67,20 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Lead with root cause in one line — or "inconclusive: [candidates]" if not yet confirmed.
+원인을 한 줄로 — 아직 확인 못 했으면 "미확인: [후보들]"
 
 ```
-Cause: [what broke and why]
-Evidence: [specific trace, log line, or test]
-Fix: `file:line` — [change made]
+원인: [무엇이 왜 망가졌는지]
+근거: [로그, 추적, 테스트 등]
+수정: `파일:줄` — [변경 내용]
 ```
 
-Regression gap (if any): [test to add]
+회귀 테스트 빈틈: [추가해야 할 테스트]
 
-On inconclusive: "Narrowed to [N] candidates — cheapest next check: [X]. Run it?"
-On step failure: "Stuck at [step] — [what's needed to continue]"
+미확인일 때: "후보 [N]개로 좁혔습니다 — 가장 빠른 다음 확인: [X]. 실행할까요?"
+단계 막힐 때: "[단계]에서 막힘 — [계속하려면 무엇이 필요한지]"
 
 ## Mandatory Rules
 - Preserve the separation between mapped surface and confirmed cause.

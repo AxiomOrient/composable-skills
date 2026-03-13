@@ -1,12 +1,12 @@
 ---
 name: doc-curate
-description: "Use when repository docs below the repo root README must be indexed, structured, linked, de-duplicated, and stale-doc-cleaned based on actual file evidence. Build non-root entry docs and navigation with MECE structure, but leave root README authoring to doc-publish-readme. Do not modify runtime code."
+description: "Govern the documentation surface by classifying docs as keep, update, deprecate, or delete, while preserving durable knowledge and explicit replacement paths. Use when repository docs need lifecycle decisions before rewriting or removal. Do not modify runtime code."
 ---
 
 # Doc / Curate
 
 ## Purpose
-Reorganize non-root docs with explicit inventory, entry-structure planning, navigation graph, and cleanup actions.
+Reclassify and clean the documentation surface with explicit lifecycle decisions grounded in current reader need, current role, migration need, and durable-knowledge retention.
 
 ## Default Program
 ```text
@@ -18,70 +18,75 @@ Reorganize non-root docs with explicit inventory, entry-structure planning, navi
 ```
 
 ## Lens Rationale
-This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions, information scent, navigation clarity, and explicit ownership of each maintained doc.
 
 ## Use When
-- Need documentation inventory, navigation, and cleanup planning.
-- Need to reorganize folder-level entry docs and guide entrypoints below the repo root.
-- Need doc curation without runtime code changes.
-- Run doc-find-all first if a fresh documentation inventory is not yet available.
+- Need to decide whether each doc should be kept, updated, deprecated, or deleted.
+- Need to preserve durable knowledge before deleting delivery-only docs.
+- Need to separate canonical docs from stale, superseded, or migration-only docs.
+- Need explicit cleanup actions without touching runtime code.
 
 ## Do Not Use When
-- Need to write architecture or usage content only.
-- Need runtime code changes.
-- Need repo root README writing or multilingual publishing.
-- Need only documentation inventory without curation guidance.
+- Need repo root README authoring or multilingual publishing.
+- Need a recursive folder docset with parent README-style summaries; use doc-build-index.
+- Need release notes, upgrade notes, or migration docs for a specific release; use doc-write-release-docs.
+- Need only a fresh inventory with no lifecycle judgement.
 
 ## Required Inputs
-- `CURATION_GOAL` (cleanup|navigation|de-duplication|mixed; required): Primary curation objective.
-- `TARGET_SCOPE` (docs-folder|repo|subtree; required): Doc scope to curate.
-- `ENTRY_DOC_STYLE` (guide|reference|index|mixed; optional): Preferred style for non-root entry docs. Default is index when omitted.
-- `INVENTORY_SCOPE` (root-only|folder-tree|repo-wide; required): How broad the inventory should be.
+- `CURATION_GOAL` (lifecycle-governance|cleanup|surface-sync|mixed; required): Primary curation objective.
+- `TARGET_SCOPE` (docs-folder|repo|subtree; required): Doc scope to govern.
+- `INVENTORY_SCOPE` (folder-tree|repo-wide|release-surface; required): How broad the lifecycle inventory and cleanup judgement should be.
+- `DECISION_MODE` (conservative|balanced|aggressive; optional): How readily delete or deprecate actions may be recommended. Defaults to `conservative` when omitted.
+- `CANONICAL_SURFACES` (list; optional; shape: {PATH, WHY_CANONICAL}): Docs that define the maintained public surface and should be favored when deduplicating or redirecting content.
 
 ## Input Contract Notes
-- This skill owns non-root entry structure planning and navigation cleanup.
-- ENTRY_DOC_STYLE defaults to index when omitted and should describe the entry-doc role, not the prose difficulty.
-- Use doc-publish-readme when the repo root README or language portal must change.
+- This skill owns lifecycle judgement for documentation, not README publication or runtime code edits.
+- Use `conservative` when migration uncertainty is high or historical docs might still have readers.
+- Put current public entry docs, current architecture docs, and current contributor workflow docs into CANONICAL_SURFACES when the repository has explicit maintainership rules.
 
 ## Structured Outputs
-- `DOC_INVENTORY` (list; required; shape: {PATH, STATUS, EVIDENCE}): Evidence-backed document inventory.
-- `DOC_ENTRY_STRUCTURE` (list; required; shape: {ENTRY_PATH, ENTRY_KIND, COVERS, EVIDENCE_REF}): Planned non-root entry docs and the scope each one covers.
-- `DOC_NAVIGATION_MAP` (list; required; shape: {FROM, TO, PURPOSE}): Navigation graph across non-root entry docs and key supporting docs.
-- `CLEANUP_ACTIONS` (list; required; shape: {ACTION, TARGET, WHY, CONFIDENCE}): Keep, merge, move, archive, or delete-candidate actions.
+- `DOC_LIFECYCLE_MAP` (list; required; shape: {PATH, DECISION, CURRENT_READER, CURRENT_ROLE, EVIDENCE}): Keep/update/deprecate/delete judgement for each doc.
+- `DURABLE_KNOWLEDGE_TRANSFERS` (list; required; shape: {FROM, TO, WHAT, WHY}): Knowledge that must move into maintained docs before any deletion.
+- `DEPRECATION_ACTIONS` (list; required; shape: {PATH, REPLACEMENT, REMOVE_CONDITION, EVIDENCE}): Docs that should remain temporarily with explicit replacement and removal conditions.
+- `DELETE_CANDIDATES` (list; required; shape: {PATH, WHY_SAFE, PRECONDITION}): Docs that are safe to delete after required knowledge transfer or replacement checks.
+- `UPDATE_TARGETS` (list; required; shape: {PATH, WHY_UPDATE}): Docs whose topic still matters but whose names, paths, examples, procedures, or surface references are stale.
 
 ## Output Contract Notes
-- DOC_INVENTORY should reflect observed doc state before proposing cleanup.
-- DOC_ENTRY_STRUCTURE should stay bounded to non-root entry docs that materially improve navigation.
-- CLEANUP_ACTIONS may be empty when the current non-root doc surface is already coherent.
+- Keep docs that explain the current public surface, current architecture, or current contributor workflow unless explicit evidence proves they are superseded.
+- Update docs whose subject still matters but whose procedures, names, examples, or paths are stale.
+- Deprecate docs when readers or migration paths still exist; include replacement and removal conditions, plus version or date when known.
+- Delete docs only when no current reader remains, a canonical replacement exists or migration is unnecessary, and any durable knowledge has already moved.
 
 ## Primary Lens
 - `primary_lens`: `nielsen-norman`
-- `why`: Doc curation should optimize findability, navigation, and information scent.
+- `why`: Documentation curation succeeds when reader tasks, navigation clarity, and maintained ownership are explicit.
 
 ## Artifacts
-- `artifacts_in`: doc-inventory.v1
-- `artifacts_out`: doc-curation-report.v1
+- `artifacts_in`: doc-inventory.v2
+- `artifacts_out`: doc-curation-report.v2
 
 ## Neutrality Rules
-- Read docs before classifying them stale or duplicate.
-- Keep delete recommendations tentative until evidence is explicit.
-- Separate navigation issues from content duplication issues.
+- Do not recommend delete simply because a doc is old.
+- Do not hide migration needs inside a vague "cleanup" label.
+- Separate lifecycle judgement from content-writing recommendations.
 
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
 
-Show what was found, then what changes:
-- Inventory: [count] docs — [N] active, [N] stale, [N] orphaned
-- Navigation map: [key links added or fixed]
-- Cleanup actions: [keep/merge/move/archive/delete] — file — reason
+Show lifecycle decisions first:
+- keep/update/deprecate/delete — file — why
 
-Flag any actions that need a decision: "Left [file] as-is — unclear if it should be merged with [other file]."
+Then show required follow-up:
+- durable knowledge move — from → to — what moves
+- deprecation notice — file — replacement / remove when
+- delete candidate — file — why safe / what must happen first
 
-Ask about any boundary decision if scope was constrained.
+Flag any boundary call that needs a human decision:
+"Left [file] as update instead of delete — current reader need is still ambiguous."
 
 ## Execution Constraints
-- Do not author or rewrite the repo root README from this skill.
-- Treat non-root entry docs generically; do not assume they must be named README unless the local structure calls for it.
-- Keep cleanup actions separate from content-writing recommendations.
-- Prefer stable folder and guide entrypoints over scattered cross-links.
+- Do not author the repo root README from this skill.
+- Do not delete unfinished plan or task docs while TODO / DOING / BLOCKED work remains.
+- Treat completed delivery-only artifacts as delete candidates only after durable knowledge is promoted into maintained docs.
+- Prefer explicit canonical targets over broad merge-everything cleanup.

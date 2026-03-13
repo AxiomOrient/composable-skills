@@ -64,8 +64,9 @@ This skill uses `contract-evidence-verifier` because it keeps the work aligned w
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Lead with fix status: PASS / BLOCKED / INCONCLUSIVE.
+Lead with fix status: 통과 / 중단 / 미확인.
 
 Show what was verified:
 - [behavior] → [result] — evidence: [test or command]

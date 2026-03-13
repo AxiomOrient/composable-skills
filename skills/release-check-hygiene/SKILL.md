@@ -82,10 +82,11 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 Show gate status up front:
-- Doc gate: PASS / BLOCKED / INCONCLUSIVE
-- Surface sync: PASS / BLOCKED / INCONCLUSIVE
+- Doc gate: 통과 / 중단 / 미확인
+- Surface sync: 통과 / 중단 / 미확인
 
 List hygiene findings that block release:
 - [issue] — file or path — blocks release: yes/no

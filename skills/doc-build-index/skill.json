@@ -6,37 +6,43 @@
   "required_inputs": [
     {
       "name": "DOCSET_KIND",
-      "type": "module-tree|library|paper|mixed",
+      "type": "folder-tree|module-tree|project-tree",
       "required": true,
-      "description": "Primary kind of knowledge surface being documented."
+      "description": "Primary hierarchy being documented."
     },
     {
-      "name": "DOC_FORM",
-      "type": "guide|reference|paper-summary|survey|mixed",
-      "required": false,
-      "description": "Document form for the generated analysis docs. Default is guide for module/library trees and paper-summary for paper targets when omitted."
-    },
-    {
-      "name": "TARGET_SCOPE",
-      "type": "folder|module|library|paper|subtree",
+      "name": "TREE_SCOPE",
+      "type": "folder|subtree",
       "required": true,
-      "description": "Exact hierarchy or source set to document."
+      "description": "Exact hierarchy to document."
     },
     {
       "name": "INDEX_DEPTH",
-      "type": "artifact-only|folder-tree|multi-level",
+      "type": "one-level|recursive",
       "required": true,
-      "description": "How deep the analysis and index hierarchy should go."
+      "description": "How deep the parent/child docset should go."
     },
     {
       "name": "INDEX_LAYOUT",
       "type": "docs-mirror|in-place-readme",
       "required": false,
-      "description": "Where index files should live. Default is docs-mirror when omitted."
+      "description": "Where the overview pages should live. Defaults to `in-place-readme` when omitted."
+    },
+    {
+      "name": "PARENT_ENTRY_STYLE",
+      "type": "readme-overview|index-page",
+      "required": false,
+      "description": "Parent-page style. Defaults to `readme-overview` when omitted."
+    },
+    {
+      "name": "CHILD_DOC_STYLE",
+      "type": "project-info|module-info|mixed",
+      "required": false,
+      "description": "Child-page style. Defaults to `project-info` when omitted."
     },
     {
       "name": "AUDIENCE",
-      "type": "general|developer|researcher|mixed",
+      "type": "general|developer|maintainer|mixed",
       "required": true,
       "description": "Primary audience for the resulting docset."
     },
@@ -49,9 +55,9 @@
     {
       "name": "EVIDENCE_LINKS",
       "type": "list",
-      "required": true,
+      "required": false,
       "shape": "{TYPE, REF, WHY_RELEVANT}",
-      "description": "Files, library docs, papers, or other sources used to support the analysis docs."
+      "description": "Extra files or sources that must be cited beyond the repo tree itself."
     }
   ],
   "display_name": "Doc / Build Index",
@@ -59,5 +65,33 @@
   "browse_priority": 50,
   "is_category_default": false,
   "codex_surface": "expert",
-  "starter_inputs": []
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "계층 문서화 대상",
+      "required": true,
+      "maps_to": [
+        "DOCSET_KIND"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "문서화 트리 범위",
+      "required": true,
+      "maps_to": [
+        "TREE_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "주요 독자",
+      "required": true,
+      "maps_to": [
+        "AUDIENCE"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
 }

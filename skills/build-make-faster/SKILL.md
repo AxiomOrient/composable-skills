@@ -52,6 +52,7 @@ This skill uses `goldratt-toc` because it keeps the work aligned with: Find the 
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 Lead with the bottleneck in one line: what it is, where it is.
 
@@ -60,7 +61,7 @@ Then show:
 - Fix applied: [what changed]
 - After: [metric] = [value] — [delta vs budget]
 
-Ask: "Measurement stable? Want a regression guard added?"
+Ask: "Measurement stable? Want a 회귀 테스트 added?"
 
 ## Neutrality Rules
 - No optimization claim without comparable before/after evidence.

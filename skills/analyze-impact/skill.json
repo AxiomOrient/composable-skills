@@ -1,0 +1,23 @@
+{
+  "name": "analyze-impact",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "file|module|folder|repo", "required": true, "description": "Where the change is planned or already applied." },
+    { "name": "CHANGE_DESCRIPTION", "type": "string", "required": true, "description": "What the change does or intends to do." },
+    { "name": "IMPACT_DEPTH", "type": "direct|transitive|full", "required": false, "allowed_values": ["direct","transitive","full"], "description": "How deep to trace impact. Defaults to transitive." },
+    { "name": "CONSTRAINTS", "type": "list", "required": false, "shape": "{CONSTRAINT}", "description": "Scope or time limits." }
+  ],
+  "display_name": "Analyze / Impact",
+  "browse_category": "analyze",
+  "browse_priority": 70,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "변경이 일어나는 경로나 모듈", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "CHANGE", "label": "변경 내용 한 줄 설명", "required": true, "maps_to": ["CHANGE_DESCRIPTION"], "derive_from_raw_request": true },
+    { "key": "DEPTH", "label": "영향 추적 깊이 (direct/transitive/full)", "required": false, "maps_to": ["IMPACT_DEPTH"] },
+    { "key": "CONSTRAINTS", "label": "추적 범위 제약", "required": false, "maps_to": ["CONSTRAINTS"] }
+  ]
+}

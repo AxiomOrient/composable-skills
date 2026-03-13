@@ -78,6 +78,7 @@ Compose does not impose a domain lens of its own; it exists to preserve explicit
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 Show the expanded skill chain in execution order:
 1. [skill-name] — [role in the chain]

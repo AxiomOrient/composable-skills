@@ -363,6 +363,73 @@ def check_wf_doc_systemize(proc: subprocess.CompletedProcess[str], payload: dict
     )
 
 
+def check_doc_curate_lifecycle_routing(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
+    must(proc.returncode == 0, f"expected success, got {proc.returncode}")
+    must(payload["response_profile"]["primary_skill"] == "doc-curate", "primary skill mismatch")
+    route_table = payload["routing"]["input_route_table"]
+    must(
+        any(
+            row["starter_key"] == "GOAL"
+            and row["target_field"] == "CURATION_GOAL"
+            and row["status"] == "derived"
+            for row in route_table
+        ),
+        "CURATION_GOAL route missing",
+    )
+    must(
+        any(
+            row["starter_key"] == "SCOPE"
+            and row["target_field"] == "TARGET_SCOPE"
+            and row["status"] == "mapped"
+            for row in route_table
+        ),
+        "TARGET_SCOPE route missing",
+    )
+    missing = payload["routing"]["missing_required_inputs"]
+    must(len(missing) == 1, "unexpected number of missing required inputs")
+    must(missing[0]["target_field"] == "INVENTORY_SCOPE", "INVENTORY_SCOPE should remain explicitly missing")
+
+
+def check_wf_doc_release_package(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
+    must(proc.returncode == 0, f"expected success, got {proc.returncode}")
+    must(payload["response_profile"]["primary_skill"] == "workflow-doc-release-package", "primary skill mismatch")
+    must(payload["response_profile"]["profile_id"] == "documentation_report", "profile mismatch")
+    must(payload["program"]["lens"] == "release-gatekeeper", "workflow lens mismatch")
+    must(
+        payload["parsed"]["expanded_skills"] == ["doc-find-all", "doc-write-release-docs"],
+        "workflow expansion mismatch",
+    )
+    route_table = payload["routing"]["input_route_table"]
+    must(
+        any(
+            row["starter_key"] == "SCOPE"
+            and row["target_field"] == "RELEASE_SCOPE"
+            and row["status"] == "mapped"
+            for row in route_table
+        ),
+        "RELEASE_SCOPE route missing",
+    )
+    must(
+        any(
+            row["starter_key"] == "GOAL"
+            and row["target_field"] == "RELEASE_DOC_GOAL"
+            and row["status"] == "derived"
+            for row in route_table
+        ),
+        "RELEASE_DOC_GOAL route missing",
+    )
+    must(
+        any(
+            row["starter_key"] == "CONTEXT"
+            and row["target_field"] == "AUDIENCE"
+            and row["status"] == "derived"
+            for row in route_table
+        ),
+        "AUDIENCE route missing",
+    )
+    must(not payload["routing"]["missing_required_inputs"], "release workflow should resolve required inputs from the fixture")
+
+
 def check_debug_root_cause_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
     must(payload["response_profile"]["primary_skill"] == "debug-find-root-cause", "primary skill mismatch")
@@ -657,6 +724,13 @@ def main() -> int:
         Case("workflow-build-implement-and-guard", "$workflow-build-implement-and-guard", True, check_wf_build_implement_and_guard),
         Case("workflow-test-close-gaps", "$workflow-test-close-gaps", True, check_wf_test_close_gaps),
         Case("workflow-doc-systemize", "$workflow-doc-systemize", True, check_wf_doc_systemize),
+        Case("doc-curate-lifecycle-routing", "$compose $doc-curate @docs [lifecycle cleanup]", True, check_doc_curate_lifecycle_routing),
+        Case(
+            "workflow-doc-release-package",
+            "$workflow-doc-release-package @changes/v2.4.0.diff [release-note developer]",
+            True,
+            check_wf_doc_release_package,
+        ),
         Case("workflow-check-with-checklist", "$workflow-check-with-checklist", True, check_wf_project_checklist_review),
         Case("workflow-tidy-find-improvements", "$workflow-tidy-find-improvements", True, check_wf_project_improvement_map),
         Case("workflow-tidy-simplify-this", "$workflow-tidy-simplify-this", True, check_wf_tidy_simplify_this),

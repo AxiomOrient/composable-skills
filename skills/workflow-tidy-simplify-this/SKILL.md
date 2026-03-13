@@ -38,6 +38,21 @@ This workflow uses `hickey-carmack` because post-change cleanup should preserve 
 - `VERIFICATION_STATUS` (pass|blocked|inconclusive; required; allowed: pass|blocked|inconclusive): Final verification verdict after cleanup.
 - `EXPANDED_ATOMIC_PATH` (list; required; shape: {SKILL}): Atomic path executed by the workflow.
 
+## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
+
+결과부터: **통과** / **중단** / **미확인**
+
+수정한 항목:
+- [수정 내용] — `file:line` — [이유]
+
+건너뛴 항목 (이유 포함):
+- [항목] — [건너뛴 이유]
+
+가장 빠른 다음 확인 방법과 함께 미확인 항목 나열.
+
 ## Execution Constraints
 1. Determine scope from `git diff`, then recent files only if no diff boundary exists.
 2. Review the same scope through reuse, quality, and efficiency lenses.
@@ -46,11 +61,9 @@ This workflow uses `hickey-carmack` because post-change cleanup should preserve 
 5. Run focused verification and keep read-only review evidence separate from edits.
 
 ## Expansion
-- `$tidy-review-reuse`
-- `$tidy-review-quality`
-- `$tidy-review-efficiency`
+- `$tidy-review`
 - `$tidy-apply-review-fixes`
-- `$check-final-verify`
+- `$review-final-verify`
 
 ## Example Invocation
 ```text

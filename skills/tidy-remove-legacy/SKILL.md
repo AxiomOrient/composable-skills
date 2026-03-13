@@ -111,6 +111,7 @@ If those checks are incomplete, mark a verification gap instead of deleting.
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
 Show what was removed or collapsed:
 - [path or surface] — action: [deleted/collapsed/relinked] — why: [legacy reason]
@@ -119,7 +120,7 @@ Show reference updates: [file] — change: [what was updated]
 
 Show verification results: [check] — result: PASS / FAIL
 
-Flag any gaps: "[path or check] could not be fully verified — need: [cheapest next check]"
+Flag any gaps: "[path or check] could not be fully verified — need: [가장 빠른 다음 확인 방법]"
 
 Ask about any boundary decision if cleanup scope was deliberately constrained.
 

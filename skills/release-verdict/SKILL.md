@@ -68,17 +68,18 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 ## Response Format
 
 Think and operate in English, but deliver the final response in Korean.
+쉽고 간결한 한국어로 답하라. 전문 용어 금지. 핵심만 간단하게.
 
-Lead with the verdict: GO / NO-GO / BLOCKED.
+결과부터: **출시 가능** / **출시 불가** / **중단**
 
-Show blast radius in one line: [who or what is affected and to what extent].
+영향 범위 한 줄로: [누가/무엇이 어느 정도 영향받는지]
 
-List any blockers with severity:
-- [gate] — [issue] — severity: [critical/moderate]
+중단 사유가 있으면:
+- [검사 항목] — [문제] — 심각도: [높음/보통]
 
-Show the rollback checklist: step → purpose.
+롤백(되돌리기) 체크리스트: 단계 → 이유
 
-Ask: "Rollback path confirmed? Any gate still needs owner approval?"
+끝에: "롤백 경로 확인됐나요? 승인이 필요한 항목이 있나요?"
 
 ## Execution Constraints
 - Do not mutate branches, tags, remotes, or release hosts from this skill.

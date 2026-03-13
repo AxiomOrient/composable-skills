@@ -1,0 +1,25 @@
+{
+  "name": "analyze-baseline",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>verify>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,perf-aware,deterministic-output | lens: goldratt-toc | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "path|module|repo", "required": true, "description": "Optimization target." },
+    { "name": "METRIC_NAME", "type": "latency|throughput|memory|cpu|custom", "required": true, "allowed_values": ["latency","throughput","memory","cpu","custom"], "description": "Primary performance metric." },
+    { "name": "MEASUREMENT_METHOD", "type": "command|benchmark|profile|custom", "required": true, "allowed_values": ["command","benchmark","profile","custom"], "description": "How the baseline will be captured." },
+    { "name": "SAMPLE_SIZE", "type": "number", "required": false, "description": "Number of samples for statistical confidence." },
+    { "name": "BUDGET_HINT", "type": "string", "required": false, "description": "Known target budget or threshold." }
+  ],
+  "display_name": "Analyze / Baseline",
+  "browse_category": "analyze",
+  "browse_priority": 40,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "측정할 대상 경로나 모듈", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "METRIC", "label": "측정할 지표 (latency/throughput/memory/cpu/custom)", "required": true, "maps_to": ["METRIC_NAME"], "derive_from_raw_request": true },
+    { "key": "METHOD", "label": "측정 방법 (benchmark/command/profile/custom)", "required": true, "maps_to": ["MEASUREMENT_METHOD"] },
+    { "key": "SAMPLE_SIZE", "label": "샘플 수 (기본: 통계적 신뢰도에 필요한 최소치)", "required": false, "maps_to": ["SAMPLE_SIZE"] },
+    { "key": "BUDGET", "label": "알고 있는 목표 수치", "required": false, "maps_to": ["BUDGET_HINT"] }
+  ]
+}

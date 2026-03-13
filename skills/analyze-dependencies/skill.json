@@ -1,0 +1,21 @@
+{
+  "name": "analyze-dependencies",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: uncle-bob | output: md(contract=v1)]",
+  "required_inputs": [
+    { "name": "TARGET_SCOPE", "type": "path|module|repo", "required": true, "description": "Scope to map dependencies in." },
+    { "name": "DEP_FOCUS", "type": "direction|cycles|coupling|violations|mixed", "required": false, "allowed_values": ["direction","cycles","coupling","violations","mixed"], "description": "Which dependency dimension to prioritize." },
+    { "name": "ALLOWED_DIRECTIONS", "type": "list", "required": false, "shape": "{FROM, TO}", "description": "Expected allowed dependency directions for violation detection." }
+  ],
+  "display_name": "Analyze / Dependencies",
+  "browse_category": "analyze",
+  "browse_priority": 60,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    { "key": "SCOPE", "label": "의존성을 분석할 경로나 모듈", "required": true, "maps_to": ["TARGET_SCOPE"], "derive_from_raw_request": true },
+    { "key": "FOCUS", "label": "어떤 의존성 문제에 집중할지 (direction/cycles/coupling/violations/mixed)", "required": false, "maps_to": ["DEP_FOCUS"], "derive_from_raw_request": true },
+    { "key": "ALLOWED_DIRECTIONS", "label": "허용되는 의존성 방향 규칙 (from → to)", "required": false, "maps_to": ["ALLOWED_DIRECTIONS"] }
+  ]
+}
