@@ -60,6 +60,7 @@
     "$debug-capture-failure",
     "$debug-map-impact",
     "$debug-find-root-cause",
+    "$debug-confirm-fix",
     "$test-find-gaps"
   ]
 }

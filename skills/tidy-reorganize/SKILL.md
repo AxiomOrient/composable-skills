@@ -51,6 +51,8 @@ This skill uses `fowler-strangler` because it keeps the work aligned with: Use s
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show target dependency rules: allowed and forbidden directions.
 
 Show atomic refactor steps:

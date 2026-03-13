@@ -94,17 +94,17 @@ def run_parser_without_workflow_metadata(_macro: str) -> subprocess.CompletedPro
             json.dumps({"valid_ids": ["hickey-carmack"]}, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
-        skill_dir = skills_root / "workflow-check-full-review"
+        skill_dir = skills_root / "workflow-review-change"
         skill_dir.mkdir(parents=True)
         (skill_dir / "SKILL.md").write_text("# placeholder\n", encoding="utf-8")
-        return run_parser("$workflow-check-full-review", extra_args=["--skills-root", str(skills_root)])
+        return run_parser("$workflow-review-change", extra_args=["--skills-root", str(skills_root)])
 
 
 def check_missing_workflow_metadata(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode != 0, "expected failure when workflow metadata is absent from direct skill metadata")
     must(payload["errors"], "expected structured error for missing workflow metadata")
     must(
-        "Workflow metadata missing for `$workflow-check-full-review`" in payload["errors"][0]
+        "Workflow metadata missing for `$workflow-review-change`" in payload["errors"][0]
         and "skill.json" in payload["errors"][0],
         "missing explicit workflow metadata failure",
     )
@@ -165,9 +165,9 @@ def check_clarify_prompt_tail(proc: subprocess.CompletedProcess[str], payload: d
 
 def check_question_clarify_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["parsed"]["skills"] == ["ask-form-question"], "skills mismatch")
+    must(payload["parsed"]["skills"] == ["ask-clarify-question"], "skills mismatch")
     must(payload["response_profile"]["profile_id"] == "clarify_question", "profile mismatch")
-    must(payload["program"]["lens"] == "inversion-focus", "ask-form-question lens mismatch")
+    must(payload["program"]["lens"] == "inversion-focus", "ask-clarify-question lens mismatch")
 
 
 def check_plan_driven_delivery_implement_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
@@ -184,7 +184,7 @@ def check_plan_driven_delivery_implement_profile(proc: subprocess.CompletedProce
 
 def check_build_until_done_loop_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "build-until-done", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "control-build-until-done", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "analysis_report", "profile mismatch")
     must(payload["parsed"]["docs"] == ["docs/IMPLEMENTATION-PLAN.md", "docs/TASKS.md"], "docs capture mismatch")
     route_table = payload["routing"]["input_route_table"]
@@ -194,7 +194,7 @@ def check_build_until_done_loop_profile(proc: subprocess.CompletedProcess[str], 
 
 def check_build_until_done_custom_plan_names(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "build-until-done", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "control-build-until-done", "primary skill mismatch")
     must(payload["program"]["scope"] == "paths(docs/05_IMPLEMENTATION_MASTER_PLAN.md,docs/06_TASKS_BACKLOG.md)", "custom scope mismatch")
     route_table = payload["routing"]["input_route_table"]
     must(any(row["target_skill"] == "plan-sync-tasks" and row["target_field"] == "IMPLEMENTATION_PLAN_PATH" and row["value_source"] == "docs/05_IMPLEMENTATION_MASTER_PLAN.md" for row in route_table), "custom implementation plan route missing")
@@ -203,7 +203,7 @@ def check_build_until_done_custom_plan_names(proc: subprocess.CompletedProcess[s
 
 def check_finish_until_done_loop_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "finish-until-done", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "control-finish-until-done", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "analysis_report", "profile mismatch")
     must(payload["parsed"]["docs"] == ["docs"], "docs capture mismatch")
     route_table = payload["routing"]["input_route_table"]
@@ -239,13 +239,13 @@ def check_curate_docs_profile(proc: subprocess.CompletedProcess[str], payload: d
 
 def check_wf_question_ready(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["parsed"]["skills"] == ["workflow-ask-sharpen"], "skills mismatch")
-    must(payload["response_profile"]["primary_skill"] == "workflow-ask-sharpen", "primary skill mismatch")
+    must(payload["parsed"]["skills"] == ["workflow-clarify-request"], "skills mismatch")
+    must(payload["response_profile"]["primary_skill"] == "workflow-clarify-request", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "question_stack", "profile mismatch")
     must(payload["program"]["lens"] == "popper-falsification", "workflow lens mismatch")
     must(
         payload["parsed"]["expanded_skills"] == [
-            "ask-form-question",
+            "ask-clarify-question",
             "ask-break-it-down",
             "ask-flip-assumption",
         ],
@@ -261,7 +261,7 @@ def check_wf_question_map(proc: subprocess.CompletedProcess[str], payload: dict)
     must(payload["program"]["lens"] == "inversion-focus", "workflow lens mismatch")
     must(
         payload["parsed"]["expanded_skills"] == [
-            "ask-form-question",
+            "ask-clarify-question",
             "ask-break-it-down",
         ],
         "workflow expansion mismatch",
@@ -270,22 +270,23 @@ def check_wf_question_map(proc: subprocess.CompletedProcess[str], payload: dict)
 
 def check_wf_project_review(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "workflow-check-full-review", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "workflow-review-change", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "generic", "profile mismatch")
     must(payload["program"]["lens"] == "kahneman-tversky", "workflow lens mismatch")
     expanded = payload["parsed"]["expanded_skills"]
-    must("tidy-find-magic-numbers" in expanded, "missing tidy-find-magic-numbers expansion")
-    must("tidy-find-copies" in expanded, "missing tidy-find-copies expansion")
-    must("check-merge-ready" in expanded, "missing review expansion")
-    must("check-quality-scan" not in expanded, "workflow-check-full-review should stay narrow by default")
+    must("scout-structure-map" in expanded, "missing structure-map expansion")
+    must("check-module-bounds" in expanded, "missing module-bounds expansion")
+    must("check-failure-paths" in expanded, "missing failure-paths expansion")
+    must("check-change-review" in expanded, "missing review expansion")
+    must("check-quality-scan" not in expanded, "workflow-review-change should stay narrow by default")
 
 
 def check_workflow_duplicate_collapse(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
     expanded = payload["parsed"]["expanded_skills"]
-    must(expanded.count("check-merge-ready") == 1, "duplicate review should be collapsed after expansion")
+    must(expanded.count("check-change-review") == 1, "duplicate review should be collapsed after expansion")
     warnings = payload.get("warnings", [])
-    must(any("Collapsed duplicate skill `$check-merge-ready`" in w for w in warnings), "missing duplicate collapse warning")
+    must(any("Collapsed duplicate skill `$check-change-review`" in w for w in warnings), "missing duplicate collapse warning")
 
 
 def check_wf_project_debug(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
@@ -298,6 +299,7 @@ def check_wf_project_debug(proc: subprocess.CompletedProcess[str], payload: dict
             "debug-capture-failure",
             "debug-map-impact",
             "debug-find-root-cause",
+            "debug-confirm-fix",
             "test-find-gaps",
         ],
         "workflow expansion mismatch",
@@ -310,7 +312,7 @@ def check_wf_scout_structure(proc: subprocess.CompletedProcess[str], payload: di
     must(payload["response_profile"]["profile_id"] == "analysis_report", "profile mismatch")
     must(payload["program"]["lens"] == "hickey-carmack", "workflow lens mismatch")
     must(
-        payload["parsed"]["expanded_skills"] == ["scout-scope", "scout-structure-map"],
+        payload["parsed"]["expanded_skills"] == ["scout-scope-contract", "scout-structure-map"],
         "workflow expansion mismatch",
     )
 
@@ -373,9 +375,9 @@ def check_wf_project_checklist_review(proc: subprocess.CompletedProcess[str], pa
     must(payload["response_profile"]["primary_skill"] == "workflow-check-with-checklist", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "review_findings", "profile mismatch")
     expanded = payload["parsed"]["expanded_skills"]
-    must("workflow-check-full-review" not in expanded, "nested workflow names should be flattened")
+    must("workflow-review-change" not in expanded, "nested workflow names should be flattened")
     must("check-quality-scan" in expanded, "checklist expansion missing")
-    must("check-merge-ready" in expanded, "review expansion missing")
+    must("check-change-review" in expanded, "review expansion missing")
 
 
 def check_wf_project_improvement_map(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
@@ -391,6 +393,17 @@ def check_wf_project_improvement_map(proc: subprocess.CompletedProcess[str], pay
     must(
         payload["contract_outputs"]["EXPANDED_SKILLS"] == payload["parsed"]["expanded_skills"],
         "contract expanded skills mismatch",
+    )
+
+
+def check_wf_tidy_simplify_this(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
+    must(proc.returncode == 0, f"expected success, got {proc.returncode}")
+    must(payload["response_profile"]["primary_skill"] == "workflow-tidy-simplify-this", "primary skill mismatch")
+    must(payload["response_profile"]["profile_id"] == "implementation_delta", "profile mismatch")
+    must(
+        payload["parsed"]["expanded_skills"]
+        == ["tidy-review-reuse", "tidy-review-quality", "tidy-review-efficiency", "tidy-apply-review-fixes", "check-final-verify"],
+        "workflow expansion mismatch",
     )
 
 
@@ -492,12 +505,12 @@ def check_release_readiness_profile(proc: subprocess.CompletedProcess[str], payl
     must(payload["program"]["lens"] == "release-gatekeeper", "release-verdict lens mismatch")
 
 
-def check_wf_security_preflight(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
+def check_security_review_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "workflow-security-preflight", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "check-security-holes", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "security_report", "profile mismatch")
     must(payload["program"]["lens"] == "nist-rmf", "workflow lens mismatch")
-    must(payload["parsed"]["expanded_skills"] == ["check-security-holes"], "workflow expansion mismatch")
+    must(payload["parsed"]["expanded_skills"] == ["check-security-holes"], "security expansion mismatch")
 
 
 def check_wf_release_review(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
@@ -518,7 +531,7 @@ def check_wf_release_review(proc: subprocess.CompletedProcess[str], payload: dic
 
 def check_wf_release_ship(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "workflow-release-publish", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "control-release-publish-flow", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "generic", "profile mismatch")
     must(payload["program"]["lens"] == "release-gatekeeper", "workflow lens mismatch")
     must(
@@ -634,9 +647,9 @@ def main() -> int:
     cases: List[Case] = [
         Case("analyze-minimal", "$scout-structure-map", True, check_analyze_minimal),
         Case("compose-analyze-orchestration-only", "$compose $scout-structure-map", True, check_compose_analyze_orchestration_only),
-        Case("workflow-ask-sharpen", "$workflow-ask-sharpen", True, check_wf_question_ready),
-        Case("workflow-check-full-review", "$compose $workflow-check-full-review @src", True, check_wf_project_review),
-        Case("workflow-duplicate-collapse", "$workflow-check-full-review + $check-merge-ready @src", True, check_workflow_duplicate_collapse),
+        Case("workflow-clarify-request", "$workflow-clarify-request", True, check_wf_question_ready),
+        Case("workflow-review-change", "$compose $workflow-review-change @src", True, check_wf_project_review),
+        Case("workflow-duplicate-collapse", "$workflow-review-change + $check-change-review @src", True, check_workflow_duplicate_collapse),
         Case("workflow-scout-structure", "$workflow-scout-structure", True, check_wf_scout_structure),
         Case("workflow-debug-this", "$workflow-debug-this", True, check_wf_project_debug),
         Case("debug-find-root-cause-profile", "$debug-find-root-cause", True, check_debug_root_cause_profile),
@@ -646,6 +659,7 @@ def main() -> int:
         Case("workflow-doc-systemize", "$workflow-doc-systemize", True, check_wf_doc_systemize),
         Case("workflow-check-with-checklist", "$workflow-check-with-checklist", True, check_wf_project_checklist_review),
         Case("workflow-tidy-find-improvements", "$workflow-tidy-find-improvements", True, check_wf_project_improvement_map),
+        Case("workflow-tidy-simplify-this", "$workflow-tidy-simplify-this", True, check_wf_tidy_simplify_this),
         Case("scope-contract-map-profile", "$scout-boundaries", True, check_scope_contract_map_profile),
         Case("baseline-metric-capture-profile", "$scout-baseline", True, check_baseline_metric_capture_profile),
         Case("test-design-cases-profile", "$test-design-cases", True, check_test_design_cases_profile),
@@ -661,9 +675,9 @@ def main() -> int:
         Case("technical-design-doc-profile", "$plan-how-to-build", True, check_technical_design_doc_profile),
         Case("release-repo-check-profile", "$release-check-repo", True, check_release_repo_check_profile),
         Case("release-readiness-profile", "$release-verdict", True, check_release_readiness_profile),
-        Case("workflow-security-preflight", "$workflow-security-preflight", True, check_wf_security_preflight),
+        Case("check-security-holes", "$check-security-holes", True, check_security_review_profile),
         Case("workflow-release-ready-check", "$workflow-release-ready-check", True, check_wf_release_review),
-        Case("workflow-release-publish", "$workflow-release-publish", True, check_wf_release_ship),
+        Case("control-release-publish-flow", "$control-release-publish-flow", True, check_wf_release_ship),
         Case("release-publish-profile", "$release-publish", True, check_release_publish_profile),
         Case("unknown-skill-hint", "$composer + $scout-structure-map", False, check_unknown_skill_hint),
         Case(
@@ -675,7 +689,7 @@ def main() -> int:
         ),
         Case(
             "workflow-metadata-must-come-from-skill-json",
-            "$workflow-check-full-review",
+            "$workflow-review-change",
             False,
             check_missing_workflow_metadata,
             run_parser_without_workflow_metadata,
@@ -687,8 +701,8 @@ def main() -> int:
             check_skill_json_backed_workflow,
             run_parser_with_skill_json_backed_workflow,
         ),
-        Case("clarify-prompt-tail", "$scout-scope 요구사항 애매함", True, check_clarify_prompt_tail),
-        Case("question-clarify-profile", "$ask-form-question", True, check_question_clarify_profile),
+        Case("clarify-prompt-tail", "$scout-scope-contract 요구사항 애매함", True, check_clarify_prompt_tail),
+        Case("question-clarify-profile", "$ask-clarify-question", True, check_question_clarify_profile),
         Case("workflow-ask-get-clear", "$workflow-ask-get-clear", True, check_wf_question_map),
         Case(
             "plan-sync-tasks-implement-profile",
@@ -697,20 +711,20 @@ def main() -> int:
             check_plan_driven_delivery_implement_profile,
         ),
         Case(
-            "build-until-done-loop-profile",
-            "$compose + $build-until-done + $plan-sync-tasks + $build-write-code + $check-final-verify @docs/IMPLEMENTATION-PLAN.md @docs/TASKS.md [Keep executing the task ledger until every required row is done.]",
+            "control-build-until-done-loop-profile",
+            "$compose + $control-build-until-done + $plan-sync-tasks + $build-write-code + $check-final-verify @docs/IMPLEMENTATION-PLAN.md @docs/TASKS.md [Keep executing the task ledger until every required row is done.]",
             True,
             check_build_until_done_loop_profile,
         ),
         Case(
-            "build-until-done-custom-plan-names",
-            "$compose + $build-until-done + $plan-sync-tasks + $build-write-code + $check-final-verify @docs/05_IMPLEMENTATION_MASTER_PLAN.md @docs/06_TASKS_BACKLOG.md [Keep executing the task ledger until every required row is done.]",
+            "control-build-until-done-custom-plan-names",
+            "$compose + $control-build-until-done + $plan-sync-tasks + $build-write-code + $check-final-verify @docs/05_IMPLEMENTATION_MASTER_PLAN.md @docs/06_TASKS_BACKLOG.md [Keep executing the task ledger until every required row is done.]",
             True,
             check_build_until_done_custom_plan_names,
         ),
         Case(
-            "finish-until-done-loop-profile",
-            "$compose + $finish-until-done + $doc-write + $check-final-verify @docs [Keep iterating until the guide is beginner-readable and every critical issue is resolved.]",
+            "control-finish-until-done-loop-profile",
+            "$compose + $control-finish-until-done + $doc-write + $check-final-verify @docs [Keep iterating until the guide is beginner-readable and every critical issue is resolved.]",
             True,
             check_finish_until_done_loop_profile,
         ),
@@ -719,9 +733,9 @@ def main() -> int:
         Case("simplifier-profile", "$compose $tidy-cut-fat $check-final-verify", True, check_simplifier_profile),
         Case("curate-docs-profile", "$compose $doc-curate @docs", True, check_curate_docs_profile),
         Case("generic-required-sections", "$check-final-verify", True, check_generic_required_sections),
-        Case("removed-entry-syntax", "$phase:check-merge-ready", False, check_removed_entry_syntax),
+        Case("removed-entry-syntax", "$phase:check-change-review", False, check_removed_entry_syntax),
         Case("docs-scope-tail", "$build-write-code docs/IMPLEMENTATION-PLAN.md docs/TASKS.md 그리고 계속 진행", True, check_docs_scope_tail),
-        Case("bracket-prompt-and-docs", "$compose $scout-structure-map $scout-scope $check-final-verify [skills 폴더 구조 분석] @docs/IMPLEMENTATION-PLAN.md", True, check_bracket_prompt_and_docs),
+        Case("bracket-prompt-and-docs", "$compose $scout-structure-map $scout-scope-contract $check-final-verify [skills 폴더 구조 분석] @docs/IMPLEMENTATION-PLAN.md", True, check_bracket_prompt_and_docs),
         Case("nested-bracket-and-escape", "$compose $scout-structure-map [[A\\+B] \\[raw\\]] @docs/TASKS.md", True, check_nested_bracket_and_escape),
         Case("at-folder-and-custom-prompt", "$compose $tidy-cut-fat @src [구조 단순화]", True, check_at_folder_and_custom_prompt),
         Case("simplifier-implement-combo", "$compose $tidy-cut-fat @src [바로 수정] $build-write-code", True, check_simplifier_implement_combo),

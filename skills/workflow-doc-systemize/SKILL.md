@@ -65,6 +65,8 @@ This skill uses `nielsen-norman` because it keeps the work aligned with: Usabili
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show what was written and what's still missing — no chain commentary.
 
 ```

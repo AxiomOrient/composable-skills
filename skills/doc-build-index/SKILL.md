@@ -78,6 +78,8 @@ This skill uses `nielsen-norman` because it keeps the work aligned with: Usabili
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 List what was written, grouped by level:
 - Analysis docs: file:section — target — form (guide/reference/paper-summary)
 - Local indexes: file — covers

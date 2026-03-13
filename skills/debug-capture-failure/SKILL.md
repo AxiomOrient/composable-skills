@@ -62,6 +62,8 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 State repro status first: STABLE / PARTIAL / MISSING.
 
 Show the repro recipe as numbered steps:

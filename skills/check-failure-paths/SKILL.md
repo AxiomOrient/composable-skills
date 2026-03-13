@@ -69,6 +69,8 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Group findings by severity — P0 (unsafe), P1 (missing guard), P2 (inconsistent recovery):
 
 P0 — file:line — [failure mode]: [what breaks and how badly]

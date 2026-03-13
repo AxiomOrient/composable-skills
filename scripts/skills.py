@@ -27,6 +27,12 @@ LEGACY_DOC_FILES = [
     "SKILL-REFACTORING-PLAN.md",
 ]
 DOCS_MANIFEST_FILE = ".composable-skills-docs-manifest.txt"
+SYNC_PROFILES = ("core", "docs-release", "extras", "all")
+CORE_CATEGORIES = {"ask", "scout", "plan", "build", "debug", "review", "check", "test", "tidy"}
+DOCS_RELEASE_CATEGORIES = {"doc", "release"}
+EXTRAS_SKILLS = {"gemini", "commit-write-message"}
+CORE_CONTROL_SKILLS = {"compose", "plan-sync-tasks", "control-build-until-done", "control-finish-until-done"}
+DOCS_RELEASE_CONTROL_SKILLS = {"compose", "plan-sync-tasks", "control-release-publish-flow", "release-publish"}
 
 DEFAULT_PROGRAM_PATTERN = re.compile(r"##\s+Default\s+Program\s*\n```text\n(.*?)\n```", flags=re.S)
 FRONTMATTER_DESCRIPTION_PATTERN = re.compile(r'^description:\s*"((?:\\"|[^"])*)"\s*$', flags=re.M)
@@ -87,6 +93,31 @@ def direct_skill_entries(skills_root: Path) -> Dict[str, dict]:
         if meta_path.exists():
             entries[path.name] = load_json(meta_path)
     return entries
+
+
+def selected_runtime_skill_names(skills_root: Path, direct_entries: Dict[str, dict], profile: str) -> List[str]:
+    all_names = [path.name for path in iter_skill_dirs(skills_root)]
+    if profile == "all":
+        return all_names
+
+    selected = set()
+    for name in all_names:
+        entry = direct_entries.get(name, {})
+        category = entry.get("browse_category")
+        if profile == "core":
+            if name in EXTRAS_SKILLS:
+                continue
+            if category in CORE_CATEGORIES or name in CORE_CONTROL_SKILLS:
+                selected.add(name)
+        elif profile == "docs-release":
+            if category in DOCS_RELEASE_CATEGORIES or category == "security" or name in DOCS_RELEASE_CONTROL_SKILLS:
+                selected.add(name)
+        elif profile == "extras":
+            if name in EXTRAS_SKILLS:
+                selected.add(name)
+        else:
+            raise ValueError(f"Unknown sync profile: {profile}")
+    return [name for name in all_names if name in selected]
 
 
 def extract_default_program(skill_md_path: Path) -> str:
@@ -251,6 +282,32 @@ def command_validate(skills_root: Path) -> int:
 
         if entry.get("layer") == "workflow" and not isinstance(entry.get("expands_to"), list):
             errors.append(f"{meta_path}: workflow metadata must define `expands_to`.")
+        if entry.get("codex_surface") == "public_entry" and not name.startswith("workflow-"):
+            errors.append(f"{meta_path}: public_entry skills must use `workflow-*` naming.")
+        if entry.get("codex_surface") == "internal_control" and name.startswith("workflow-"):
+            errors.append(f"{meta_path}: internal_control skills must not use `workflow-*` naming.")
+
+        required_inputs = entry.get("required_inputs")
+        starter_inputs = entry.get("starter_inputs")
+        if entry.get("codex_surface") == "public_entry" and isinstance(required_inputs, list) and isinstance(starter_inputs, list):
+            mapped_fields = {
+                field
+                for starter in starter_inputs
+                if isinstance(starter, dict)
+                for field in starter.get("maps_to", [])
+                if isinstance(field, str)
+            }
+            for required_input in required_inputs:
+                if not isinstance(required_input, dict) or not required_input.get("required"):
+                    continue
+                field_name = required_input.get("name")
+                if isinstance(field_name, str) and field_name not in mapped_fields:
+                    errors.append(
+                        f"{meta_path}: public_entry required input `{field_name}` must be routable from starter_inputs."
+                    )
+
+        if entry.get("layer") == "workflow" and isinstance(entry.get("expands_to"), list) and len(entry["expands_to"]) < 2:
+            notes.append(f"{meta_path}: workflow expands_to has fewer than 2 steps; review whether it should remain a workflow.")
 
         try:
             current_program = extract_default_program(skill_md_path)
@@ -301,6 +358,31 @@ def command_validate(skills_root: Path) -> int:
         agent_placeholders = find_scaffold_placeholders(agent_yaml_path)
         if agent_placeholders:
             errors.append(f"{agent_yaml_path}: unresolved scaffold placeholders present: {', '.join(agent_placeholders)}")
+
+    overlap_candidates = []
+    comparable_entries = []
+    for name, entry in sorted(direct_entries.items()):
+        required_inputs = entry.get("required_inputs")
+        if not isinstance(required_inputs, list):
+            continue
+        comparable_entries.append(
+            (
+                name,
+                entry.get("browse_category"),
+                entry.get("layer"),
+                entry.get("codex_surface"),
+                {item.get("name") for item in required_inputs if isinstance(item, dict) and isinstance(item.get("name"), str)},
+            )
+        )
+    for index, (name_a, category_a, layer_a, surface_a, inputs_a) in enumerate(comparable_entries):
+        for name_b, category_b, layer_b, surface_b, inputs_b in comparable_entries[index + 1 :]:
+            if category_a != category_b or layer_a != layer_b or surface_a != surface_b:
+                continue
+            overlap = sorted(inputs_a & inputs_b)
+            if len(overlap) >= 2:
+                overlap_candidates.append(f"{name_a} <-> {name_b} share input surface {overlap}")
+    if overlap_candidates:
+        notes.extend(f"Overlap hint: {candidate}" for candidate in overlap_candidates[:12])
 
     if missing_agent_yaml:
         notes.append(f"Agent metadata is derivable and currently omitted for {len(missing_agent_yaml)} skill(s).")
@@ -378,14 +460,14 @@ def sync_rendered_agent_yaml(skills_root: Path, skills_dest: Path, name: str, en
     agent_yaml_path.write_text(rendered, encoding="utf-8")
 
 
-def command_sync(skills_root: Path, target_root: Path) -> int:
+def command_sync(skills_root: Path, target_root: Path, profile: str) -> int:
     target_root = normalize_target_root(str(target_root))
     skills_dest = target_root / "skills"
     docs_dest = target_root / "docs"
     skills_dest.mkdir(parents=True, exist_ok=True)
 
     direct_entries = direct_skill_entries(skills_root)
-    runtime_skills = runtime_skill_names(skills_root)
+    runtime_skills = selected_runtime_skill_names(skills_root, direct_entries, profile)
     manifest_path = target_root / MANIFEST_FILE
     docs_manifest_path = target_root / DOCS_MANIFEST_FILE
 
@@ -420,7 +502,7 @@ def command_sync(skills_root: Path, target_root: Path) -> int:
 
     write_manifest(manifest_path, sorted(runtime_skills))
 
-    print(f"Synced composable-skills into {target_root}")
+    print(f"Synced composable-skills profile `{profile}` into {target_root}")
     print("Restart Codex to pick up updated skills.")
     return 0
 
@@ -432,6 +514,7 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("validate", help="Validate direct metadata and runtime contracts.")
     sync_parser = sub.add_parser("sync", help="Sync the runtime surface to a target .agents root.")
     sync_parser.add_argument("target_root", help="Target .agents root or a path ending in /skills.")
+    sync_parser.add_argument("--profile", choices=SYNC_PROFILES, default="core", help="Runtime surface profile to sync.")
     return parser
 
 
@@ -443,7 +526,7 @@ def main() -> int:
     if args.command == "validate":
         return command_validate(skills_root)
     if args.command == "sync":
-        return command_sync(skills_root, Path(args.target_root))
+        return command_sync(skills_root, Path(args.target_root), args.profile)
 
     parser.error(f"Unknown command: {args.command}")
     return 2

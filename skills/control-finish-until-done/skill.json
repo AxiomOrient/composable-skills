@@ -1,0 +1,89 @@
+{
+  "name": "control-finish-until-done",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: evaluate>read>improve>verify>loop>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,craft-clarity,loop-until-done,approval-gates{blockers-only} |\n lens: craft-clarity |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "MISSION_GOAL",
+      "type": "string",
+      "required": true,
+      "description": "One bounded non-code mission to drive to completion."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|artifact|folder",
+      "required": true,
+      "description": "Exact scope the mission is allowed to touch."
+    },
+    {
+      "name": "DONE_CONDITION",
+      "type": "list",
+      "required": true,
+      "shape": "{CONDITION, PROOF_REQUIRED}",
+      "description": "Explicit completion contract. Each condition must be reader-verifiable — no vibe-based success language."
+    },
+    {
+      "name": "CURRENT_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Observations, review notes, or prior pass results. When absent, reads TARGET_SCOPE to build initial state."
+    },
+    {
+      "name": "MAX_PASSES",
+      "type": "integer",
+      "required": false,
+      "description": "Safety ceiling for passes in one turn. Default: 5."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Scope, audience, tone, or non-goal constraints."
+    }
+  ],
+  "display_name": "Control / Finish Until Done",
+  "browse_category": "control",
+  "browse_priority": 35,
+  "is_category_default": false,
+  "codex_surface": "internal_control",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "Mission goal",
+      "required": true,
+      "maps_to": ["MISSION_GOAL"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "Target scope",
+      "required": true,
+      "maps_to": ["TARGET_SCOPE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "DONE",
+      "label": "Done condition (reader-verifiable)",
+      "required": true,
+      "maps_to": ["DONE_CONDITION"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "EVIDENCE",
+      "label": "Current state evidence (optional)",
+      "required": false,
+      "maps_to": ["CURRENT_EVIDENCE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "Constraints",
+      "required": false,
+      "maps_to": ["CONSTRAINTS"],
+      "derive_from_raw_request": true
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: workflow-check-with-checklist
-description: "Workflow skill that combines `workflow-check-full-review` with the full 9-item `check-quality-scan` pass. Use when the user explicitly wants both narrow review scans and checklist coverage."
+description: "Workflow skill that combines `workflow-review-change` with the full 9-item `check-quality-scan` pass. Use when the user explicitly wants both narrow review scans and checklist coverage."
 ---
 
 # Workflow / Check + Checklist
@@ -18,11 +18,11 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 
 ## Use When
 - Need both explicit narrow review scans and the full 9-item checklist.
-- Need a named workflow instead of repeatedly typing `$workflow-check-full-review + $check-quality-scan`.
+- Need a named workflow instead of repeatedly typing `$workflow-review-change + $check-quality-scan`.
 - Need checklist-backed review output for a bounded project or module scope.
 
 ## Do Not Use When
-- Need only the narrower `workflow-check-full-review` workflow.
+- Need only the narrower `workflow-review-change` workflow.
 - Need only the checklist without narrow review scans.
 - Need release-only gating without structural review.
 
@@ -50,7 +50,7 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 - `artifacts_out`: review-findings.v2, quality-checklist-report.v1
 
 ## Neutrality Rules
-- Preserve the neutrality rules of `workflow-check-full-review` and `check-quality-scan`.
+- Preserve the neutrality rules of `workflow-review-change` and `check-quality-scan`.
 - Do not invent findings when both underlying workflows return no issue.
 - Keep checklist coverage explicit rather than hiding it inside the base review workflow.
 
@@ -60,6 +60,8 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 - Preserve the named combination of narrow review plus checklist instead of hiding one side.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 Lead with verdict: **INTEGRATE** or **HOLD**.
 
@@ -78,7 +80,7 @@ On step failure: name the step and ask what blocked it.
 - Expose the combined workflow as a named convenience layer only.
 
 ## Expansion
-- `$workflow-check-full-review`
+- `$workflow-review-change`
 - `$check-quality-scan`
 
 ## Example Invocation

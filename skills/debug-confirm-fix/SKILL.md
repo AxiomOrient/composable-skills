@@ -63,6 +63,8 @@ This skill uses `contract-evidence-verifier` because it keeps the work aligned w
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with fix status: PASS / BLOCKED / INCONCLUSIVE.
 
 Show what was verified:

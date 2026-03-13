@@ -1,0 +1,58 @@
+{
+  "name": "tidy-review-efficiency",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,deterministic-output | lens: goldratt-toc | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "REVIEW_SCOPE",
+      "type": "diff|recent-files|path-set",
+      "required": true,
+      "allowed_values": [
+        "diff",
+        "recent-files",
+        "path-set"
+      ],
+      "description": "How to choose the files to review."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo",
+      "required": false,
+      "description": "Explicit path boundary when REVIEW_SCOPE is path-set, or a narrowing filter over a diff."
+    },
+    {
+      "name": "FOCUS_HINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{AREA, WHY}",
+      "description": "Optional efficiency concerns to prioritize, such as memory pressure or startup latency."
+    }
+  ],
+  "display_name": "Tidy / Review Efficiency",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "리뷰 범위",
+      "required": true,
+      "maps_to": [
+        "REVIEW_SCOPE",
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "FOCUS",
+      "label": "집중할 효율 포인트",
+      "required": false,
+      "maps_to": [
+        "FOCUS_HINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

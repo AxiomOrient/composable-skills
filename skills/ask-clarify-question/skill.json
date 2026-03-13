@@ -1,0 +1,60 @@
+{
+  "name": "ask-clarify-question",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: inversion-focus | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "RAW_TOPIC",
+      "type": "string",
+      "required": true,
+      "description": "Messy topic, rough thought, or problem statement draft."
+    },
+    {
+      "name": "AUDIENCE",
+      "type": "string",
+      "required": false,
+      "description": "Who the future answer or decision is for."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Known time, resource, domain, or evidence constraints."
+    }
+  ],
+  "display_name": "Ask / Clarify Question",
+  "browse_category": "ask",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "질문으로 만들고 싶은 주제",
+      "required": true,
+      "maps_to": [
+        "RAW_TOPIC"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "답을 듣고 싶은 독자 또는 결정권자",
+      "required": false,
+      "maps_to": [
+        "AUDIENCE"
+      ]
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "지켜야 할 제약",
+      "required": false,
+      "maps_to": [
+        "CONSTRAINTS"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

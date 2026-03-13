@@ -72,6 +72,8 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 State the recommendation in one line — or "inconclusive" if evidence cannot discriminate.
 
 Show the trade-off comparison:

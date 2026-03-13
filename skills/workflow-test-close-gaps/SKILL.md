@@ -65,6 +65,8 @@ This skill uses `kent-beck` because it keeps the work aligned with: Small safe i
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show per-step outcome (step → result):
 - test-find-gaps → missing scenarios list
 - test-design-cases → case matrix (happy / edge / failure)

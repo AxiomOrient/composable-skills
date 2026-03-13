@@ -69,6 +69,8 @@ This skill uses `nielsen-norman` because it keeps the work aligned with: Usabili
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show what was found, then what changes:
 - Inventory: [count] docs — [N] active, [N] stale, [N] orphaned
 - Navigation map: [key links added or fixed]

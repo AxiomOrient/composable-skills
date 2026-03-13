@@ -66,6 +66,8 @@ This skill uses `minto-pyramid` because it keeps the work aligned with: Lead wit
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the top candidate first, nothing else before it:
 
 ```

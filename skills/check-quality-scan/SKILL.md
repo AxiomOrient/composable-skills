@@ -1,6 +1,6 @@
 ---
 name: check-quality-scan
-description: "Checklist-only quality inspection for changed code. Verify 9 fixed items: design elegance, conciseness, latent bugs, goal achievement, security, duplicate code, performance, constant extraction, and unnecessary code. Do not use as a standalone verdict; compose with check-merge-ready when integrate/hold judgement is needed."
+description: "Checklist-only quality inspection for changed code. Verify 9 fixed items: design elegance, conciseness, latent bugs, goal achievement, security, duplicate code, performance, constant extraction, and unnecessary code. Do not use as a standalone verdict; compose with check-change-review when integrate/hold judgement is needed."
 ---
 
 # Check / Quality Scan
@@ -82,6 +82,8 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 - Do not elevate style preference above behavior, safety, or performance evidence.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 Show the 9-item checklist as a compact table:
 - # | Item | Status (pass/risk/unknown) | Key evidence

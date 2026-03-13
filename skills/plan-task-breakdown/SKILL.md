@@ -78,6 +78,8 @@ This skill uses `eisenhower` because it keeps the work aligned with: Prioritize 
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the key decisions made in the plan:
 - Critical path: [first task → ... → final task]
 - Decision gates: [gate name] — passes when: [condition]

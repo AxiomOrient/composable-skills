@@ -1,0 +1,904 @@
+diff -ruN composable-skills-simplify-original/README.md composable-skills-simplify-upgrade/README.md
+--- composable-skills-simplify-original/README.md	2026-03-13 03:47:52.113318074 +0000
++++ composable-skills-simplify-upgrade/README.md	2026-03-13 03:47:26.779692018 +0000
+@@ -1 +1 @@
+-# Original overlay subset
++# Simplify upgrade overlay for composable-skills
+diff -ruN composable-skills-simplify-original/skills/README.md composable-skills-simplify-upgrade/skills/README.md
+--- composable-skills-simplify-original/skills/README.md	2026-03-13 03:47:52.112729682 +0000
++++ composable-skills-simplify-upgrade/skills/README.md	2026-03-13 03:47:26.779497809 +0000
+@@ -43,7 +43,8 @@
+ | 바로 구현하고 테스트 보호막까지 같이 만들고 싶다 | [`workflow-build-implement-and-guard`](./workflow-build-implement-and-guard/SKILL.md) | 코드 수정 뒤 회귀 방지 테스트까지 이어 준다 |
+ | 기존 태스크 문서를 끝까지 자동 실행하고 싶다 | [`workflow-build-execute-plan`](./workflow-build-execute-plan/SKILL.md) | `plans/TASKS.md`를 읽고 루프를 계속 돈다 |
+ | 테스트가 어디 비었는지 찾고 메우고 싶다 | [`workflow-test-close-gaps`](./workflow-test-close-gaps/SKILL.md) | 빈 구멍 찾기부터 테스트 작성까지 이어 준다 |
+-| 코드나 구조를 더 단순하게 만들고 싶다 | [`workflow-tidy-find-improvements`](./workflow-tidy-find-improvements/SKILL.md) | 복잡성 지도부터 개선 포인트까지 정리한다 |
++| 방금 바꾼 코드를 더 깔끔하고 빠르게 다듬고 싶다 | [`workflow-tidy-simplify-this`](./workflow-tidy-simplify-this/SKILL.md) | 최근 변경분을 리유즈·퀄리티·효율 관점으로 리뷰하고 바로 고친다 |
++| 어디부터 정리해야 할지 먼저 지도부터 보고 싶다 | [`workflow-tidy-find-improvements`](./workflow-tidy-find-improvements/SKILL.md) | 복잡성 지도부터 개선 포인트까지 정리한다 |
+ | 문서를 정리하고 새로 쓰고 싶다 | [`workflow-doc-systemize`](./workflow-doc-systemize/SKILL.md) | 문서 인벤토리, 정리, 작성까지 한 번에 이어 준다 |
+ | 커밋이나 릴리즈 전에 보안만 가볍게 점검하고 싶다 | [`workflow-security-preflight`](./workflow-security-preflight/SKILL.md) | 비밀키, ignore drift, 모바일 설정 노출 같은 위험을 가볍게 훑는다 |
+ | 배포 가능한지 먼저 판단하고 싶다 | [`workflow-release-ready-check`](./workflow-release-ready-check/SKILL.md) | 저장소 상태, 릴리즈 위생, 최종 출고 준비를 점검한다 |
+@@ -107,7 +108,8 @@
+ 
+ ### 구조 개선을 위한 workflow
+ 
+-- [`workflow-tidy-find-improvements`](./workflow-tidy-find-improvements/SKILL.md): 복잡한 곳, 중복된 곳, 정리하면 좋아질 곳을 먼저 지도처럼 보여 준다. 막연한 "좀 더 깔끔하게"를 구체적인 개선 후보로 바꾼다.
++- [`workflow-tidy-simplify-this`](./workflow-tidy-simplify-this/SKILL.md): 최근 변경분을 리유즈, 구조 품질, 효율 관점으로 병렬 리뷰하고, 안전한 수정만 바로 적용한다. 구현 뒤 마지막 정리 패스로 쓰기 좋다.
++- [`workflow-tidy-find-improvements`](./workflow-tidy-find-improvements/SKILL.md): 복잡한 곳, 중복된 곳, 정리하면 좋아질 곳을 먼저 지도처럼 보여 준다. 막연한 "좀 더 깔끔하게"를 구체적인 개선 후보로 바꾸는 분석 전용 workflow다.
+ 
+ ### 문서를 정리하는 workflow
+ 
+@@ -210,10 +212,14 @@
+ 
+ - [`tidy-why-complex`](./tidy-why-complex/SKILL.md): 지금 왜 복잡한지 원인을 먼저 분해한다. 본질적인 복잡함과 쓸데없는 복잡함을 구분하는 공구다.
+ - [`tidy-cut-fat`](./tidy-cut-fat/SKILL.md): 핵심 동작은 그대로 두고 군살만 도려낸다. 과한 구조, 시끄러운 폴더, 쓸데없는 추상화를 줄일 때 맞다.
++- [`tidy-review-reuse`](./tidy-review-reuse/SKILL.md): 최근 변경분에서 이미 있는 유틸이나 헬퍼를 재사용할 수 있었는지 찾는다.
++- [`tidy-review-quality`](./tidy-review-quality/SKILL.md): 중복 상태, 파라미터 비대화, 새는 추상화 같은 구조 품질 문제를 리뷰한다.
++- [`tidy-review-efficiency`](./tidy-review-efficiency/SKILL.md): 불필요한 일, 놓친 병렬화, 핫패스 비대화, 메모리 낭비 같은 효율 문제를 리뷰한다.
+ - [`tidy-find-copies`](./tidy-find-copies/SKILL.md): 같은 로직이나 구조가 여러 군데 복제돼 있는지 찾는다.
+ - [`tidy-find-magic-numbers`](./tidy-find-magic-numbers/SKILL.md): 여기저기 흩어진 숫자와 상수 후보를 찾아 한곳으로 모으도록 돕는다.
+ - [`tidy-reorganize`](./tidy-reorganize/SKILL.md): 동작은 유지한 채 파일 구조와 경계를 더 낫게 재배치하는 리팩터링 계획 공구다.
+-- [`tidy-simplify`](./tidy-simplify/SKILL.md): 실제 코드에서 복잡한 구조를 더 짧고 이해하기 쉬운 모양으로 단순화한다.
++- [`tidy-simplify`](./tidy-simplify/SKILL.md): 한정된 범위에서 실제 코드 구조를 더 짧고 이해하기 쉬운 모양으로 단순화한다. "방금 바꾼 diff를 전체적으로 정리"하는 기본 진입은 아니다.
++- [`tidy-apply-review-fixes`](./tidy-apply-review-fixes/SKILL.md): 여러 review atomic 결과를 모아 겹치는 지적을 정리한 뒤, 안전한 수정만 실제 코드에 반영한다.
+ - [`tidy-remove-legacy`](./tidy-remove-legacy/SKILL.md): 오래된 파일, 다 끝난 계획 문서, 죽은 별칭, 쓸모없는 접착 코드 같은 잔재를 치운다.
+ 
+ ### `doc-` — 문서를 다루는 공구
+diff -ruN composable-skills-simplify-original/skills/tidy-apply-review-fixes/SKILL.md composable-skills-simplify-upgrade/skills/tidy-apply-review-fixes/SKILL.md
+--- composable-skills-simplify-original/skills/tidy-apply-review-fixes/SKILL.md	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-apply-review-fixes/SKILL.md	2026-03-13 03:47:26.778472226 +0000
+@@ -0,0 +1,90 @@
++---
++name: tidy-apply-review-fixes
++description: "Implementation skill that takes bounded cleanup findings and applies the smallest safe fixes while preserving current behavior. Designed to consume review outputs such as reuse, quality, and efficiency findings. Do not use for net-new feature work or broad refactors."
++---
++# Tidy / Apply Review Fixes
++
++## Purpose
++Aggregate bounded cleanup findings, apply the smallest safe fixes, and verify that behavior still holds.
++
++## Default Program
++```text
++[stages: preflight>detect>analyze>implement>verify>review>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
++```
++
++## Lens Rationale
++This skill uses `hickey-carmack` because cleanup fixes should preserve the contract while removing accidental complexity and wasted work with the smallest explicit change.
++
++## Use When
++- Need to turn bounded review findings into actual code changes.
++- Need a post-review cleanup pass that preserves current behavior.
++- Need one implementation step that deduplicates overlapping cleanup findings before editing code.
++
++## Do Not Use When
++- Need net-new feature work.
++- Need broad architectural refactor planning.
++- Need to edit code without concrete upstream findings.
++
++## Required Inputs
++- `TARGET_SCOPE` (path|module|folder|diff; required): Bounded scope where the fixes may be applied.
++- `REVIEW_FINDINGS` (list; required; shape: {SOURCE_SKILL, ISSUE, LOCATION, RECOMMENDED_FIX, EVIDENCE}): Cleanup findings to normalize and fix.
++- `FUNCTIONAL_EQUIVALENCE` (yes|preserve-current-behavior; required; allowed: yes|preserve-current-behavior): Explicit contract that behavior must stay the same.
++- `APPLY_POLICY` (fix-high-signal|fix-all-safe; optional; allowed: fix-high-signal|fix-all-safe): How aggressively to apply the findings.
++
++## Input Contract Notes
++- `REVIEW_FINDINGS` should already be bounded and actionable; this skill is not responsible for inventing new review categories.
++- `TARGET_SCOPE` must be small enough that focused verification can still prove behavior holds.
++- Use `fix-high-signal` when the diff is risky or the review findings include larger refactor ideas.
++
++## Structured Outputs
++- `FIXED_FINDINGS` (list; required; shape: {SOURCE_SKILL, ISSUE, LOCATION, CHANGE, STATUS}): Findings that were actually fixed and the change made.
++- `SKIPPED_FINDINGS` (list; required; shape: {SOURCE_SKILL, ISSUE, LOCATION, REASON}): Findings intentionally skipped because they were false positives, too risky, or out of scope.
++- `CHANGED_ARTIFACTS` (list; required; shape: {PATH, WHY}): Files changed during the cleanup pass.
++- `VERIFICATION_RESULTS` (list; required; shape: {CHECK, RESULT, COMMAND_OR_TEST, EVIDENCE}): Checks run after edits.
++
++## Output Contract Notes
++- Every `FIXED_FINDINGS` row must map to at least one `CHANGED_ARTIFACTS` row.
++- Every changed file must be covered by at least one verification result or an explicit verification-gap note inside `SKIPPED_FINDINGS`.
++- A finding may be skipped without argument when it is a false positive or exceeds the bounded scope.
++
++## Artifacts
++- `artifacts_in`: review-report.v1
++- `artifacts_out`: implementation-delta.v1
++
++## Neutrality Rules
++- Prefer the smallest explicit fix that resolves the finding.
++- Do not expand the cleanup pass into unrelated refactoring.
++- Skip speculative or boundary-breaking findings instead of forcing them in.
++
++## Execution Constraints
++- Edit only inside TARGET_SCOPE.
++- Deduplicate overlapping findings before changing code.
++- Preserve current behavior and rerun the narrowest relevant checks after each cluster of changes.
++- If a finding requires a broader refactor than the scope can verify, skip it and record why.
++
++## Response Format
++Lead with what was fixed and what was skipped.
++
++Fixed:
++- [source] [issue] — `file:line` — changed: [what]
++
++Skipped:
++- [source] [issue] — `file:line` — reason: [why skipped]
++
++Verification:
++- [command or test] — PASS / FAIL — [key signal]
++
++## Mandatory Rules
++- Preserve behavior.
++- Keep the cleanup bounded.
++- Do not claim success without verification evidence.
++
++## Example Invocation
++```text
++$tidy-apply-review-fixes TARGET_SCOPE: diff FUNCTIONAL_EQUIVALENCE: yes APPLY_POLICY: fix-high-signal REVIEW_FINDINGS:
++- SOURCE_SKILL: tidy-review-reuse
++  ISSUE: duplicated path normalization
++  LOCATION: src/router/path.ts:44
++  RECOMMENDED_FIX: replace inline normalization with normalizePath()
++  EVIDENCE: src/shared/path.ts:12 already provides normalizePath
++```
+diff -ruN composable-skills-simplify-original/skills/tidy-apply-review-fixes/skill.json composable-skills-simplify-upgrade/skills/tidy-apply-review-fixes/skill.json
+--- composable-skills-simplify-original/skills/tidy-apply-review-fixes/skill.json	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-apply-review-fixes/skill.json	2026-03-13 03:47:26.778687612 +0000
+@@ -0,0 +1,47 @@
++{
++  "name": "tidy-apply-review-fixes",
++  "layer": "atomic",
++  "layer_badge": "Atomic",
++  "default_program": "[stages: preflight>detect>analyze>implement>verify>review>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
++  "required_inputs": [
++    {
++      "name": "TARGET_SCOPE",
++      "type": "path|module|folder|diff",
++      "required": true,
++      "description": "Bounded scope where the fixes may be applied."
++    },
++    {
++      "name": "REVIEW_FINDINGS",
++      "type": "list",
++      "required": true,
++      "shape": "{SOURCE_SKILL, ISSUE, LOCATION, RECOMMENDED_FIX, EVIDENCE}",
++      "description": "Cleanup findings to normalize and fix."
++    },
++    {
++      "name": "FUNCTIONAL_EQUIVALENCE",
++      "type": "yes|preserve-current-behavior",
++      "required": true,
++      "allowed_values": [
++        "yes",
++        "preserve-current-behavior"
++      ],
++      "description": "Explicit contract that behavior must stay the same."
++    },
++    {
++      "name": "APPLY_POLICY",
++      "type": "fix-high-signal|fix-all-safe",
++      "required": false,
++      "allowed_values": [
++        "fix-high-signal",
++        "fix-all-safe"
++      ],
++      "description": "How aggressively to apply the findings."
++    }
++  ],
++  "display_name": "Tidy / Apply Review Fixes",
++  "browse_category": "tidy",
++  "browse_priority": 50,
++  "is_category_default": false,
++  "codex_surface": "expert",
++  "starter_inputs": []
++}
+diff -ruN composable-skills-simplify-original/skills/tidy-review-efficiency/SKILL.md composable-skills-simplify-upgrade/skills/tidy-review-efficiency/SKILL.md
+--- composable-skills-simplify-original/skills/tidy-review-efficiency/SKILL.md	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-review-efficiency/SKILL.md	2026-03-13 03:47:26.778117438 +0000
+@@ -0,0 +1,81 @@
++---
++name: tidy-review-efficiency
++description: "Read-only review skill that inspects a bounded change scope for efficiency cleanup opportunities: unnecessary work, missed concurrency, hot-path bloat, TOCTOU-style existence checks, memory growth, and overly broad operations. Do not use for benchmark-driven optimization implementation itself."
++---
++# Tidy / Review Efficiency
++
++## Purpose
++Review a bounded scope for safe efficiency improvements that should be cleaned up after the main implementation.
++
++## Default Program
++```text
++[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,deterministic-output | lens: goldratt-toc | output: md(contract=v1)]
++```
++
++## Lens Rationale
++This skill uses `goldratt-toc` because efficiency review should identify the real local bottleneck or wasted work, not cargo-cult micro-optimizations.
++
++## Use When
++- Need a focused pass for wasted work in recent changes.
++- Need to review a diff for hot-path bloat, repeated I/O, or missed parallelism.
++- Need one specialized efficiency review before deciding what cleanup to implement.
++
++## Do Not Use When
++- Need to implement benchmark-driven performance changes across a large scope.
++- Need direct code edits.
++- Need broad system profiling instead of bounded review.
++
++## Required Inputs
++- `REVIEW_SCOPE` (diff|recent-files|path-set; required; allowed: diff|recent-files|path-set): How to choose the files to review.
++- `TARGET_SCOPE` (path|module|folder|repo; optional): Explicit path boundary when REVIEW_SCOPE is `path-set`, or a narrowing filter over a diff.
++- `FOCUS_HINTS` (list; optional; shape: {AREA, WHY}): Optional efficiency concerns to prioritize, such as memory pressure or startup latency.
++
++## Input Contract Notes
++- This is a bounded review skill, not a full benchmarking workflow.
++- Efficiency findings should name the wasted work, the likely cost model, and the smallest safe improvement.
++- Prefer obvious unnecessary work over speculative future bottlenecks.
++
++## Structured Outputs
++- `EFFICIENCY_FINDINGS` (list; required; shape: {ISSUE, LOCATION, COST_MODEL, RECOMMENDED_FIX, RISK}): Actionable efficiency findings with a visible cost model.
++- `HOT_PATH_NOTES` (list; required; shape: {LOCATION, WHY_HOT}): Hot-path or repeated-path notes that justify why a finding matters.
++- `REVIEW_STATUS` (clean|findings|inconclusive; required; allowed: clean|findings|inconclusive): Whether the scope is clean, has findings, or lacks enough evidence.
++
++## Output Contract Notes
++- Use `RISK` to call out behavior or readability tradeoffs when an efficiency fix is not obviously safe.
++- Return `clean` when no concrete wasted work is visible in scope.
++- Return `inconclusive` when the likely cost model depends on evidence that is unavailable.
++
++## Artifacts
++- `artifacts_in`: none
++- `artifacts_out`: review-report.v1
++
++## Neutrality Rules
++- Do not optimize by folklore; every finding needs an observed local cost model.
++- Prefer removing obvious wasted work before proposing deeper rewrites.
++- Call out when a potential efficiency win would materially worsen readability or contract clarity.
++
++## Execution Constraints
++- This skill is read-and-review only; do not edit files.
++- Review at least these classes of issues when present: unnecessary work, missed concurrency, hot-path bloat, pre-checking existence before operation, memory growth, and overly broad operations.
++- Keep the review bounded to the supplied scope.
++
++## Response Format
++Lead with `CLEAN`, `FINDINGS`, or `INCONCLUSIVE`.
++
++For each finding:
++- [issue] — `file:line` — cost: [cost model] — fix: [smallest safe improvement]
++
++If a hot path matters:
++- hot path: `file:line` — [why this path is likely hot or repeated]
++
++## Mandatory Rules
++- Keep this skill read-only.
++- Name the local cost model for every finding.
++- Avoid speculative optimization advice with no scope evidence.
++
++## Example Invocation
++```text
++$tidy-review-efficiency REVIEW_SCOPE: diff FOCUS_HINTS:
++- AREA: memory efficiency
++  WHY: the change added a new cache-like structure
++```
+diff -ruN composable-skills-simplify-original/skills/tidy-review-efficiency/skill.json composable-skills-simplify-upgrade/skills/tidy-review-efficiency/skill.json
+--- composable-skills-simplify-original/skills/tidy-review-efficiency/skill.json	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-review-efficiency/skill.json	2026-03-13 03:47:26.778350521 +0000
+@@ -0,0 +1,58 @@
++{
++  "name": "tidy-review-efficiency",
++  "layer": "atomic",
++  "layer_badge": "Atomic",
++  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,deterministic-output | lens: goldratt-toc | output: md(contract=v1)]",
++  "required_inputs": [
++    {
++      "name": "REVIEW_SCOPE",
++      "type": "diff|recent-files|path-set",
++      "required": true,
++      "allowed_values": [
++        "diff",
++        "recent-files",
++        "path-set"
++      ],
++      "description": "How to choose the files to review."
++    },
++    {
++      "name": "TARGET_SCOPE",
++      "type": "path|module|folder|repo",
++      "required": false,
++      "description": "Explicit path boundary when REVIEW_SCOPE is path-set, or a narrowing filter over a diff."
++    },
++    {
++      "name": "FOCUS_HINTS",
++      "type": "list",
++      "required": false,
++      "shape": "{AREA, WHY}",
++      "description": "Optional efficiency concerns to prioritize, such as memory pressure or startup latency."
++    }
++  ],
++  "display_name": "Tidy / Review Efficiency",
++  "browse_category": "tidy",
++  "browse_priority": 50,
++  "is_category_default": false,
++  "codex_surface": "expert",
++  "starter_inputs": [
++    {
++      "key": "SCOPE",
++      "label": "리뷰 범위",
++      "required": true,
++      "maps_to": [
++        "REVIEW_SCOPE",
++        "TARGET_SCOPE"
++      ],
++      "derive_from_raw_request": true
++    },
++    {
++      "key": "FOCUS",
++      "label": "집중할 효율 포인트",
++      "required": false,
++      "maps_to": [
++        "FOCUS_HINTS"
++      ],
++      "derive_from_raw_request": true
++    }
++  ]
++}
+diff -ruN composable-skills-simplify-original/skills/tidy-review-quality/SKILL.md composable-skills-simplify-upgrade/skills/tidy-review-quality/SKILL.md
+--- composable-skills-simplify-original/skills/tidy-review-quality/SKILL.md	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-review-quality/SKILL.md	2026-03-13 03:47:26.777648432 +0000
+@@ -0,0 +1,81 @@
++---
++name: tidy-review-quality
++description: "Read-only review skill that inspects a bounded change scope for code-quality cleanup opportunities: redundant state, parameter sprawl, near-duplicate branches, leaky abstractions, and stringly-typed logic. Do not use for direct code edits or broad product planning."
++---
++# Tidy / Review Quality
++
++## Purpose
++Review a bounded scope for structural code-quality issues that should be cleaned up after the main implementation is complete.
++
++## Default Program
++```text
++[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
++```
++
++## Lens Rationale
++This skill uses `hickey-carmack` because code quality judgments should reward explicit data flow, sharp invariants, and the smallest clear mechanism.
++
++## Use When
++- Need a focused post-change review for structural quality issues.
++- Need to catch hacky cleanup debt before merging or shipping.
++- Need one specialized review pass whose output can feed a later fix step.
++
++## Do Not Use When
++- Need direct file edits.
++- Need risk scoring for release or security judgement.
++- Need speculative architecture advice outside the reviewed scope.
++
++## Required Inputs
++- `REVIEW_SCOPE` (diff|recent-files|path-set; required; allowed: diff|recent-files|path-set): How to choose the files to review.
++- `TARGET_SCOPE` (path|module|folder|repo; optional): Explicit path boundary when REVIEW_SCOPE is `path-set`, or a narrowing filter over a diff.
++- `FOCUS_HINTS` (list; optional; shape: {AREA, WHY}): Optional quality concerns to prioritize.
++
++## Input Contract Notes
++- A quality finding must name the concrete smell and the local code that shows it.
++- Prefer observable structural problems over taste-based style comments.
++- When the same underlying issue appears several times, group it into one finding with multiple locations.
++
++## Structured Outputs
++- `QUALITY_FINDINGS` (list; required; shape: {ISSUE, LOCATION, SIGNAL, WHY_IT_HURTS, RECOMMENDED_FIX}): Actionable structural quality findings.
++- `QUALITY_HOLDS` (list; required; shape: {LOCATION, WHY_OK}): Areas reviewed and intentionally left alone because the structure carries a real invariant or boundary.
++- `REVIEW_STATUS` (clean|findings|inconclusive; required; allowed: clean|findings|inconclusive): Whether the scope is clean, has findings, or lacks enough evidence.
++
++## Output Contract Notes
++- Use `QUALITY_HOLDS` to explain false positives that should not be “cleaned up.”
++- Return `clean` only when no structural quality issue is justified by the observed code.
++- Return `inconclusive` when the relevant boundary cannot be inspected confidently.
++
++## Artifacts
++- `artifacts_in`: none
++- `artifacts_out`: review-report.v1
++
++## Neutrality Rules
++- Focus on structure that increases cognitive load or weakens invariants.
++- Do not report pure formatting or naming preferences as findings unless they break a real contract.
++- Do not push new abstractions unless they remove a proven local smell.
++
++## Execution Constraints
++- This skill is read-and-review only; do not edit files.
++- Review at least these classes of issues when present: redundant state, parameter sprawl, copy-paste with slight variation, leaky abstractions, and stringly-typed logic.
++- Tie every recommendation back to the local code path, not generic best practice prose.
++
++## Response Format
++Lead with `CLEAN`, `FINDINGS`, or `INCONCLUSIVE`.
++
++For each finding:
++- [issue] — `file:line` — why it hurts: [reason] — fix: [smallest useful change]
++
++For each hold:
++- left alone: `file:line` — [why the structure is justified]
++
++## Mandatory Rules
++- Keep this skill read-only.
++- Separate real findings from justified structure.
++- Do not turn taste into defect claims.
++
++## Example Invocation
++```text
++$tidy-review-quality REVIEW_SCOPE: diff FOCUS_HINTS:
++- AREA: abstraction boundaries
++  WHY: a new service layer was added in this diff
++```
+diff -ruN composable-skills-simplify-original/skills/tidy-review-quality/skill.json composable-skills-simplify-upgrade/skills/tidy-review-quality/skill.json
+--- composable-skills-simplify-original/skills/tidy-review-quality/skill.json	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-review-quality/skill.json	2026-03-13 03:47:26.777845684 +0000
+@@ -0,0 +1,58 @@
++{
++  "name": "tidy-review-quality",
++  "layer": "atomic",
++  "layer_badge": "Atomic",
++  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
++  "required_inputs": [
++    {
++      "name": "REVIEW_SCOPE",
++      "type": "diff|recent-files|path-set",
++      "required": true,
++      "allowed_values": [
++        "diff",
++        "recent-files",
++        "path-set"
++      ],
++      "description": "How to choose the files to review."
++    },
++    {
++      "name": "TARGET_SCOPE",
++      "type": "path|module|folder|repo",
++      "required": false,
++      "description": "Explicit path boundary when REVIEW_SCOPE is path-set, or a narrowing filter over a diff."
++    },
++    {
++      "name": "FOCUS_HINTS",
++      "type": "list",
++      "required": false,
++      "shape": "{AREA, WHY}",
++      "description": "Optional quality concerns to prioritize."
++    }
++  ],
++  "display_name": "Tidy / Review Quality",
++  "browse_category": "tidy",
++  "browse_priority": 50,
++  "is_category_default": false,
++  "codex_surface": "expert",
++  "starter_inputs": [
++    {
++      "key": "SCOPE",
++      "label": "리뷰 범위",
++      "required": true,
++      "maps_to": [
++        "REVIEW_SCOPE",
++        "TARGET_SCOPE"
++      ],
++      "derive_from_raw_request": true
++    },
++    {
++      "key": "FOCUS",
++      "label": "집중할 품질 포인트",
++      "required": false,
++      "maps_to": [
++        "FOCUS_HINTS"
++      ],
++      "derive_from_raw_request": true
++    }
++  ]
++}
+diff -ruN composable-skills-simplify-original/skills/tidy-review-reuse/SKILL.md composable-skills-simplify-upgrade/skills/tidy-review-reuse/SKILL.md
+--- composable-skills-simplify-original/skills/tidy-review-reuse/SKILL.md	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-review-reuse/SKILL.md	2026-03-13 03:47:26.777345275 +0000
+@@ -0,0 +1,81 @@
++---
++name: tidy-review-reuse
++description: "Read-only review skill that inspects a bounded change scope for missed reuse opportunities. Find newly written logic that should call existing helpers, utilities, shared modules, or adjacent abstractions instead. Do not use for direct code edits or broad architecture planning."
++---
++# Tidy / Review Reuse
++
++## Purpose
++Review a bounded scope for new logic that should reuse existing code instead of reimplementing it.
++
++## Default Program
++```text
++[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
++```
++
++## Lens Rationale
++This skill uses `hickey-carmack` because reuse judgements should start from explicit data flow and real invariants, not decorative abstraction.
++
++## Use When
++- Need to review a recent diff or bounded file set for duplicated logic.
++- Need to search the codebase for existing helpers that could replace new hand-rolled code.
++- Need one specialized review pass before deciding what cleanup to implement.
++
++## Do Not Use When
++- Need direct code changes.
++- Need broad architecture or module-boundary refactor planning.
++- Need to speculate about reusable abstractions that do not already exist.
++
++## Required Inputs
++- `REVIEW_SCOPE` (diff|recent-files|path-set; required; allowed: diff|recent-files|path-set): How to choose the files to review.
++- `TARGET_SCOPE` (path|module|folder|repo; optional): Explicit path boundary when REVIEW_SCOPE is `path-set`, or a narrowing filter over a diff.
++- `FOCUS_HINTS` (list; optional; shape: {AREA, WHY}): Optional focus areas such as parsing helpers, type guards, or path handling.
++
++## Input Contract Notes
++- Use `diff` first when git changes exist. Use `recent-files` only when there is no useful diff boundary.
++- A valid reuse finding must point to a concrete existing asset, not a hypothetical helper that should be created later.
++- If the scope is large, limit the review to the files actually changed or the smallest explicit folder boundary.
++
++## Structured Outputs
++- `REUSE_FINDINGS` (list; required; shape: {ISSUE, LOCATION, EXISTING_ASSET, WHY_REUSE, RECOMMENDED_CHANGE}): Actionable reuse findings tied to a concrete existing asset.
++- `SEARCH_EVIDENCE` (list; required; shape: {PATTERN, MATCH, WHY_RELEVANT}): Searches or codebase matches that justify each finding.
++- `REVIEW_STATUS` (clean|findings|inconclusive; required; allowed: clean|findings|inconclusive): Whether the scope is clean, has findings, or lacks enough evidence.
++
++## Output Contract Notes
++- Return `clean` when no concrete existing asset beats the new code.
++- Return `inconclusive` when the scope cannot be inspected confidently or the codebase search is incomplete.
++- Every `REUSE_FINDINGS` row must cite the existing asset that should be reused.
++
++## Artifacts
++- `artifacts_in`: none
++- `artifacts_out`: review-report.v1
++
++## Neutrality Rules
++- Do not invent a reuse finding without a concrete existing implementation.
++- Prefer local or adjacent utilities over larger shared abstractions when both satisfy the same contract.
++- Leave intentionally local code alone when reuse would increase coupling or hide a real invariant.
++
++## Execution Constraints
++- This skill is read-and-review only; do not edit files.
++- Search common utility directories, shared modules, and files adjacent to the changed code.
++- Flag inline logic only when the existing asset is truly equivalent or can be used with a small safe adaptation.
++
++## Response Format
++Lead with `CLEAN`, `FINDINGS`, or `INCONCLUSIVE`.
++
++For each finding:
++- [issue] — `file:line` → reuse `[existing asset]` — why: [why the existing code is better]
++
++If clean:
++- "No concrete reuse win found in the reviewed scope."
++
++## Mandatory Rules
++- Point to a concrete existing asset for every finding.
++- Keep this skill read-only.
++- Separate proven reuse wins from speculative refactor ideas.
++
++## Example Invocation
++```text
++$tidy-review-reuse REVIEW_SCOPE: diff FOCUS_HINTS:
++- AREA: type guards
++  WHY: several new inline checks were added
++```
+diff -ruN composable-skills-simplify-original/skills/tidy-review-reuse/skill.json composable-skills-simplify-upgrade/skills/tidy-review-reuse/skill.json
+--- composable-skills-simplify-original/skills/tidy-review-reuse/skill.json	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-review-reuse/skill.json	2026-03-13 03:47:26.777540075 +0000
+@@ -0,0 +1,58 @@
++{
++  "name": "tidy-review-reuse",
++  "layer": "atomic",
++  "layer_badge": "Atomic",
++  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
++  "required_inputs": [
++    {
++      "name": "REVIEW_SCOPE",
++      "type": "diff|recent-files|path-set",
++      "required": true,
++      "allowed_values": [
++        "diff",
++        "recent-files",
++        "path-set"
++      ],
++      "description": "How to choose the files to review."
++    },
++    {
++      "name": "TARGET_SCOPE",
++      "type": "path|module|folder|repo",
++      "required": false,
++      "description": "Explicit path boundary when REVIEW_SCOPE is path-set, or a narrowing filter over a diff."
++    },
++    {
++      "name": "FOCUS_HINTS",
++      "type": "list",
++      "required": false,
++      "shape": "{AREA, WHY}",
++      "description": "Optional focus areas such as parsing helpers, type guards, or path handling."
++    }
++  ],
++  "display_name": "Tidy / Review Reuse",
++  "browse_category": "tidy",
++  "browse_priority": 50,
++  "is_category_default": false,
++  "codex_surface": "expert",
++  "starter_inputs": [
++    {
++      "key": "SCOPE",
++      "label": "리뷰 범위",
++      "required": true,
++      "maps_to": [
++        "REVIEW_SCOPE",
++        "TARGET_SCOPE"
++      ],
++      "derive_from_raw_request": true
++    },
++    {
++      "key": "FOCUS",
++      "label": "집중할 재사용 후보",
++      "required": false,
++      "maps_to": [
++        "FOCUS_HINTS"
++      ],
++      "derive_from_raw_request": true
++    }
++  ]
++}
+diff -ruN composable-skills-simplify-original/skills/tidy-simplify/SKILL.md composable-skills-simplify-upgrade/skills/tidy-simplify/SKILL.md
+--- composable-skills-simplify-original/skills/tidy-simplify/SKILL.md	2026-03-13 03:47:52.099181317 +0000
++++ composable-skills-simplify-upgrade/skills/tidy-simplify/SKILL.md	2026-03-13 03:47:26.775663269 +0000
+@@ -1,6 +1,6 @@
+ ---
+ name: tidy-simplify
+-description: "Behavior-preserving code simplification skill that applies the four-step cognitive-load reduction sequence: Intent Extraction, Abstraction Cost, Collapse & Merge, and Immutability Check. Do not use for net-new feature work, analysis-only planning, or scopes too broad to verify functional equivalence."
++description: "Behavior-preserving code simplification skill for one bounded scope after the target has already been identified. Applies the four-step cognitive-load reduction sequence: Intent Extraction, Abstraction Cost, Collapse & Merge, and Immutability Check. For recent-diff cleanup across reuse, quality, and efficiency, use workflow-tidy-simplify-this instead."
+ ---
+ 
+ # Tidy / Simplify
+@@ -30,6 +30,7 @@
+ - Need net-new feature work or behavior changes.
+ - Need only analysis, inventory, or a simplification plan — use tidy-cut-fat or tidy-why-complex instead.
+ - Need only checklist review or final delivery verification.
++- Need recent-diff cleanup across reuse, quality, and efficiency — use workflow-tidy-simplify-this.
+ - The target scope is too broad to verify functional equivalence after simplification.
+ 
+ ## Required Inputs
+diff -ruN composable-skills-simplify-original/skills/workflow-tidy-find-improvements/SKILL.md composable-skills-simplify-upgrade/skills/workflow-tidy-find-improvements/SKILL.md
+--- composable-skills-simplify-original/skills/workflow-tidy-find-improvements/SKILL.md	2026-03-13 03:47:52.103538340 +0000
++++ composable-skills-simplify-upgrade/skills/workflow-tidy-find-improvements/SKILL.md	2026-03-13 03:47:26.776940946 +0000
+@@ -1,8 +1,7 @@
+ ---
+ name: workflow-tidy-find-improvements
+-description: "Workflow skill that maps concrete simplification and commonization opportunities before structural improvement work. Use when the user wants an explicit improvement map rather than a vague 'make it better' request."
++description: "Workflow skill that maps concrete simplification and commonization opportunities before structural improvement work. Use when the user wants an explicit improvement map rather than direct cleanup of recent changes. For review-and-fix cleanup, use workflow-tidy-simplify-this."
+ ---
+-
+ # Workflow / Tidy Improvements
+ 
+ ## Purpose
+@@ -19,11 +18,11 @@
+ ## Use When
+ - Need an explicit improvement map grounded in duplication and constant extraction evidence.
+ - Need to decide whether simplification or refactoring is justified in a bounded scope.
+-- Need a reusable improvement workflow that can still be extended with extra skills.
++- Need analysis-first triage before any code is changed.
+ 
+ ## Do Not Use When
++- Need the skill to actually fix recent changes.
+ - Need only a single narrow scan.
+-- Need a direct feature implementation unrelated to simplification.
+ - Need bug debugging rather than structure improvement.
+ 
+ ## Required Inputs
+@@ -65,14 +64,14 @@
+ - Do not turn style preference into an improvement mandate unless it removes accidental complexity or protects a meaningful user or maintenance outcome.
+ 
+ ## Response Format
+-
+ Lead with direction: **SIMPLIFY**, **REFACTOR**, or **HOLD**.
+ 
+ Opportunities (evidence-backed, file:line cited):
+ - [opportunity] — `file:line` — [recommended action and why]
+ 
+ On HOLD: "No actionable duplication or complexity found — clean as-is."
+-On SIMPLIFY/REFACTOR: "Start with [top opportunity] — or want full list sorted by impact?"
++
++On SIMPLIFY/REFACTOR: "Start with [top opportunity] — or use workflow-tidy-simplify-this if you want the fixes applied now."
+ 
+ ## Mandatory Rules
+ - Keep improvement findings tied to explicit scan evidence.
+@@ -86,7 +85,5 @@
+ 
+ ## Example Invocation
+ ```text
+-$workflow-tidy-find-improvements
+-TARGET_SCOPE: src/auth
+-IMPROVEMENT_GOAL: mixed
++$workflow-tidy-find-improvements TARGET_SCOPE: src/auth IMPROVEMENT_GOAL: mixed
+ ```
+diff -ruN composable-skills-simplify-original/skills/workflow-tidy-find-improvements/skill.json composable-skills-simplify-upgrade/skills/workflow-tidy-find-improvements/skill.json
+--- composable-skills-simplify-original/skills/workflow-tidy-find-improvements/skill.json	2026-03-13 03:47:52.107352122 +0000
++++ composable-skills-simplify-upgrade/skills/workflow-tidy-find-improvements/skill.json	2026-03-13 03:47:26.777193419 +0000
+@@ -24,8 +24,8 @@
+   ],
+   "display_name": "Workflow / Tidy Improvements",
+   "browse_category": "tidy",
+-  "browse_priority": 10,
+-  "is_category_default": true,
++  "browse_priority": 20,
++  "is_category_default": false,
+   "codex_surface": "public_entry",
+   "starter_inputs": [
+     {
+diff -ruN composable-skills-simplify-original/skills/workflow-tidy-simplify-this/SKILL.md composable-skills-simplify-upgrade/skills/workflow-tidy-simplify-this/SKILL.md
+--- composable-skills-simplify-original/skills/workflow-tidy-simplify-this/SKILL.md	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/workflow-tidy-simplify-this/SKILL.md	2026-03-13 03:47:26.778823097 +0000
+@@ -0,0 +1,96 @@
++---
++name: workflow-tidy-simplify-this
++description: "Workflow skill that reviews recent changes for reuse, quality, and efficiency issues, then applies bounded safe fixes. Use after implementing a feature or bug fix when you want one default cleanup entrypoint instead of manually chaining review and fix skills."
++---
++# Workflow / Tidy Simplify This
++
++## Purpose
++Review recent changes through specialized cleanup lenses, aggregate the findings, apply the smallest safe fixes, and verify the result.
++
++## Default Program
++```text
++[stages: preflight>detect>analyze>implement>verify>review>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
++```
++
++## Lens Rationale
++This workflow uses `hickey-carmack` because post-change cleanup should preserve the contract, keep data flow and side effects explicit, and prefer the smallest justified simplification.
++
++## Use When
++- Need a default post-implementation cleanup pass over recent changes.
++- Need one workflow that checks reuse, quality, and efficiency before editing code.
++- Need a diff-first simplify workflow similar to a “clean up my recent changes” command.
++
++## Do Not Use When
++- Need analysis-only mapping with no code edits — use workflow-tidy-find-improvements.
++- Need a broad refactor or architecture redesign.
++- Need to change behavior or add net-new features.
++
++## Required Inputs
++- `TARGET_SCOPE` (diff|recent-files|path-set; optional; allowed: diff|recent-files|path-set): Scope to simplify. Defaults to current git diff, then recent files if no diff exists.
++- `FOCUS_HINTS` (list; optional; shape: {AREA, WHY}): Optional concerns such as memory efficiency, utility reuse, or abstraction boundaries.
++- `APPLY_POLICY` (fix-high-signal|fix-all-safe; optional; allowed: fix-high-signal|fix-all-safe): How aggressively to apply findings. Defaults to `fix-high-signal`.
++- `VERIFY_HINTS` (list; optional; shape: {CHECK, PASS_CONDITION}): Extra checks to run after cleanup when the user has a known done condition.
++
++## Input Contract Notes
++- Prefer `diff` whenever git changes exist because the cleanup contract is “what just changed.”
++- Use `recent-files` only when no usable diff boundary exists.
++- `FOCUS_HINTS` narrow prioritization; they do not replace the three default review axes.
++
++## Structured Outputs
++- `REVIEW_FINDINGS` (list; required; shape: {CATEGORY, ISSUE, LOCATION, RECOMMENDED_FIX}): Aggregated findings from reuse, quality, and efficiency review.
++- `FIXED_FINDINGS` (list; required; shape: {CATEGORY, ISSUE, LOCATION, CHANGE, STATUS}): Findings that were fixed in the cleanup pass.
++- `SKIPPED_FINDINGS` (list; required; shape: {CATEGORY, ISSUE, LOCATION, REASON}): Findings left alone because they were false positives, out of scope, or too risky.
++- `VERIFICATION_STATUS` (pass|blocked|inconclusive; required; allowed: pass|blocked|inconclusive): Final verification verdict after cleanup.
++- `EXPANDED_ATOMIC_PATH` (list; required; shape: {SKILL}): Atomic path executed by the workflow.
++
++## Output Contract Notes
++- The aggregated review list should deduplicate overlapping findings from multiple review skills.
++- If all three review passes are clean, return an empty `FIXED_FINDINGS` list and `VERIFICATION_STATUS=pass` only after confirming no code edits were needed.
++- `EXPANDED_ATOMIC_PATH` must preserve the actual execution order; the first three review skills may run in parallel when the runtime supports it.
++
++## Artifacts
++- `artifacts_in`: none
++- `artifacts_out`: review-report.v1, implementation-delta.v1, self-verify-report.v1
++
++## Neutrality Rules
++- Keep the workflow bounded to the reviewed scope.
++- Skip findings that are false positives or that require a larger refactor than the cleanup contract allows.
++- Do not turn this into a feature pass or architecture rewrite.
++
++## Execution Constraints
++1. Determine the scope. Use `git diff` or `git diff HEAD` when staged changes exist. If there is no meaningful diff, use the most recently changed or explicitly mentioned files.
++2. Launch the three review atomics on the same scope. When the runtime supports parallel agents, run `tidy-review-reuse`, `tidy-review-quality`, and `tidy-review-efficiency` in parallel.
++3. Aggregate and deduplicate the findings. Keep only concrete, locally actionable items.
++4. Invoke `tidy-apply-review-fixes` with the bounded findings and `FUNCTIONAL_EQUIVALENCE=yes`.
++5. Invoke `check-final-verify` over the changed artifacts with explicit contracts: current behavior preserved, cleanup findings resolved or justified, and focused checks passed.
++6. If the best action is “do nothing,” say so plainly and stop.
++
++## Response Format
++Lead with one of:
++- `CLEAN` — no worthwhile cleanup found
++- `FIXED` — fixes applied and verified
++- `BLOCKED` / `INCONCLUSIVE` — verification did not fully pass
++
++Then show:
++- Review findings by category
++- What was fixed vs skipped
++- Verification evidence
++
++## Mandatory Rules
++- Expose the expanded atomic path explicitly.
++- Preserve current behavior.
++- Keep review, fix, and verification evidence separate.
++
++## Expansion
++- `$tidy-review-reuse`
++- `$tidy-review-quality`
++- `$tidy-review-efficiency`
++- `$tidy-apply-review-fixes`
++- `$check-final-verify`
++
++## Example Invocation
++```text
++$workflow-tidy-simplify-this TARGET_SCOPE: diff FOCUS_HINTS:
++- AREA: memory efficiency
++  WHY: a new cache-like branch was added
++```
+diff -ruN composable-skills-simplify-original/skills/workflow-tidy-simplify-this/skill.json composable-skills-simplify-upgrade/skills/workflow-tidy-simplify-this/skill.json
+--- composable-skills-simplify-original/skills/workflow-tidy-simplify-this/skill.json	1970-01-01 00:00:00.000000000 +0000
++++ composable-skills-simplify-upgrade/skills/workflow-tidy-simplify-this/skill.json	2026-03-13 03:47:26.779041140 +0000
+@@ -0,0 +1,83 @@
++{
++  "name": "workflow-tidy-simplify-this",
++  "layer": "workflow",
++  "layer_badge": "Workflow",
++  "default_program": "[stages: preflight>detect>analyze>implement>verify>review>audit | scope: diff|recent-files|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
++  "required_inputs": [
++    {
++      "name": "TARGET_SCOPE",
++      "type": "diff|recent-files|path-set",
++      "required": false,
++      "allowed_values": [
++        "diff",
++        "recent-files",
++        "path-set"
++      ],
++      "description": "Scope to simplify. Defaults to current git diff, then recent files if no diff exists."
++    },
++    {
++      "name": "FOCUS_HINTS",
++      "type": "list",
++      "required": false,
++      "shape": "{AREA, WHY}",
++      "description": "Optional concerns such as memory efficiency, utility reuse, or abstraction boundaries."
++    },
++    {
++      "name": "APPLY_POLICY",
++      "type": "fix-high-signal|fix-all-safe",
++      "required": false,
++      "allowed_values": [
++        "fix-high-signal",
++        "fix-all-safe"
++      ],
++      "description": "How aggressively to apply findings. Defaults to fix-high-signal."
++    },
++    {
++      "name": "VERIFY_HINTS",
++      "type": "list",
++      "required": false,
++      "shape": "{CHECK, PASS_CONDITION}",
++      "description": "Extra checks to run after cleanup when the user has a known done condition."
++    }
++  ],
++  "display_name": "Workflow / Tidy Simplify This",
++  "browse_category": "tidy",
++  "browse_priority": 10,
++  "is_category_default": true,
++  "codex_surface": "public_entry",
++  "starter_inputs": [
++    {
++      "key": "SCOPE",
++      "label": "무슨 변경을 정리할지",
++      "required": false,
++      "maps_to": [
++        "TARGET_SCOPE"
++      ],
++      "derive_from_raw_request": true
++    },
++    {
++      "key": "FOCUS",
++      "label": "특히 볼 개선 포인트",
++      "required": false,
++      "maps_to": [
++        "FOCUS_HINTS"
++      ],
++      "derive_from_raw_request": true
++    },
++    {
++      "key": "DONE",
++      "label": "추가 검증 기준",
++      "required": false,
++      "maps_to": [
++        "VERIFY_HINTS"
++      ]
++    }
++  ],
++  "expands_to": [
++    "$tidy-review-reuse",
++    "$tidy-review-quality",
++    "$tidy-review-efficiency",
++    "$tidy-apply-review-fixes",
++    "$check-final-verify"
++  ]
++}

@@ -53,7 +53,7 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - `why`: Breaking one question into a prioritized stack requires separating what must be answered first (critical path) from what can wait, and pushing nice-to-have sub-questions out of the main layer so the core question stays reachable.
 
 ## Artifacts
-- `artifacts_in`: ask-form-question.v1
+- `artifacts_in`: ask-clarify-question.v1
 - `artifacts_out`: question-stack.v1
 
 ## Neutrality Rules
@@ -67,6 +67,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - Keep the stack minimal and focused on the core question.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 State the CORE_QUESTION first, one sentence.
 

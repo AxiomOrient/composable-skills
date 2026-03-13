@@ -4,7 +4,8 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 usage() {
-  echo "Usage: ./scripts/sync.sh [local] [target-agents-root]" >&2
+  echo "Usage: ./scripts/sync.sh [local] [profile] [target-agents-root]" >&2
+  echo "Profiles: core | docs-release | extras | all" >&2
 }
 
 if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
@@ -13,12 +14,24 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
 fi
 
 MODE="${1:-global}"
+PROFILE="core"
 TARGET_ROOT_ARG=""
+is_profile() {
+  [[ "$1" == "core" || "$1" == "docs-release" || "$1" == "extras" || "$1" == "all" ]]
+}
 if [[ "$MODE" == "local" ]]; then
   shift || true
+  if [[ -n "${1:-}" ]] && is_profile "${1:-}"; then
+    PROFILE="$1"
+    shift || true
+  fi
   TARGET_ROOT_ARG="${1:-}"
 else
   MODE="global"
+  if [[ -n "${1:-}" ]] && is_profile "${1:-}"; then
+    PROFILE="$1"
+    shift || true
+  fi
   TARGET_ROOT_ARG="${1:-}"
 fi
 
@@ -50,7 +63,7 @@ need_cmd() {
 need_cmd python3
 
 if [[ "$MODE" == "local" ]]; then
-  python3 "$REPO_ROOT/scripts/skills.py" sync "$(resolve_local_root "$TARGET_ROOT_ARG")"
+  python3 "$REPO_ROOT/scripts/skills.py" sync --profile "$PROFILE" "$(resolve_local_root "$TARGET_ROOT_ARG")"
 else
-  python3 "$REPO_ROOT/scripts/skills.py" sync "$(resolve_global_root "$TARGET_ROOT_ARG")"
+  python3 "$REPO_ROOT/scripts/skills.py" sync --profile "$PROFILE" "$(resolve_global_root "$TARGET_ROOT_ARG")"
 fi

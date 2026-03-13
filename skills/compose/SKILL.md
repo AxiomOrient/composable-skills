@@ -28,7 +28,7 @@ Compose does not impose a domain lens of its own; it exists to preserve explicit
 - Need direct PROGRAM DSL input parsing as a public entry mode.
 
 ## Required Inputs
-- `MACRO_EXPRESSION` (string; required; shape: $skill + $workflow-name + @path + [prompt]): Explicit macro text such as $workflow-check-full-review + @src/auth + $check-final-verify.
+- `MACRO_EXPRESSION` (string; required; shape: $skill + $workflow-name + @path + [prompt]): Explicit macro text such as $workflow-review-change + @src/auth + $check-final-verify.
 - `LENS_OVERRIDE` (string; optional): Optional explicit lens override token.
 - `SCOPE_OVERRIDE` (string|list; optional): Optional explicit scope tokens such as @src or scope:paths(src/auth).
 
@@ -77,6 +77,8 @@ Compose does not impose a domain lens of its own; it exists to preserve explicit
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the expanded skill chain in execution order:
 1. [skill-name] — [role in the chain]
 2. ...
@@ -94,5 +96,5 @@ Ask: "Does this chain look right before I execute?"
 
 ## Example Invocation
 ```text
-$compose + $workflow-check-full-review + @src/auth + $check-final-verify
+$compose + $workflow-review-change + @src/auth + $check-final-verify
 ```

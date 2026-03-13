@@ -30,7 +30,7 @@
     }
   ],
   "display_name": "Gemini",
-  "browse_category": "utility",
+  "browse_category": "extras",
   "browse_priority": 90,
   "is_category_default": false,
   "codex_surface": "expert",

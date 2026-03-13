@@ -8,6 +8,8 @@ description: "Use when a bounded scope contains unnecessary files, stale docs, c
 ## Purpose
 Remove unnecessary legacy surface in a bounded scope, relink surviving references, and verify that the remaining public or runtime surface still matches the intended contract.
 
+For documentation, do not treat "old" as a synonym for "delete". First classify each doc as `keep`, `update`, `deprecate`, or `delete`, then act only on the classes that justify removal.
+
 ## Default Program
 ```text
 [stages: preflight>detect>implement>verify>review>audit |
@@ -44,6 +46,48 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - PRESERVE_SURFACE should name the surfaces that would be expensive or dangerous to delete by mistake.
 - Keep the cleanup bounded. If multiple unrelated legacy themes appear, split them into separate runs.
 
+## Documentation Decision Ladder
+
+Before deleting any documentation, classify it with this order of precedence:
+
+1. `keep`
+   - Keep docs that describe the current public surface, current runtime behavior, current architecture, or current contributor workflow.
+   - Keep entry docs that help readers discover the project, such as root `README.md`, runtime `skills/README.md`, support docs, contribution docs, and docs that explain the project's core artifact.
+   - In a repository whose product is "skills", documentation that explains those skills is product documentation by default, not legacy.
+2. `update`
+   - Update docs that still serve a current audience but contain stale names, stale paths, stale examples, or outdated workflow details.
+   - Prefer update over delete when the topic is still valid but the wording is behind the code.
+3. `deprecate`
+   - Deprecate docs when the thing they describe is still temporarily supported, still needed for migration, or still relevant to users on a supported older path.
+   - Mark deprecation explicitly with replacement path, removal condition, and if possible a target version or milestone.
+4. `delete`
+   - Delete only when the content has no current audience, duplicates another source of truth, describes removed and unsupported behavior with no migration need, or is a delivery-only artifact the repo contract says must not ship.
+
+## Documentation-Specific Rules
+
+- Wrong docs are worse than missing docs. If a doc is inaccurate but still covers a live topic, prefer `update` or temporary `deprecate`, not silent retention.
+- Keep one source of truth per topic. If two docs say the same thing, keep the discoverable canonical one and delete or redirect the duplicate.
+- Preserve discoverability. If a doc is the shortest path for a user to understand what the project is, how it is used, or where deeper docs live, do not delete it without a replacement path.
+- Preserve documentation mode boundaries. Reference, explanation, how-to, and tutorial content should be separated by purpose; mixed docs should usually be split or rewritten before deletion is considered.
+
+## Planning Artifact Rules
+
+- Keep plan docs such as `plans/IMPLEMENTATION-PLAN.md` and `plans/TASKS.md` while the work is active, queued, blocked, or still used by execution workflows.
+- Do not delete plan docs when any task row is still `TODO`, `DOING`, or `BLOCKED`, or when an execution workflow like `workflow-build-execute-plan` still depends on them.
+- Delete delivery-only planning docs only after all tasks are done and the repository contract says they must not ship in release commits.
+- If a completed plan still contains reusable project knowledge, convert that durable knowledge into a permanent doc first, then delete the delivery-only artifact.
+
+## Evidence Requirements For Doc Deletion
+
+Do not delete a doc unless you can point to at least one of:
+
+- a newer canonical doc that supersedes it
+- repository policy that says the artifact is temporary and must not ship
+- code or surface removal that makes the doc factually dead
+- absence of active workflow or user path that still needs it
+
+If those checks are incomplete, mark a verification gap instead of deleting.
+
 ## Structured Outputs
 - `CLEANUP_CHANGES` (list; required; shape: {PATH, ACTION, WHY}): Files or surfaces removed, collapsed, or updated.
 - `REFERENCE_UPDATES` (list; required; shape: {PATH, CHANGE, WHY}): Direct references updated because of the cleanup.
@@ -62,8 +106,11 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - Do not label something legacy without file, reference, or contract evidence.
 - Keep removed surface separate from follow-up improvement ideas.
 - If a target might still be live, record the verification gap instead of deleting on assumption.
+- For docs, prefer `update` over `delete` unless deletion has stronger evidence than preservation.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 Show what was removed or collapsed:
 - [path or surface] — action: [deleted/collapsed/relinked] — why: [legacy reason]
@@ -80,3 +127,4 @@ Ask about any boundary decision if cleanup scope was deliberately constrained.
 - Delete or collapse only the legacy surface named in LEGACY_TARGETS unless a directly dependent reference must change for correctness.
 - Prefer removing the smallest obsolete surface that restores clarity; do not widen into unrelated renames or reshaping.
 - If cleanup reveals a larger architectural problem, stop at the bounded cleanup and record the next structural step separately.
+- When the target is documentation, run the decision ladder explicitly and state the chosen class (`keep`, `update`, `deprecate`, or `delete`) before editing files.

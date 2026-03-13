@@ -69,6 +69,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with the design summary in one sentence: what gets built and its central trade-off.
 
 Show key decisions made:

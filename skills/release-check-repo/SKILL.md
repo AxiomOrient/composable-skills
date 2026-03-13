@@ -68,6 +68,8 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with repo readiness: READY / BLOCKED / INCONCLUSIVE.
 
 Show observed facts as a compact list:

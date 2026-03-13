@@ -30,7 +30,7 @@
     }
   ],
   "display_name": "Commit / Write Message",
-  "browse_category": "commit",
+  "browse_category": "extras",
   "browse_priority": 50,
   "is_category_default": false,
   "codex_surface": "expert",

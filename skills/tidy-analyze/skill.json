@@ -1,0 +1,45 @@
+{
+  "name": "tidy-analyze",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Where to inspect complexity."
+    },
+    {
+      "name": "SIMPLIFICATION_GOAL",
+      "type": "naming|structure|side-effects|mixed",
+      "required": true,
+      "description": "Complexity dimension to prioritize."
+    }
+  ],
+  "display_name": "Tidy / Analyze",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디의 복잡도를 볼지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "어떤 복잡도를 먼저 볼지",
+      "required": true,
+      "maps_to": [
+        "SIMPLIFICATION_GOAL"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

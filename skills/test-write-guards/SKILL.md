@@ -69,6 +69,8 @@ This skill uses `kent-beck` because it keeps the work aligned with: Small safe i
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show added tests as a compact list:
 - [test name] — behavior covered: [what it guards] — layer: [unit/integration/contract] — file
 

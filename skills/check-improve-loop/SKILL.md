@@ -36,7 +36,7 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - `TARGET_SCOPE` (path|artifact|module|folder|repo|diff; required): Exact scope the self-verify loop is allowed to inspect or improve.
 - `DONE_CONDITION` (list; required; shape: {CONDITION, PROOF_REQUIRED}): Explicit quality bar and the proof required for each condition.
 - `CURRENT_EVIDENCE` (list; optional; shape: {TYPE, REF, WHY_RELEVANT}): Current implementation evidence, review notes, tests, or docs from prior passes.
-- `COMPANION_SKILLS` (list; optional; allowed: build-write-code|doc-write|tidy-simplify|test-write-guards|check-merge-ready|check-final-verify|plan-sync-tasks; shape: {SKILL}): Narrow companion skills allowed for the next improvement pass.
+- `COMPANION_SKILLS` (list; optional; allowed: build-write-code|doc-write|tidy-simplify|test-write-guards|check-change-review|check-final-verify|plan-sync-tasks; shape: {SKILL}): Narrow companion skills allowed for the next improvement pass.
 - `MAX_PASSES` (integer; optional): Safety ceiling for same-turn refinement passes. Default to 3 when omitted.
 - `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Non-goals, simplicity limits, approval gates, or quality boundaries.
 
@@ -81,6 +81,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - Do not convert an implicit backlog into mandatory work unless the prompt or DONE_CONDITION makes it critical.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 Lead with the loop status: DONE / CONTINUE / BLOCKED.
 

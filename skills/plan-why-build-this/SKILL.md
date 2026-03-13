@@ -73,6 +73,8 @@ This skill uses `christensen-jtbd` because it keeps the work aligned with: Defin
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with the brief summary in two sentences: who, what problem, what outcome.
 
 Show ranked outcomes and their success signals:

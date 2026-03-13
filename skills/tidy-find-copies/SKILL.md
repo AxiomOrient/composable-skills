@@ -55,6 +55,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show duplication clusters with evidence locations:
 - [cluster name] — files: [list] — kind: [logic/structure/flow]
 

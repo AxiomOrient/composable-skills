@@ -1,6 +1,6 @@
 ---
 name: tidy-simplify
-description: "Behavior-preserving code simplification skill that applies the four-step cognitive-load reduction sequence: Intent Extraction, Abstraction Cost, Collapse & Merge, and Immutability Check. Do not use for net-new feature work, analysis-only planning, or scopes too broad to verify functional equivalence."
+description: "Behavior-preserving code simplification skill for one bounded scope after the target has already been identified. Applies the four-step cognitive-load reduction sequence: Intent Extraction, Abstraction Cost, Collapse & Merge, and Immutability Check. For recent-diff cleanup across reuse, quality, and efficiency, use workflow-tidy-simplify-this instead."
 ---
 
 # Tidy / Simplify
@@ -28,7 +28,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Do Not Use When
 - Need net-new feature work or behavior changes.
-- Need only analysis, inventory, or a simplification plan — use tidy-cut-fat or tidy-why-complex instead.
+- Need only analysis, inventory, or a simplification plan — use tidy-cut-fat or tidy-analyze instead.
+- Need recent-diff cleanup across reuse, quality, and efficiency — use workflow-tidy-simplify-this.
 - Need only checklist review or final delivery verification.
 - The target scope is too broad to verify functional equivalence after simplification.
 
@@ -87,6 +88,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - Do not turn this into a broad refactor or architecture rewrite.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 State the intent: what the code must preserve after simplification.
 

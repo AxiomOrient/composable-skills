@@ -86,6 +86,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Output directly after implementing.
 
 ```

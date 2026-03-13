@@ -29,7 +29,7 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 ## Do Not Use When
 
 - Need direct branch, tag, or GitHub release mutation; use release-publish instead.
-- Need the default review-plus-publish release flow; use workflow-release-publish instead.
+- Need the default review-plus-publish release flow; use control-release-publish-flow instead.
 - Need only one narrow release concern rather than a combined release review.
 - Need runtime implementation or debugging rather than release gating.
 
@@ -91,12 +91,14 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with release decision: GO / NO-GO / BLOCKED.
 
 Show per-step outcome (step → result):
 - release-check-repo → READY / BLOCKED
 - release-check-hygiene → doc gate + surface sync
-- workflow-security-preflight → PASS / BLOCKED
+- check-security-holes → PASS / BLOCKED
 - release-verdict → GO / NO-GO / BLOCKED
 
 List any blockers with severity and what resolves each.
@@ -113,7 +115,7 @@ On GO: "All gates passed — ready to publish." No further question needed.
 
 - `$release-check-repo`
 - `$release-check-hygiene`
-- `$workflow-security-preflight`
+- `$check-security-holes`
 - `$release-verdict`
 
 ## Example Invocation

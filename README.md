@@ -36,13 +36,30 @@ For project-local install:
 ./scripts/sync.sh local
 ```
 
+Profile-specific install:
+
+```bash
+./scripts/sync.sh core
+./scripts/sync.sh docs-release
+./scripts/sync.sh extras
+./scripts/sync.sh all
+```
+
 If the target ends with `/skills`, the scripts normalize it back to the `.agents` root automatically.
 
 ## Runtime Model
 
 - Public entry surface: `workflow-*`
 - Expert building blocks: atomic skills
-- Internal control surface: `compose`, `plan-sync-tasks`, `build-until-done`, `finish-until-done`, `release-publish`
+- Internal control surface: `compose`, `plan-sync-tasks`, `control-build-until-done`, `control-finish-until-done`, `control-release-publish-flow`, `release-publish`
+- Extras profile: `gemini`, `commit-write-message`
+
+## Surface Policy
+
+- Public workflows are the discovery-first entry surface.
+- Atomic skills should do one bounded job cleanly and remain compose-friendly.
+- Internal control skills use `control-*` naming and are not default discovery targets.
+- This repo does not keep runtime alias skills by default. Rename and merge migrations are handled through docs, not duplicate runtime entries.
 
 The runtime reads direct skill metadata from skill folders.
 It does not require `_registry`, `_core`, generated guides, a committed `catalog.json`, or a separate docs package.
@@ -55,5 +72,6 @@ It does not require `_registry`, `_core`, generated guides, a committed `catalog
 
 - Public entry skills use `workflow-*` only.
 - `compose` stays an internal control engine, not a default discovery target.
+- Default sync profile is `core`; use `all` only when you want the full runtime surface.
 - Every shipped skill keeps explicit inputs, outputs, neutrality rules, and deterministic output contracts.
 - Temporary implementation docs such as `plans/IMPLEMENTATION-PLAN.md` and `plans/TASKS.md` do not ship in release commits.

@@ -79,6 +79,8 @@ This skill uses `nist-rmf` because it keeps the work aligned with: Systematic ri
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with the threat surface in one line: assets, attacker model, trust boundary.
 
 Then list findings ordered by severity:

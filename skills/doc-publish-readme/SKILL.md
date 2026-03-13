@@ -93,6 +93,8 @@ This skill uses `feynman-teaching` because it keeps the work aligned with: Start
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show what was written or updated:
 
 - README.md — [change kind]

@@ -68,6 +68,8 @@ This skill uses `popper-falsification` because it keeps the work aligned with: P
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 List the three assumptions holding the current question in place.
 
 Then show two challenge questions, each anchored to a reversal:

@@ -67,6 +67,8 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with the verdict: GO / NO-GO / BLOCKED.
 
 Show blast radius in one line: [who or what is affected and to what extent].

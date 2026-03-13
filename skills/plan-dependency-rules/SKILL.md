@@ -59,6 +59,8 @@ This skill uses `uncle-bob` because it keeps the work aligned with: Strong bound
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the target dependency rules in two lists:
 - Allowed: [from] → [to] — why
 - Forbidden: [from] → [to] — why

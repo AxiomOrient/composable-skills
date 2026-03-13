@@ -61,6 +61,8 @@ This skill uses `kent-beck` because it keeps the work aligned with: Small safe i
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show verification in order:
 1. Narrow check — [command or test] — pass signal: [what to look for]
 2. Broader check — [command or test] — pass signal: [what to look for]

@@ -39,7 +39,7 @@
         "doc-write",
         "tidy-simplify",
         "test-write-guards",
-        "check-merge-ready",
+        "check-change-review",
         "check-final-verify",
         "plan-sync-tasks"
       ],

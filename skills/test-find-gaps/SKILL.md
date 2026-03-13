@@ -71,6 +71,8 @@ This skill uses `kent-beck` because it keeps the work aligned with: Small safe i
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show what is currently covered: [behavior] — evidence: [test or check]
 
 Then list missing test scenarios ordered by regression value:

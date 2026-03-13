@@ -46,10 +46,12 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - `why`: Simplification should remove hidden indirection and preserve only essential structure.
 
 ## Artifacts
-- `artifacts_in`: tidy-why-complex.v1
+- `artifacts_in`: tidy-analyze.v1
 - `artifacts_out`: simplification-plan.v1
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 Show what changed and what was left alone:
 - Simplified: [what] — why: [complexity removed]

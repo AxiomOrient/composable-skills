@@ -71,6 +71,8 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the execution log with status per scenario:
 - [scenario] — role: [user type] — status: PASS / FAIL / UNCLEAR — [one line on what happened]
 

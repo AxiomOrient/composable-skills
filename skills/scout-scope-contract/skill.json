@@ -1,0 +1,38 @@
+{
+  "name": "scout-scope-contract",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>plan>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs},deterministic-output |\n lens: minto-pyramid |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "REQUEST",
+      "type": "string",
+      "required": true,
+      "description": "Ambiguous request or work item."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|folder|repo|artifact",
+      "required": true,
+      "description": "Target scope under discussion."
+    },
+    {
+      "name": "KNOWN_CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "description": "Explicit constraints, non-goals, or deadlines."
+    },
+    {
+      "name": "KNOWN_DONE_CONDITION",
+      "type": "list",
+      "required": false,
+      "description": "Any existing completion rule."
+    }
+  ],
+  "display_name": "Scout / Scope Contract",
+  "browse_category": "scout",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

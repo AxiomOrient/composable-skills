@@ -15,7 +15,7 @@
       "type": "list",
       "required": true,
       "shape": "{PATH_OR_PATTERN, WHY_LEGACY}",
-      "description": "Concrete unnecessary files, stale docs, completed plan artifacts, aliases, patterns, or surfaces to remove or collapse."
+      "description": "Concrete unnecessary files, stale docs, completed plan artifacts, aliases, patterns, or surfaces to remove or collapse. For docs, the why must justify delete, deprecate, or collapse rather than just age."
     },
     {
       "name": "CLEANUP_MODE",
@@ -28,7 +28,7 @@
       "type": "list",
       "required": false,
       "shape": "{PATH_OR_CONTRACT, WHY_MUST_SURVIVE}",
-      "description": "Files, interfaces, or public surfaces that must remain intact."
+      "description": "Files, interfaces, entry docs, or public surfaces that must remain intact."
     },
     {
       "name": "VERIFICATION_MAP",

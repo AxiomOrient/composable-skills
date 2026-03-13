@@ -66,6 +66,8 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with root cause in one line — or "inconclusive: [candidates]" if not yet confirmed.
 
 ```

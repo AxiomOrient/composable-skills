@@ -81,6 +81,8 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show gate status up front:
 - Doc gate: PASS / BLOCKED / INCONCLUSIVE
 - Surface sync: PASS / BLOCKED / INCONCLUSIVE

@@ -27,7 +27,7 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 
 ## Do Not Use When
 - Need direct code implementation.
-- Need a general review verdict rather than gate audit — use check-merge-ready instead.
+- Need a general review verdict rather than gate audit — use check-change-review instead.
 - Need vulnerability analysis only — use check-security-holes instead.
 - Need full GO/NO-GO release judgment with rollout plan and rollback strategy — use release-verdict instead.
 
@@ -66,6 +66,8 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 - Do not inflate style preference into a blocker without release or regression impact.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 Show gate status as a compact table:
 - Gate | Status (pass/fail/unverified) | Evidence

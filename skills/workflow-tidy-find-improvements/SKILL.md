@@ -1,9 +1,9 @@
 ---
 name: workflow-tidy-find-improvements
-description: "Workflow skill that maps concrete simplification and commonization opportunities before structural improvement work. Use when the user wants an explicit improvement map rather than a vague 'make it better' request."
+description: "Workflow skill that maps concrete simplification and commonization opportunities before structural improvement work. Use when the user wants an explicit improvement map rather than direct cleanup of recent changes."
 ---
 
-# Workflow / Tidy Improvements
+# Workflow / Tidy Find Improvements
 
 ## Purpose
 Compose specific improvement scans with simplification and refactor intent into one explicit improvement map.
@@ -19,11 +19,11 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 ## Use When
 - Need an explicit improvement map grounded in duplication and constant extraction evidence.
 - Need to decide whether simplification or refactoring is justified in a bounded scope.
-- Need a reusable improvement workflow that can still be extended with extra skills.
+- Need analysis-first triage before any code is changed.
 
 ## Do Not Use When
 - Need only a single narrow scan.
-- Need a direct feature implementation unrelated to simplification.
+- Need the skill to actually fix recent changes.
 - Need bug debugging rather than structure improvement.
 
 ## Required Inputs
@@ -66,13 +66,15 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with direction: **SIMPLIFY**, **REFACTOR**, or **HOLD**.
 
 Opportunities (evidence-backed, file:line cited):
 - [opportunity] — `file:line` — [recommended action and why]
 
 On HOLD: "No actionable duplication or complexity found — clean as-is."
-On SIMPLIFY/REFACTOR: "Start with [top opportunity] — or want full list sorted by impact?"
+On SIMPLIFY/REFACTOR: "Start with [top opportunity] — or use workflow-tidy-simplify-this if you want the fixes applied now."
 
 ## Mandatory Rules
 - Keep improvement findings tied to explicit scan evidence.

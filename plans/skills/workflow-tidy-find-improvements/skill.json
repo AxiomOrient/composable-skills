@@ -1,0 +1,56 @@
+{
+  "name": "workflow-tidy-find-improvements",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Scope to map for improvement."
+    },
+    {
+      "name": "IMPROVEMENT_GOAL",
+      "type": "simplify|commonize|mixed",
+      "required": true,
+      "allowed_values": [
+        "simplify",
+        "commonize",
+        "mixed"
+      ],
+      "description": "Improvement emphasis."
+    }
+  ],
+  "display_name": "Workflow / Tidy Improvements",
+  "browse_category": "tidy",
+  "browse_priority": 20,
+  "is_category_default": false,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디를 개선할지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "개선 방향",
+      "required": true,
+      "maps_to": [
+        "IMPROVEMENT_GOAL"
+      ],
+      "help": "simplify, commonize, mixed 중 하나."
+    }
+  ],
+  "expands_to": [
+    "$tidy-find-copies",
+    "$tidy-find-magic-numbers",
+    "$tidy-cut-fat",
+    "$tidy-reorganize"
+  ]
+}

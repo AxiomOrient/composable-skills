@@ -1,6 +1,6 @@
 ---
 name: workflow-build-execute-plan
-description: "Plan-document-driven build pipeline. Requires plans/TASKS.md (and optionally plans/IMPLEMENTATION-PLAN.md). Reads each incomplete task row, implements it, self-critiques, syncs the ledger, verifies, and loops until all tasks are done or a real blocker stops progress. For plan-free autonomous execution without task documents, use build-until-done instead."
+description: "Plan-document-driven build pipeline. Requires plans/TASKS.md (and optionally plans/IMPLEMENTATION-PLAN.md). Reads each incomplete task row, implements it, self-critiques, syncs the ledger, verifies, and loops until all tasks are done or a real blocker stops progress. For plan-free autonomous execution without task documents, use control-build-until-done instead."
 ---
 
 # Workflow / Build Execute Plan
@@ -27,10 +27,10 @@ This skill uses `contract-evidence-verifier` because it keeps the work aligned w
 - Need a structured execution record of what was implemented and why.
 
 ## Do Not Use When
-- Have no plan or task documents — use `build-until-done` for plan-free autonomous execution.
+- Have no plan or task documents — use `control-build-until-done` for plan-free autonomous execution.
 - Need only a single-pass implementation — use `build-write-code` directly.
 - Need planning first — use `workflow-plan-build-ready` to create the plan, then return here.
-- Need non-code work (docs, review, release) — use `finish-until-done` instead.
+- Need non-code work (docs, review, release) — use `control-finish-until-done` instead.
 
 ## Required Inputs
 - `MISSION_GOAL` (string; required): One bounded mission to execute until all task rows are done or a real blocker stops progress.
@@ -40,7 +40,7 @@ This skill uses `contract-evidence-verifier` because it keeps the work aligned w
 - `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Safety, rollout, compatibility, or non-goal constraints.
 
 ## Input Contract Notes
-- PLAN_ARTIFACTS is required. If called without plan documents, immediately emit blocked and direct the user to `build-until-done`.
+- PLAN_ARTIFACTS is required. If called without plan documents, immediately emit blocked and direct the user to `control-build-until-done`.
 - Treat every incomplete task row as active work to consume, not passive reference material.
 - DONE_CONDITION must be externally checkable. No vibe-based success language.
 - CONSTRAINTS should name non-goals explicitly so the loop does not drift into adjacent cleanup.
@@ -70,6 +70,8 @@ Run all task cycles within a single turn. Do not stop between cycles — continu
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Output one line per task cycle in real time, then immediately start the next cycle.
 
 ```
@@ -96,7 +98,7 @@ On loop exit:
 ## Neutrality Rules
 - Do not mark a task done without per-task done condition evidence.
 - Do not skip the self-critique pass for speed.
-- If plan documents are absent, do not invent task rows — emit blocked and direct to `build-until-done`.
+- If plan documents are absent, do not invent task rows — emit blocked and direct to `control-build-until-done`.
 
 ## Execution Loop Rules
 - Execute all cycles in a single turn. Do not treat one-cycle output as a final result.
@@ -110,7 +112,7 @@ On loop exit:
 - `$check-final-verify`
 
 ## Mandatory Rules
-- If PLAN_ARTIFACTS is absent, emit blocked immediately and direct to `build-until-done`.
+- If PLAN_ARTIFACTS is absent, emit blocked immediately and direct to `control-build-until-done`.
 - Never emit MISSION_STATUS=done while any task row or DONE_CONDITION lacks evidence.
 - Never stop after one cycle when tasks remain.
 
@@ -124,4 +126,4 @@ DONE: All tasks complete and core session tests pass
 PLAN: plans/IMPLEMENTATION-PLAN.md, plans/TASKS.md
 ```
 
-> No plan documents? Use `build-until-done` for plan-free autonomous execution.
+> No plan documents? Use `control-build-until-done` for plan-free autonomous execution.

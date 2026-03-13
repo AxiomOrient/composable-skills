@@ -47,7 +47,7 @@ This skill uses `inversion-focus` because it keeps the work aligned with: Reduce
 
 ## Artifacts
 - `artifacts_in`: none
-- `artifacts_out`: ask-form-question.v1, question-stack.v1
+- `artifacts_out`: ask-clarify-question.v1, question-stack.v1
 
 ## Neutrality Rules
 - Preserve the neutrality rules of each underlying atomic skill.
@@ -59,6 +59,8 @@ This skill uses `inversion-focus` because it keeps the work aligned with: Reduce
 - Keep the stack focused on the core decision the audience actually needs.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 Output the result directly — no preamble, no chain commentary.
 
@@ -75,7 +77,7 @@ If a step failed, say which and ask: "Want to try a different angle?"
 - Keep the workflow output short enough that the user can ask or refine the question immediately.
 
 ## Expansion
-- `$ask-form-question`
+- `$ask-clarify-question`
 - `$ask-break-it-down`
 
 ## Example Invocation

@@ -29,7 +29,7 @@
   "codex_surface": "expert",
   "starter_inputs": [],
   "expands_to": [
-    "$workflow-check-full-review",
+    "$workflow-review-change",
     "$check-quality-scan"
   ]
 }

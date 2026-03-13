@@ -72,6 +72,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the boundary map as a compact list:
 - [boundary] — owns: [responsibility] — interacts with: [other boundary]
 

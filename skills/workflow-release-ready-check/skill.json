@@ -101,6 +101,15 @@
       "derive_from_raw_request": true
     },
     {
+      "key": "BRANCHES",
+      "label": "대상 브랜치",
+      "required": true,
+      "maps_to": [
+        "TARGET_BRANCHES"
+      ],
+      "help": "예: {BRANCH: dev, ROLE: source}, {BRANCH: main, ROLE: target}"
+    },
+    {
       "key": "DONE",
       "label": "롤아웃 계획",
       "required": true,
@@ -120,7 +129,7 @@
   "expands_to": [
     "$release-check-repo",
     "$release-check-hygiene",
-    "$workflow-security-preflight",
+    "$check-security-holes",
     "$release-verdict"
   ]
 }

@@ -59,6 +59,8 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 State the reproduction window in one line: trigger conditions and minimal scope.
 
 Show:

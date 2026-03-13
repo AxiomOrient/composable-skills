@@ -28,7 +28,7 @@
       "type": "list",
       "required": true,
       "shape": "{PATH, ROLE}",
-      "description": "Plan and task ledger documents to execute. Required — this workflow does not operate without plan documents. Defaults to plans/IMPLEMENTATION-PLAN.md + plans/TASKS.md. Without this, use build-until-done instead."
+      "description": "Plan and task ledger documents to execute. Required — this workflow does not operate without plan documents. Defaults to plans/IMPLEMENTATION-PLAN.md + plans/TASKS.md. Without this, use control-build-until-done instead."
     },
     {
       "name": "CONSTRAINTS",

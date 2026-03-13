@@ -74,6 +74,8 @@ This skill uses `minto-pyramid` because it keeps the work aligned with: Lead wit
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with the spec summary in one sentence: scope, core outcome, key constraint.
 
 Show the requirement list: FR-N | behavior | why it matters.

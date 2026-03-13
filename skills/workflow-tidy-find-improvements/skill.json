@@ -22,10 +22,10 @@
       "description": "Improvement emphasis."
     }
   ],
-  "display_name": "Workflow / Tidy Improvements",
+  "display_name": "Workflow / Tidy Find Improvements",
   "browse_category": "tidy",
-  "browse_priority": 10,
-  "is_category_default": true,
+  "browse_priority": 20,
+  "is_category_default": false,
   "codex_surface": "public_entry",
   "starter_inputs": [
     {

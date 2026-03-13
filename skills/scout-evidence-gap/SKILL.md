@@ -71,6 +71,8 @@ This skill uses `kahneman-tversky` because it keeps the work aligned with: Separ
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 State the current confidence level for the claim in one line: supported / under-supported / unsupported.
 
 List what exists as evidence: [observation] — [location]

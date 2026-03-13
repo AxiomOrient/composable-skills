@@ -51,6 +51,8 @@ This skill uses `goldratt-toc` because it keeps the work aligned with: Find the 
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with the bottleneck in one line: what it is, where it is.
 
 Then show:

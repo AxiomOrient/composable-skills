@@ -62,6 +62,8 @@ This skill uses `goldratt-toc` because it keeps the work aligned with: Find the 
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the baseline as one line: [metric] = [value] [unit] — method: [how captured] — environment: [where]
 
 State the performance budget: [target] — basis: [where this number came from or "provisional"]

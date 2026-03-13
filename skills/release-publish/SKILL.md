@@ -32,7 +32,7 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 ## Do Not Use When
 
 - Need only release safety or rollout judgement; use release-verdict or workflow-release-ready-check instead.
-- Need the default end-to-end release flow; use workflow-release-publish instead.
+- Need the default end-to-end release flow; use control-release-publish-flow instead.
 - Need normal implementation, debugging, or documentation authoring work.
 - Cannot tolerate branch, tag, or remote mutation in the current run.
 
@@ -101,6 +101,8 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with release status: PUBLISHED / PREPARED / BLOCKED.
 
 Show what happened:
@@ -123,7 +125,7 @@ Ask for confirmation before any push or publish action that has not yet occurred
 ## Example Invocation
 
 ```text
-$compose + $workflow-release-publish + $check-final-verify
+$compose + $control-release-publish-flow + $check-final-verify
 
 TARGET_BRANCHES:
   - {BRANCH: codex/dev, ROLE: source}

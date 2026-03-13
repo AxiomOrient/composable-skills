@@ -1,0 +1,41 @@
+{
+  "name": "tidy-apply-review-fixes",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>implement>verify>review>audit | scope: diff|repo|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|diff",
+      "required": true,
+      "description": "Bounded scope where the fixes may be applied."
+    },
+    {
+      "name": "REVIEW_FINDINGS",
+      "type": "list",
+      "required": true,
+      "shape": "{SOURCE_SKILL, ISSUE, LOCATION, RECOMMENDED_FIX, EVIDENCE}",
+      "description": "Cleanup findings to normalize and fix."
+    },
+    {
+      "name": "FUNCTIONAL_EQUIVALENCE",
+      "type": "yes|preserve-current-behavior",
+      "required": true,
+      "allowed_values": ["yes", "preserve-current-behavior"],
+      "description": "Explicit contract that behavior must stay the same."
+    },
+    {
+      "name": "APPLY_POLICY",
+      "type": "fix-high-signal|fix-all-safe",
+      "required": false,
+      "allowed_values": ["fix-high-signal", "fix-all-safe"],
+      "description": "How aggressively to apply the findings."
+    }
+  ],
+  "display_name": "Tidy / Apply Review Fixes",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

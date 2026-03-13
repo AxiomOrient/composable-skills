@@ -1,0 +1,78 @@
+{
+  "name": "tidy-simplify",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>implement>verify>review>audit |\n scope: diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|diff",
+      "required": true,
+      "description": "Bounded scope to simplify. Must be small enough to verify equivalence with focused checks."
+    },
+    {
+      "name": "FUNCTIONAL_EQUIVALENCE",
+      "type": "yes|preserve-current-behavior",
+      "required": true,
+      "allowed_values": [
+        "yes",
+        "preserve-current-behavior"
+      ],
+      "description": "Behavior-preservation contract for the simplification pass. Mandatory because this is a reduction pass, not feature work."
+    },
+    {
+      "name": "SIMPLIFY_GOAL",
+      "type": "control-flow|data-flow|indirection|immutability|mixed",
+      "required": true,
+      "allowed_values": [
+        "control-flow",
+        "data-flow",
+        "indirection",
+        "immutability",
+        "mixed"
+      ],
+      "description": "Primary simplification dimension matching the four-step algorithm. Identify the dominant cognitive load source."
+    },
+    {
+      "name": "KNOWN_PAIN",
+      "type": "list",
+      "required": false,
+      "shape": "{SYMPTOM, LOCATION, WHY_RELEVANT}",
+      "description": "Known complexity hotspots to prioritize in the simplification pass."
+    }
+  ],
+  "display_name": "Tidy / Simplify",
+  "browse_category": "tidy",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "어디를 단순화할지",
+      "required": true,
+      "maps_to": [
+        "TARGET_SCOPE"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "어떤 복잡도를 줄일지 (control-flow / data-flow / indirection / immutability / mixed)",
+      "required": true,
+      "maps_to": [
+        "SIMPLIFY_GOAL"
+      ],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "지켜야 할 동작 계약",
+      "required": true,
+      "maps_to": [
+        "FUNCTIONAL_EQUIVALENCE"
+      ],
+      "derive_from_raw_request": true
+    }
+  ]
+}

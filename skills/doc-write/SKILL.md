@@ -78,6 +78,8 @@ This skill uses `feynman-teaching` because it keeps the work aligned with: Start
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 List what was written or updated:
 - file:section — change kind (created/updated/expanded) — audience — form
 

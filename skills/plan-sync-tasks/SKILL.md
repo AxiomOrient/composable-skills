@@ -76,6 +76,8 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show which task rows were updated:
 - TASK-ID | from: [status] → to: [status] | evidence: [what proved it]
 

@@ -77,6 +77,8 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Lead with the failure class and one sentence on why the answer failed.
 
 Then show the minimal repair:

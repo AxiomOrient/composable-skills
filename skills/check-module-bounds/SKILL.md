@@ -69,6 +69,8 @@ This skill uses `uncle-bob` because it keeps the work aligned with: Strong bound
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 State the current contract in one sentence: what the boundary exposes, what it hides.
 
 Then show leaks found:

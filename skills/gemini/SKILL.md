@@ -59,6 +59,8 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show Gemini's output directly, attributed: "Gemini says: [finding or claim]"
 
 Then compare against local evidence: "Local evidence: [agrees / disagrees / insufficient]"

@@ -63,6 +63,8 @@ This skill uses `kent-beck` because it keeps the work aligned with: Small safe i
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show the case matrix grouped by bucket:
 
 Happy path:

@@ -55,7 +55,7 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 - `artifacts_out`: clarify-contract.v1, structure-map.v1
 
 ## Neutrality Rules
-- Preserve the neutrality rules of scout-scope and scout-structure-map.
+- Preserve the neutrality rules of scout-scope-contract and scout-structure-map.
 - Do not smuggle redesign, implementation, or review judgement into the workflow.
 - Keep the workflow explicit enough that users can drop to the narrower atomic skill when needed.
 
@@ -67,8 +67,10 @@ This skill uses `hickey-carmack` because it keeps the work aligned with: Data mo
 
 ## Response Format
 
+Think and operate in English, but deliver the final response in Korean.
+
 Show per-step outcome (step → result):
-- scout-scope → scope contract: goal + acceptance boundary
+- scout-scope-contract → scope contract: goal + acceptance boundary
 - scout-structure-map → boundary map + open structure questions
 
 On failure at any step: stop and ask what blocked it.
@@ -83,7 +85,7 @@ Ask: "Want to go deeper on [most interesting or uncertain boundary]?"
 - Do not claim the workflow is done if either atomic pass skipped its anchor-and-verification step on a long context.
 
 ## Expansion
-- `$scout-scope`
+- `$scout-scope-contract`
 - `$scout-structure-map`
 
 ## Example Invocation

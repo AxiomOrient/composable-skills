@@ -25,7 +25,7 @@ This skill uses `minto-pyramid` because it keeps the work aligned with: Lead wit
 - Already have a precise scope contract.
 - Need direct implementation or review work.
 - Need full planning artifacts rather than scope normalization only.
-- Requirements are still ambiguous and clarifying questions are needed first — use scout-scope instead.
+- Requirements are still ambiguous and clarifying questions are needed first — use scout-scope-contract instead.
 
 ## Required Inputs
 - `REQUEST` (string; required): Original user request or work item.
@@ -58,6 +58,8 @@ This skill uses `minto-pyramid` because it keeps the work aligned with: Lead wit
 - Do not turn preference into scope without evidence.
 
 ## Response Format
+
+Think and operate in English, but deliver the final response in Korean.
 
 State the goal in one sentence.
 
