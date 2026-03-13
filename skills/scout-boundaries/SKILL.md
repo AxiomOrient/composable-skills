@@ -13,6 +13,9 @@ Reduce a broad request to an explicit scope contract that downstream planning or
 [stages: preflight>detect>analyze>plan>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: minto-pyramid | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `minto-pyramid` because it keeps the work aligned with: Lead with the answer, group supporting points logically, and make scope and evidence hierarchy explicit.
+
 ## Use When
 - Need to lock goal, scope, constraints, and done condition before planning.
 - Need to separate in-scope, out-of-scope, and acceptance boundary.
@@ -53,6 +56,19 @@ Reduce a broad request to an explicit scope contract that downstream planning or
 - Separate explicit constraints from inferred assumptions.
 - Mark unresolved scope edges instead of silently deciding them.
 - Do not turn preference into scope without evidence.
+
+## Response Format
+
+State the goal in one sentence.
+
+Then show:
+- In scope: [item list]
+- Out of scope: [item list]
+- Done when: [condition list]
+
+Flag unresolved edges: "Still open: [what couldn't be locked without more info]"
+
+Ask about any unresolved edge that most affects planning.
 
 ## Mandatory Rules
 - Keep the output contract-first and compact.

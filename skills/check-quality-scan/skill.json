@@ -2,7 +2,6 @@
   "name": "check-quality-scan",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "review_findings",
   "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security,perf,compat,style},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
   "required_inputs": [
     {

@@ -17,6 +17,9 @@ Surface concrete security issues and repo-exposure risks without turning every h
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `nist-rmf` because it keeps the work aligned with: Systematic risk framing with controls and continuous monitoring lifecycle.
+
 ## Use When
 - Need a pre-commit or pre-release security pass focused on secret exposure, ignore drift, or shipped credentials.
 - Need vulnerability, threat-model, or mitigation-verification output.
@@ -73,6 +76,18 @@ Surface concrete security issues and repo-exposure risks without turning every h
 - Separate discovered vulnerabilities from hardening suggestions.
 - Separate actual secret leaks from repo-hygiene and allowlist decisions.
 - If a platform config file is often public client config, classify it from evidence rather than from filename alone.
+
+## Response Format
+
+Lead with the threat surface in one line: assets, attacker model, trust boundary.
+
+Then list findings ordered by severity:
+- P0 (critical) / P1 (high) / P2 (medium) — file:line — [issue] — exploitability: [confirmed/unverified]
+
+Show exposure decisions separately:
+- [file or token] → [secret / public-client-config / allowlisted / unverified] — [evidence]
+
+End with: "Fix P0s before push, or need full mitigation plan?"
 
 ## Execution Constraints
 - Do not invent vulnerabilities to satisfy a security-audit request; return an empty SECURITY_FINDINGS list when evidence does not support a finding.

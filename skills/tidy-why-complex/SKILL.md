@@ -13,6 +13,9 @@ Map complexity sources and classify them as essential or accidental before simpl
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need a bounded complexity inventory before simplification.
 - Need to know whether complexity comes from domain rules or accidental structure.
@@ -39,6 +42,17 @@ Map complexity sources and classify them as essential or accidental before simpl
 ## Artifacts
 - `artifacts_in`: none
 - `artifacts_out`: tidy-why-complex.v1
+
+## Response Format
+
+Show the complexity inventory as two lists:
+- Essential: [complexity] — reason: [why the domain requires it]
+- Accidental: [complexity] — cause: [indirection / naming / hidden state]
+
+Show simplification candidates ordered by removal value:
+1. [candidate] — what it would remove
+
+Ask: "Start with [top candidate], or want the full complexity map before deciding?"
 
 ## Neutrality Rules
 - Do not label domain-required complexity as accidental without evidence.

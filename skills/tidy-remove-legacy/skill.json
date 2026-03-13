@@ -2,7 +2,6 @@
   "name": "tidy-remove-legacy",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "implementation_delta",
   "default_program": "[stages: preflight>detect>implement>verify>review>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,docs,compat},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
   "required_inputs": [
     {

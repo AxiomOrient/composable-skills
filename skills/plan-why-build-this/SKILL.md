@@ -17,6 +17,9 @@ Capture why the work matters, for whom it matters, and what success looks like b
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `christensen-jtbd` because it keeps the work aligned with: Define customer progress as job-to-be-done and map competing alternatives.
+
 ## Use When
 - Need a high-level brief before feature spec or design work.
 - Need to make audience, problem, success signals, and non-goals explicit.
@@ -67,6 +70,19 @@ Capture why the work matters, for whom it matters, and what success looks like b
 - Separate user problem from preferred solution.
 - Do not invent business impact or certainty that the inputs do not support.
 - Keep non-goals and open assumptions visible instead of implying universal buy-in.
+
+## Response Format
+
+Lead with the brief summary in two sentences: who, what problem, what outcome.
+
+Show ranked outcomes and their success signals:
+- [outcome] → signal: [how measured] — priority: [1/2/3]
+
+List non-goals explicitly — what is deliberately out of scope.
+
+Flag open assumptions that later spec work must confirm.
+
+Ask: "Is the success signal for [highest-priority outcome] measurable, or is it still a proxy?"
 
 ## Execution Constraints
 - Do not turn this skill into a detailed feature spec or technical design document.

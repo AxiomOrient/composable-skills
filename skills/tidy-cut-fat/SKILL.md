@@ -17,6 +17,9 @@ Identify and propose the smallest useful complexity reduction without changing i
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need a simplification blueprint for a bounded scope.
 - Need to distinguish essential complexity from accidental complexity.
@@ -45,6 +48,18 @@ Identify and propose the smallest useful complexity reduction without changing i
 ## Artifacts
 - `artifacts_in`: tidy-why-complex.v1
 - `artifacts_out`: simplification-plan.v1
+
+## Response Format
+
+Show what changed and what was left alone:
+- Simplified: [what] — why: [complexity removed]
+- Left alone: [what] — reason: [essential or out of scope]
+
+List behavior guards: [check] — confirms: [what still works]
+
+If scope was constrained, say so plainly: "Stopped at [boundary] — [rest] was out of scope."
+
+Ask about any boundary decision that affected what got simplified.
 
 ## Neutrality Rules
 - Separate essential complexity from accidental complexity.

@@ -13,6 +13,9 @@ Identify exact literal values and policy constants that can be centralized witho
 [stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need to find extractable constants in a module, folder, or repo.
 - Need to reduce repeated literals and policy drift.
@@ -50,6 +53,15 @@ Identify exact literal values and policy constants that can be centralized witho
 - Recommend extraction only when reuse or policy consistency is evidenced.
 - Do not force extraction for values that are local and semantically unique.
 - Separate extraction candidates from blockers and uncertainty.
+
+## Response Format
+
+List extractable constants with evidence locations:
+- [value or family] — appears at: [file:line, file:line] — extract to: [constants/config/shared]
+
+Show blockers: [value] — keep local — reason: [why extraction would harm clarity]
+
+Ask: "Extract [highest-reuse constant family] now, or review full list first?"
 
 ## Mandatory Rules
 - Name the exact literal or value family being recommended.

@@ -1,86 +1,146 @@
 ---
 name: finish-until-done
-description: "Atomic completion-control skill for bounded non-code work. Own the loop for one explicit mission until its done contract is proven or a real blocker stops progress. Use prompt criteria and fresh evidence to keep going until the issue is actually resolved."
+description: "Plan-free autonomous loop for non-code work. Drives bounded documentation, review, planning, or release-prep missions to completion without requiring task documents. Reads current artifact state, evaluates it against the done contract, applies the smallest content improvement, and loops until the contract is proven or a real blocker stops progress. For code-changing missions, use build-until-done instead."
 ---
 
-# Finish / Until Done
+# Finish / Until Done (Plan-Free)
 
 ## Purpose
-Own a bounded non-code loop, execute the next required pass, and keep going until the explicit contract is proven or a real blocker stops progress.
+Autonomously drive a bounded non-code mission to completion without plan documents. Reads current artifact state, evaluates it against the done contract, picks the smallest useful improvement, applies it, and loops immediately. No manual stepping — done or blocked is the only exit.
+
+Works across: documentation, code review, planning artifacts, release prep, content revision.
 
 ## Default Program
 ```text
-[stages: preflight>detect>analyze>plan>handoff>audit |
+[stages: evaluate>read>improve>verify>loop>audit |
  scope: diff|repo|paths(glob,...) |
- policy: evidence,deterministic-output |
- lens: contract-evidence-verifier |
+ policy: evidence,craft-clarity,loop-until-done,approval-gates{blockers-only} |
+ lens: craft-clarity |
  output: md(contract=v1)]
 ```
 
+## Lens: craft-clarity
+Each pass must make the artifact **clearer, more complete, or more accurate** for its intended reader. "Technically present" is not the same as done. A section that would confuse its reader is not finished. Keep going until the content stands on its own.
+
+## Lens Rationale
+This skill uses `craft-clarity` because it keeps the work aligned with: Treat clear, complete, reader-usable output as the real done condition, then keep iterating until the artifact stands on its own.
+
 ## Use When
-- Need to keep one bounded non-code mission moving until explicit done conditions are satisfied.
-- Need a disciplined continue/done/blocked decision after a documentation, review, planning, or release-prep pass.
-- Need to compose with narrow non-code companion skills so the task finishes instead of stopping at a partial result.
-- Need the stopping condition to come from the prompt and fresh evidence rather than from a prewritten task ledger.
+- Need to drive documentation, review, planning, or release-prep to completion without any task documents.
+- DONE_CONDITION is clear but the path to get there is not fully mapped upfront.
+- Need to keep iterating on content — write → read → revise → verify — until the quality bar is provably met.
+- A pass reveals a new gap — incorporate it into the loop instead of stopping.
 
 ## Do Not Use When
-- Need code implementation, test-writing, performance tuning, or patch-and-rerun loops.
-- Need only final read-only validation after work is already complete.
-- Need broad multi-project orchestration or hidden retry automation.
+- Need code implementation, tests, or performance fixes — use `build-until-done` instead.
+- Have a TASKS.md plan and need ledger-driven execution — use `workflow-build-execute-plan` instead.
+- Need only final validation after work is already complete.
 
 ## Required Inputs
-- `MISSION_GOAL` (string; required): One bounded mission that should either finish or stop with a real blocker.
-- `TARGET_SCOPE` (path|module|folder|repo|artifact; required): Exact scope the mission is allowed to touch.
-- `DONE_CONDITION` (list; required; shape: {CONDITION, PROOF_REQUIRED}): Explicit completion contract and the evidence required for each condition.
-- `CURRENT_EVIDENCE` (list; optional; shape: {TYPE, REF, WHY_RELEVANT}): Current outputs, notes, review results, docs, or observations from prior passes.
-- `COMPANION_SKILLS` (list; optional; allowed: plan-sync-tasks|scout-structure-map|doc-write|check-merge-ready|check-quality-scan|plan-task-breakdown|check-final-verify; shape: {SKILL}): Narrow non-code companion skills allowed for the next pass.
-- `MAX_PASSES` (integer; optional): Safety budget for same-turn iteration. Default to 3 when omitted.
-- `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Time, safety, approval, or non-goal constraints that limit the loop.
+- `MISSION_GOAL` (string; required): One bounded non-code mission to drive to completion.
+- `TARGET_SCOPE` (path|artifact|folder; required): Exact scope the mission is allowed to touch.
+- `DONE_CONDITION` (list; required; shape: {CONDITION, PROOF_REQUIRED}): Explicit completion contract. Each condition must be reader-verifiable — no "looks good" or "seems complete."
+- `CURRENT_EVIDENCE` (list; optional; shape: {TYPE, REF, WHY_RELEVANT}): Observations, review notes, or prior pass results. When absent, reads TARGET_SCOPE to build initial state.
+- `MAX_PASSES` (integer; optional): Safety ceiling for passes in one turn. Default: 5.
+- `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Scope, audience, tone, or non-goal constraints.
 
 ## Input Contract Notes
-- DONE_CONDITION should contain externally checkable conditions, not vibe-based success language.
-- DONE_CONDITION should prioritize the core user-visible or contract-visible outcome before secondary polish or optional cleanup.
-- COMPANION_SKILLS should stay non-code and narrow. If the mission requires code changes or test loops, use `build-until-done` instead.
-- DONE_CONDITION should be derived from the prompt or explicit contract in front of the skill, not assumed from a hidden task list.
-- MAX_PASSES is a safety ceiling for one turn, not a quality score. If omitted, use 3 as the default ceiling.
+- DONE_CONDITION must be reader-checkable: "beginner can follow without prior context", "all links verified", "no undefined terms in section 2". "Looks complete" is not valid.
+- When CURRENT_EVIDENCE is absent, read TARGET_SCOPE first to establish baseline content state.
+- If the mission goal is ambiguous (e.g., "write the docs" with no audience defined), emit blocked immediately and ask for clarification.
+
+## Execution Loop
+
+Run this loop within a single turn until MISSION_STATUS=done or blocked:
+
+```
+1. Read current artifact state at TARGET_SCOPE
+2. Check each DONE_CONDITION against current content evidence
+3. All conditions met with reader-verifiable proof → done
+4. A real blocker exists (missing source, unclear audience, approval needed) → blocked, ask
+5. Pick smallest improvement that advances the weakest done condition
+6. Execute: write/revise content (doc-write), review (check-quality-scan / check-merge-ready),
+            structure (plan-task-breakdown), or verify (check-final-verify)
+7. Update evidence with results
+8. Go back to step 2 immediately
+```
+
+**Do not stop between passes.** Each pass completes and immediately triggers the next evaluation.
 
 ## Structured Outputs
-- `MISSION_STATUS` (continue|done|blocked; required; allowed: continue|done|blocked): Whether the mission needs another pass, is complete, or is blocked.
-- `DONE_CONDITION_STATUS` (list; required; shape: {CONDITION, STATUS, EVIDENCE_OR_GAP}): Per-condition check status against the explicit completion contract.
-- `NEXT_PASS` (list; optional; required when MISSION_STATUS=continue; shape: {GOAL, RECOMMENDED_SKILL, PASS_CONDITION, WHY_THIS_FIRST}): Exactly one smallest next pass when the mission should continue.
-- `BLOCKERS` (list; optional; required when MISSION_STATUS=blocked; shape: {ISSUE, LOCATION, UNBLOCKING_CHECK}): Real blockers that stop progress and what would unblock them.
-- `LOOP_EXIT_REASON` (string; required): Why the loop stopped on done, blocked, or continue-for-another-pass.
+- `MISSION_STATUS` (done|blocked; required; allowed: done|blocked): Loop outcome. No `continue` — if not done, keep looping.
+- `DONE_CONDITION_STATUS` (list; required; shape: {CONDITION, STATUS, EVIDENCE}): Reader-verifiable evidence for each condition.
+- `PASSES_COMPLETED` (integer; required): Number of content improvement passes executed.
+- `BLOCKERS` (list; optional; required when MISSION_STATUS=blocked; shape: {ISSUE, LOCATION, UNBLOCKING_CHECK}): What stopped progress and what would unblock it.
 
-## Output Contract Notes
-- Emit `done` only when every DONE_CONDITION row has evidence, not just partial progress.
-- Emit `continue` only when the next pass is known but cannot be safely executed within the current turn because of MAX_PASSES, a blocker, or missing proof. Do not return a backlog disguised as a next step.
-- Emit `blocked` only when an external dependency, missing input, approval gate, or pass-budget stop prevents the next pass.
+## Response Format
+
+Do not summarize the process. Output one line per pass as it executes, then keep going.
+
+```
+Pass 1 → doc-write: `docs/auth.md §session` — added refresh flow explanation
+Pass 2 → check-quality-scan: clarity P1 in intro — revised lead sentence
+Pass 3 → check-final-verify: ✓ all conditions met
+```
+
+On done:
+```
+Done ✓ (N passes)
+- [condition]: ✓ [proof]
+- [condition]: ✓ [proof]
+```
+
+On blocked — ask directly, one sentence:
+> "`docs/api-spec.md` missing — can you share it, or should I draft a placeholder?"
+
+No "work complete" line. No summary of what each pass did. Let the pass log speak.
 
 ## Primary Lens
-- `primary_lens`: `contract-evidence-verifier`
-- `why`: Non-code completion looping should compare explicit done conditions against fresh evidence, force one smallest next pass, and stop cleanly on real blockers instead of vibe-based progress claims.
+- `primary_lens`: `craft-clarity`
+- `why`: Non-code work is done when its intended reader can use it — not when it's technically present. Each pass must advance clarity, completeness, or accuracy. "Written" and "finished" are not the same thing.
 
 ## Artifacts
-- `artifacts_in`: analysis-report.v1, documentation-report.v1, planning-doc.v1, review-report.v1, release-decision.v1, self-verify-report.v1
-- `artifacts_out`: completion-contract-loop-report.v1
+- `artifacts_in`: none (plan-free — reads current artifact state directly)
+- `artifacts_out`: completion-evidence.v1
 
 ## Neutrality Rules
-- Do not declare the mission complete from momentum, partial progress, or intent.
-- Prefer the smallest discriminating next pass over a broad cleanup list.
-- If the done contract is ambiguous, surface the ambiguity as a blocker instead of guessing success.
+- Do not declare done from partial progress, word count, or intent. Every DONE_CONDITION row needs reader-verifiable evidence.
+- If a pass reveals a new gap, add it to the loop — do not stop and report it as a blocker unless it's genuinely unresolvable.
+- Prefer the smallest improvement that advances the weakest condition. Do not rewrite everything when one section needs a fix.
 
 ## Execution Constraints
-- This skill owns pass selection and stop conditions. It may invoke allowed companion skills, absorb fresh evidence, and resume control within the same turn.
-- When composed with allowed companion skills in the same turn, execute the next required pass, rerun the completion check, and keep going until done, blocked, or MAX_PASSES exhaustion.
-- Derive the next stopping test from the prompt, DONE_CONDITION, and fresh evidence rather than from an external plan ledger.
-- Keep companion skills narrow. If the mission requires broad cross-domain decomposition, hand off to `plan-task-breakdown` or a workflow instead of stretching this skill.
-- Do not keep the mission in `continue` for non-essential cleanup once the core done contract is already proven unless that cleanup was explicitly included in DONE_CONDITION.
+- Run the full loop within a single turn. Do not pause between passes for user confirmation unless a genuine blocker appears.
+- If a review pass finds issues, fix them within the same loop before declaring done.
+- Keep each pass bounded to the smallest action that advances the weakest done condition.
+- Do not drift into adjacent content not in DONE_CONDITION.
 
 ## Mandatory Rules
-- Never emit `MISSION_STATUS=done` while any DONE_CONDITION row lacks proof.
-- When `MISSION_STATUS=continue`, NEXT_PASS must contain exactly one row.
+- Never emit MISSION_STATUS=done while any DONE_CONDITION row lacks reader-verifiable proof.
+- Do not stop after one pass when the mission is not done. Continue immediately.
+- Stop and ask only when a genuine blocker exists. Do not guess or fabricate missing content.
+
+## Symmetry with build-until-done
+
+| | build-until-done | finish-until-done |
+|--|--|--|
+| Domain | Code | Docs / reviews / plans |
+| Drives by | DONE_CONDITION + tests | DONE_CONDITION + reader evidence |
+| Pass types | implement, run tests, debug | write, review, revise, verify |
+| Lens | contract-evidence-verifier | craft-clarity |
+| Plan docs | Not needed | Not needed |
+| Exit | done ✓ or blocked | done ✓ or blocked |
 
 ## Example Invocation
+
 ```text
-$compose + $finish-until-done + $doc-write + $check-final-verify + @docs + [Keep iterating until the guide is beginner-readable, linked correctly, and contract sections are complete.]
+$finish-until-done
+GOAL: Make the session auth guide beginner-readable and complete
+SCOPE: docs/auth/
+DONE:
+  - A developer new to the project can follow the guide without external help
+  - All code examples are verified against the current API
+  - No section ends with a placeholder or TODO
 ```
+
+> Have a TASKS.md plan? Use `workflow-build-execute-plan` for document-driven execution.
+> Need code changes too? Switch to `build-until-done` for that part.

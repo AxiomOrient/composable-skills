@@ -13,6 +13,9 @@ Compose scope clarification and current-state structure mapping into one default
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs,tests,security},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need one default scout entrypoint for understanding current structure.
 - Need to lock scope before mapping boundaries and responsibilities.
@@ -61,6 +64,18 @@ Compose scope clarification and current-state structure mapping into one default
 - Keep the workflow focused on current-state understanding.
 - When the source material is long, keep scope clarification and structure mapping as two explicit passes instead of collapsing them into one skimmed summary.
 - Final handoff should carry anchor evidence from the scope pass and the structure pass, and leave unresolved verification questions visible instead of smoothing them over.
+
+## Response Format
+
+Show per-step outcome (step → result):
+- scout-scope → scope contract: goal + acceptance boundary
+- scout-structure-map → boundary map + open structure questions
+
+On failure at any step: stop and ask what blocked it.
+
+On success: show the boundary map and list remaining structure questions with cheapest checks.
+
+Ask: "Want to go deeper on [most interesting or uncertain boundary]?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

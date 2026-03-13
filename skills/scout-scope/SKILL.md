@@ -17,6 +17,9 @@ Turn vague requests into concrete goal, scope, constraints, and acceptance crite
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `minto-pyramid` because it keeps the work aligned with: Lead with the answer, group supporting points logically, and make scope and evidence hierarchy explicit.
+
 ## Use When
 - Requirements are ambiguous.
 - Completion criteria are missing or conflicting.
@@ -69,6 +72,20 @@ Turn vague requests into concrete goal, scope, constraints, and acceptance crite
 - If the request context is long or noisy, recite 3-5 explicit goal, constraint, or done-condition anchors before drafting the scope contract.
 - Ask 2-4 verification questions that distinguish explicit user facts from your own assumptions, then rescan before finalizing the contract.
 - If the first draft omits a salient anchor, rewrite once with higher information density instead of adding broader speculation.
+
+## Response Format
+
+Show the draft scope contract:
+- Goal: [one sentence]
+- In scope: [list]
+- Out of scope: [list]
+- Acceptance boundary: [done when ...]
+
+List clarifying questions ordered by how much they block the contract, most blocking first.
+
+Didn't lock: [any edge that is still an assumption rather than an explicit fact].
+
+Ask the most blocking clarification if any remain open.
 
 ## Mandatory Rules
 - Do not finalize `DRAFT_SCOPE_CONTRACT` while a key goal, constraint, or acceptance condition appears only as an unstated assumption rather than an anchored fact or an explicit open question.

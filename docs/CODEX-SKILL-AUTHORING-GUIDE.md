@@ -5,7 +5,6 @@
 - `skills/<name>/SKILL.md`: 사람이 읽는 지시문
 - `skills/<name>/skill.json`: 기계가 읽는 메타데이터
 - `skills/_meta/lenses.json`
-- `skills/_meta/response_profiles.json`
 
 ## 기본 원칙
 
@@ -19,7 +18,6 @@
 
 - `name`
 - `layer`
-- `response_profile`
 - `default_program`
 - `required_inputs`
 - `display_name`
@@ -75,8 +73,8 @@ python3 scripts/skills.py validate
 이 검사는:
 
 - 모든 skill folder에 `skill.json`이 있는지
-- `SKILL.md`의 Default Program과 response_profile이 메타데이터와 맞는지
-- `_meta`의 response profile과 lens metadata가 유효한지
+- `SKILL.md`의 Default Program이 메타데이터와 맞는지
+- `_meta`의 lens metadata가 유효한지
 
 ## 어떻게 sync 하나
 

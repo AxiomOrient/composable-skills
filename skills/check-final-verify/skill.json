@@ -2,7 +2,6 @@
   "name": "check-final-verify",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "self_verify_report",
   "default_program": "[stages: review>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security},deterministic-output |\n lens: contract-evidence-verifier |\n output: md(contract=v1)]",
   "required_inputs": [
     {

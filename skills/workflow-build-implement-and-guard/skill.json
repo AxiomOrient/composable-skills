@@ -2,7 +2,6 @@
   "name": "workflow-build-implement-and-guard",
   "layer": "workflow",
   "layer_badge": "Workflow",
-  "response_profile": "implementation_delta",
   "default_program": "[stages: preflight>detect>implement>verify>review>audit | scope: diff|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,security},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
   "required_inputs": [
     {

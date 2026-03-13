@@ -13,6 +13,9 @@ Lock a concrete verification path before implementation work starts.
 [stages: preflight>detect>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: kent-beck | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kent-beck` because it keeps the work aligned with: Small safe iterations with explicit Red-Green-Refactor rhythm.
+
 ## Use When
 - Need to define how a code change will be verified before patching.
 - Need narrow-to-broad verification steps for a bounded task.
@@ -55,6 +58,17 @@ Lock a concrete verification path before implementation work starts.
 - Do not mark a check sufficient if it does not cover the claimed change risk.
 - Separate required checks from optional confidence checks.
 - Keep verification steps executable and bounded.
+
+## Response Format
+
+Show verification in order:
+1. Narrow check — [command or test] — pass signal: [what to look for]
+2. Broader check — [command or test] — pass signal: [what to look for]
+
+List stop conditions explicitly:
+- [condition] — blocks claiming success because: [why]
+
+Ask: "Run narrow checks first? Or is [specific risk area] the higher priority?"
 
 ## Execution Constraints
 - Do not turn this skill into a full regression test inventory; focus on ordered verification path and stop conditions.

@@ -1,9 +1,9 @@
 ---
-name: check-ship-risk
-description: "Review-only skill. Evaluate existing diff/PR risks and quality gates before merge or release. Do not edit code or create implementation plans here. For full GO/NO-GO release judgment with rollout and rollback strategy, use ship-release-verdict instead."
+name: check-release-risk
+description: "Review-only skill. Evaluate existing diff/PR risks and quality gates before merge or release. Do not edit code or create implementation plans here. For full GO/NO-GO release judgment with rollout and rollback strategy, use release-verdict instead."
 ---
 
-# Check / Ship Risk
+# Check / Release Risk
 
 ## Purpose
 Assess release or quality-gate risk with explicit evidence.
@@ -17,6 +17,9 @@ Assess release or quality-gate risk with explicit evidence.
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
+
 ## Use When
 - Need regression, gate, or release-adjacent audit output.
 - Need explicit pass/fail or gap status for tests, security, and compatibility gates.
@@ -26,7 +29,7 @@ Assess release or quality-gate risk with explicit evidence.
 - Need direct code implementation.
 - Need a general review verdict rather than gate audit — use check-merge-ready instead.
 - Need vulnerability analysis only — use check-security-holes instead.
-- Need full GO/NO-GO release judgment with rollout plan and rollback strategy — use ship-release-verdict instead.
+- Need full GO/NO-GO release judgment with rollout plan and rollback strategy — use release-verdict instead.
 
 ## Required Inputs
 - `AUDIT_GOAL` (regression-gate|release-risk|quality-gate-check; required): Type of audit judgement required.
@@ -61,6 +64,18 @@ Assess release or quality-gate risk with explicit evidence.
 - Separate gate evidence from recommendation.
 - If a gate is unverified, mark it as a gap instead of assuming pass or fail.
 - Do not inflate style preference into a blocker without release or regression impact.
+
+## Response Format
+
+Show gate status as a compact table:
+- Gate | Status (pass/fail/unverified) | Evidence
+
+List blocking findings first:
+- [gate] — file:line — [issue] — impact: [what breaks if shipped]
+
+Follow with the RISK_RECOMMENDATION in one sentence.
+
+If gates are unverified, list the cheapest check for each.
 
 ## Execution Constraints
 - Do not manufacture audit blockers because the prompt asks for an audit; return an empty AUDIT_FINDINGS list when gate evidence is clean.

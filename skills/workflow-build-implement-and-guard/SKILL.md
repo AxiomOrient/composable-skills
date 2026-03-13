@@ -13,6 +13,9 @@ Compose implementation and regression-guard writing into one default build workf
 [stages: preflight>detect>implement>verify>review>audit | scope: diff|paths(glob,...) | policy: evidence,correctness-first,quality-gates{tests,security},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need to implement a bounded change and leave regression guards in the same run.
 - Need one default build entrypoint for category-first discovery.
@@ -60,6 +63,18 @@ Compose implementation and regression-guard writing into one default build workf
 ## Execution Constraints
 - Do not inflate the workflow into a planning or architecture pass.
 - Keep the test guard work bounded to the same contract as the code change.
+
+## Response Format
+
+Output implementation and guard together.
+
+```
+changed: `file:line` — description
+guard: `test name` → ✓
+```
+
+If the test fails, ask immediately:
+> "Guard failed: [reason] — continue anyway?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

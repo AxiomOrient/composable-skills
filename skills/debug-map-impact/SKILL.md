@@ -13,6 +13,9 @@ Reduce a broad bug report to a bounded reproduction window and impacted code sur
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman` because it keeps the work aligned with: Reproduce first, use disprovable hypotheses, and explain the result plainly.
+
 ## Use When
 - A failure is reported but the affected modules or boundaries are still unclear.
 - Need to map observed versus expected behavior before debugging deeper.
@@ -42,8 +45,8 @@ Reduce a broad bug report to a bounded reproduction window and impacted code sur
 4. Return the cheapest next debugging entry points without claiming root cause.
 
 ## Primary Lens
-- `primary_lens`: `feynman`
-- `why`: Failure mapping should shrink the problem space using observable repro evidence.
+- `primary_lens`: `kahneman-tversky`
+- `why`: Blast-radius mapping must separate what is directly observed (confirmed failure paths) from what is inferred (suspected affected scope), mark uncertainty explicitly, and resist the urge to claim wide impact without evidence.
 
 ## Artifacts
 - `artifacts_in`: none
@@ -53,6 +56,19 @@ Reduce a broad bug report to a bounded reproduction window and impacted code sur
 - Map the failing surface without asserting a root cause.
 - Keep suspected modules tentative until evidence confirms them.
 - If reproduction remains unclear, state the smallest missing condition explicitly.
+
+## Response Format
+
+State the reproduction window in one line: trigger conditions and minimal scope.
+
+Show:
+- Observed: [what actually happens]
+- Expected: [what should happen]
+- Impacted paths: file or module list (tentative)
+
+List the two or three cheapest next debugging entry points.
+
+Ask: "Start with [most likely entry point], or need to narrow scope further?"
 
 ## Mandatory Rules
 - Do not jump directly to the fix.

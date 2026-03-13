@@ -2,7 +2,6 @@
   "name": "scout-structure-map",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "analysis_report",
   "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
   "required_inputs": [
     {

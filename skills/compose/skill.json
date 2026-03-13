@@ -2,7 +2,6 @@
   "name": "compose",
   "layer": "utility",
   "layer_badge": "Utility",
-  "response_profile": "generic",
   "default_program": "[orchestration-only]",
   "required_inputs": [
     {

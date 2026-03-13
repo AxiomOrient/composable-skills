@@ -34,6 +34,9 @@ TARGET_AREA maps emphasis to these items: `security` → item 5; `perf` → item
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
+
 ## Use When
 - Need the mandatory 9-item checklist evaluated.
 - Need explicit pass/risk/unknown output across fixed quality dimensions.
@@ -77,6 +80,17 @@ TARGET_AREA maps emphasis to these items: `security` → item 5; `perf` → item
 - Use pass, risk, or unknown only; do not force a negative finding.
 - If evidence is insufficient for a checklist item, mark it unknown with the cheapest verification step.
 - Do not elevate style preference above behavior, safety, or performance evidence.
+
+## Response Format
+
+Show the 9-item checklist as a compact table:
+- # | Item | Status (pass/risk/unknown) | Key evidence
+
+List material risks below the table, one line each: item number → finding → impact.
+
+List unknown items with cheapest verification step.
+
+End with any risk items that need action before merge.
 
 ## Execution Constraints
 - Do not collapse the checklist into a generic review verdict from this skill.

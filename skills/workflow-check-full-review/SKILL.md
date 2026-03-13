@@ -13,6 +13,9 @@ Compose specific analysis and review scans into one explicit project review work
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests,security},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
+
 ## Use When
 - Need a project, folder, or module reviewed through explicit subchecks.
 - Need review output grounded in current-state structure, duplication, boundary, error-path, and test-gap evidence.
@@ -55,6 +58,20 @@ Compose specific analysis and review scans into one explicit project review work
 - Do not patch code from this workflow; it is analysis and review composition only.
 - If a required subcheck cannot run, surface that gap in CHECK_REPORTS rather than pretending full coverage.
 - Keep workflow output inspectable by preserving the explicit subcheck trail.
+
+## Response Format
+
+Lead with verdict: **INTEGRATE** or **HOLD**.
+
+Findings by severity (evidence-backed only):
+- P0 `file:line` — [what's wrong and why it must be fixed before merge]
+- P1 `file:line` — [should fix]
+- P2 — [consider]
+
+Clean subchecks: one line only if notable.
+
+On HOLD: "Fix [top P0] before merge — want the full list?"
+On step failure: "Stopped at [subcheck name] — [what blocked it]"
 
 ## Mandatory Rules
 - Keep findings tied to explicit subcheck evidence.

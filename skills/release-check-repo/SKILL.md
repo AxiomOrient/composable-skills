@@ -1,9 +1,9 @@
 ---
-name: ship-check-repo
+name: release-check-repo
 description: "Use when release work must start by confirming the repository is a real git release target with usable branches, remotes, and a clean enough working tree. Do not use for rollout judgement or actual publication."
 ---
 
-# Ship / Check Repo
+# Release / Check Repo
 
 ## Purpose
 Check repository, branch, remote, and tag preconditions before release review or publication.
@@ -17,14 +17,17 @@ Check repository, branch, remote, and tag preconditions before release review or
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `release-gatekeeper` because it keeps the work aligned with: Treat release as a sequence of explicit gates and judge only the gate in scope with concrete evidence.
+
 ## Use When
 - Need to confirm the target is a git repository before any release work.
 - Need to inspect source/target branch state, worktree cleanliness, remotes, or tag collisions.
 - Need explicit repository preconditions before release review or publish execution.
 
 ## Do Not Use When
-- Need rollout risk or GO/NO-GO judgement; use ship-release-verdict instead.
-- Need documentation or public-surface hygiene checks; use ship-check-hygiene instead.
+- Need rollout risk or GO/NO-GO judgement; use release-verdict instead.
+- Need documentation or public-surface hygiene checks; use release-check-hygiene instead.
 - Need to mutate branches, tags, or remotes; use release-publish instead.
 
 ## Required Inputs
@@ -62,6 +65,18 @@ Check repository, branch, remote, and tag preconditions before release review or
 - Report repository facts as observed state, not as guessed release policy.
 - Do not infer push or publish success from branch names alone.
 - If a repository precondition cannot be verified, mark it inconclusive rather than assuming ready.
+
+## Response Format
+
+Lead with repo readiness: READY / BLOCKED / INCONCLUSIVE.
+
+Show observed facts as a compact list:
+- [check] — [result] — [evidence]
+
+List blockers first if any:
+- [issue] — why it stops release work
+
+Flag inconclusive checks: "[check] could not be verified — need: [what to confirm]"
 
 ## Execution Constraints
 - Do not modify branches, tags, remotes, or files from this skill.

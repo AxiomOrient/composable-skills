@@ -1,8 +1,7 @@
 {
-  "name": "check-ship-risk",
+  "name": "check-release-risk",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "review_findings",
   "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff |\n policy: evidence,quality-gates{tests,security,compat,style},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -31,7 +30,7 @@
       "description": "Known test, security, compat, or CI signals."
     }
   ],
-  "display_name": "Check / Ship Risk",
+  "display_name": "Check / Release Risk",
   "browse_category": "check",
   "browse_priority": 50,
   "is_category_default": false,

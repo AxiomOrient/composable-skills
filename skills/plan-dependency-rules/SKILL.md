@@ -13,6 +13,9 @@ Make target dependency rules explicit before structural cleanup.
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{compat},deterministic-output | lens: uncle-bob | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `uncle-bob` because it keeps the work aligned with: Strong boundaries and maintainable architecture with explicit dependency direction.
+
 ## Use When
 - Need explicit dependency rules before refactoring.
 - Need to clarify allowed versus forbidden imports or calls.
@@ -53,6 +56,16 @@ Make target dependency rules explicit before structural cleanup.
 - Describe the current dependency reality before prescribing rules.
 - Keep target rules bounded to the inspected scope.
 - Do not propose new abstraction layers without evidence they reduce coupling.
+
+## Response Format
+
+Show the target dependency rules in two lists:
+- Allowed: [from] → [to] — why
+- Forbidden: [from] → [to] — why
+
+Then show transition steps: one line each, bounded to the rule change.
+
+Ask: "Do these rules match your intent, or is [specific direction] still open?"
 
 ## Execution Constraints
 - Do not turn this skill into a broad technical design or whole-system architecture rewrite.

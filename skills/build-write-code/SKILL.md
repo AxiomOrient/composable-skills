@@ -17,6 +17,9 @@ Apply code changes for explicit task ids and produce verification-backed impleme
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need to apply real code changes for a bounded task.
 - Need to emit implementation evidence that downstream delivery flow can synchronize with plan/task artifacts.
@@ -80,6 +83,20 @@ Apply code changes for explicit task ids and produce verification-backed impleme
 - God Object signals to watch during implementation: (1) the file now imports from two or more unrelated subsystems; (2) different callers only need a different subset of its interface; (3) a change in one feature area requires touching code that belongs to a different feature area in the same file.
 - Do not diagnose a God Object from LOC alone. A large file with one clear responsibility is better than three small files with entangled cross-calls.
 - When a split is warranted, cut along the axis that lets each resulting module be tested and changed in isolation without importing the other.
+
+## Response Format
+
+Output directly after implementing.
+
+```
+changed: `file:line` — one-line description
+verified: `command` → ✓ N/N passed
+```
+
+If gaps exist, ask immediately:
+> "`file.ts` unverified — handle this now?"
+
+Do not write "work complete", a list of what you did, or a closing summary.
 
 ## Mandatory Rules
 - Do not synchronize plan/task markdown here; emit implementation evidence only.

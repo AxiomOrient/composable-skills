@@ -17,6 +17,9 @@ Measure and improve a bounded performance bottleneck with comparable before/afte
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `goldratt-toc` because it keeps the work aligned with: Find the system constraint and optimize end-to-end throughput.
+
 ## Use When
 - Need measured performance optimization.
 - Need baseline, bottleneck evidence, and after-result in one path.
@@ -45,6 +48,17 @@ Measure and improve a bounded performance bottleneck with comparable before/afte
 ## Artifacts
 - `artifacts_in`: perf-baseline.v1
 - `artifacts_out`: performance-report.v1
+
+## Response Format
+
+Lead with the bottleneck in one line: what it is, where it is.
+
+Then show:
+- Baseline: [metric] = [value] ([method])
+- Fix applied: [what changed]
+- After: [metric] = [value] — [delta vs budget]
+
+Ask: "Measurement stable? Want a regression guard added?"
 
 ## Neutrality Rules
 - No optimization claim without comparable before/after evidence.

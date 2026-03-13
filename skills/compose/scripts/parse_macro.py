@@ -41,16 +41,14 @@ POLICY_PRIORITY = [
     "correctness-first",
 ]
 
-PRIMARY_SELECTION_UTILITY_SKILLS = {"compose", "respond", "check-final-verify", "plan-sync-tasks"}
 COMPLETION_CONTROL_SKILLS = {"build-until-done", "finish-until-done", "check-improve-loop"}
-ROUTING_SKIP_SKILLS = {"compose", "respond", "check-final-verify"}
+ROUTING_SKIP_SKILLS = {"compose", "check-final-verify"}
 DEFAULT_PLAN_DOC_PATHS = {"plans/IMPLEMENTATION-PLAN.md", "plans/TASKS.md"}
 
 LEGACY_SKILL_GUIDANCE: Dict[str, str] = {}
 
 FALLBACK_SKILL_RESPONSE_PROFILE_MAP: Dict[str, str] = {
     "compose": "generic",
-    "respond": "generic",
     "build-until-done": "analysis_report",
     "scout-structure-map": "analysis_report",
     "finish-until-done": "analysis_report",
@@ -75,7 +73,7 @@ FALLBACK_SKILL_RESPONSE_PROFILE_MAP: Dict[str, str] = {
     "build-write-code": "implementation_delta",
     "plan-sync-tasks": "implementation_delta",
     "check-final-verify": "self_verify_report",
-    "check-ship-risk": "review_findings",
+    "check-release-risk": "review_findings",
     "check-merge-ready": "review_findings",
     "check-quality-scan": "review_findings",
     "debug-find-root-cause": "debug_report",
@@ -85,9 +83,9 @@ FALLBACK_SKILL_RESPONSE_PROFILE_MAP: Dict[str, str] = {
     "test-design-cases": "test_report",
     "check-security-holes": "security_report",
     "workflow-security-preflight": "security_report",
-    "ship-check-repo": "analysis_report",
-    "ship-check-hygiene": "analysis_report",
-    "ship-release-verdict": "release_decision",
+    "release-check-repo": "analysis_report",
+    "release-check-hygiene": "analysis_report",
+    "release-verdict": "release_decision",
     "release-publish": "generic",
     "tidy-find-magic-numbers": "review_findings",
     "tidy-find-copies": "review_findings",
@@ -96,7 +94,7 @@ FALLBACK_SKILL_RESPONSE_PROFILE_MAP: Dict[str, str] = {
     "test-find-gaps": "review_findings",
     "plan-what-it-does": "spec_contract",
     "plan-how-to-build": "design_contract",
-    "ship-commit": "commit_proposal",
+    "commit-write-message": "commit_proposal",
     "ask-form-question": "clarify_question",
     "ask-break-it-down": "question_stack",
     "ask-flip-assumption": "analysis_report",
@@ -107,10 +105,14 @@ FALLBACK_SKILL_RESPONSE_PROFILE_MAP: Dict[str, str] = {
     "workflow-check-with-checklist": "review_findings",
     "workflow-debug-this": "debug_report",
     "workflow-scout-structure": "analysis_report",
+    "workflow-plan-build-ready": "planning_doc",
+    "workflow-build-implement-and-guard": "implementation_delta",
+    "workflow-test-close-gaps": "test_report",
+    "workflow-doc-systemize": "documentation_report",
     "workflow-tidy-find-improvements": "analysis_report",
     "workflow-security-preflight": "security_report",
-    "workflow-ship-it": "generic",
-    "workflow-ship-ready-check": "release_decision",
+    "workflow-release-publish": "generic",
+    "workflow-release-ready-check": "release_decision",
     "gemini": "external_verification",
 }
 
@@ -203,11 +205,9 @@ SKILL_RESPONSE_PROFILE_MAP = dict(FALLBACK_SKILL_RESPONSE_PROFILE_MAP)
 PROFILE_REQUIRED_SECTIONS_MAP = dict(FALLBACK_PROFILE_REQUIRED_SECTIONS)
 VALID_OUTPUTS = {"md(contract=v1)", "json(schema=v1)", "both"}
 VALID_SCOPES = {"repo", "diff"}
-AUTO_RESPONSE_SKILL = "respond"
 PER_SKILL_META_FILE = "skill.json"
 DIRECT_META_DIR = "_meta"
 DIRECT_LENSES_FILE = "lenses.json"
-DIRECT_RESPONSE_PROFILES_FILE = "response_profiles.json"
 
 
 def load_json_file(path: Path, label: str) -> Tuple[Optional[dict], List[str]]:
@@ -264,25 +264,6 @@ def all_skill_dirs_have_direct_metadata(skills_root: Path, direct_entries: Dict[
     except OSError:
         return False
     return bool(expected) and expected == set(direct_entries)
-
-
-def load_direct_response_profiles(skills_root: Path) -> Tuple[Optional[Dict[str, List[str]]], List[str]]:
-    path = skills_root / DIRECT_META_DIR / DIRECT_RESPONSE_PROFILES_FILE
-    data, warnings = load_json_file(path, "Direct response profile metadata")
-    if data is None:
-        return None, warnings
-
-    raw = data.get("required_sections")
-    if not isinstance(raw, dict):
-        return None, warnings + [f"Direct response profile metadata `{path}` is missing `required_sections`."]
-
-    parsed: Dict[str, List[str]] = {}
-    for profile_id, sections in raw.items():
-        if isinstance(profile_id, str) and isinstance(sections, list) and all(isinstance(item, str) for item in sections):
-            parsed[profile_id] = list(sections)
-    if not parsed:
-        return None, warnings + [f"Direct response profile metadata `{path}` does not contain valid profile sections."]
-    return parsed, warnings
 
 
 def load_direct_lens_ids(skills_root: Path) -> Tuple[Optional[Set[str]], List[str]]:
@@ -350,17 +331,12 @@ def build_runtime_metadata(skills_root: Path) -> RuntimeMetadata:
 
     direct_metadata_complete = all_skill_dirs_have_direct_metadata(skills_root, direct_entries)
 
-    direct_profiles, direct_profile_warnings = load_direct_response_profiles(skills_root)
-    metadata.warnings.extend(direct_profile_warnings)
-    if direct_profiles:
-        metadata.profile_required_sections_map = direct_profiles
-
     direct_lenses, direct_lens_warnings = load_direct_lens_ids(skills_root)
     metadata.warnings.extend(direct_lens_warnings)
     if direct_lenses:
         metadata.valid_lenses = direct_lenses
 
-    if direct_metadata_complete and direct_profiles and direct_lenses:
+    if direct_metadata_complete and direct_lenses:
         try:
             for path in skills_root.iterdir():
                 if not path.is_dir() or path.name.startswith("."):
@@ -965,15 +941,6 @@ def compose_program(
         if prog.lens:
             skill_lens_map[s] = prog.lens
 
-    if AUTO_RESPONSE_SKILL not in effective_skills:
-        respond_file = skills_root / AUTO_RESPONSE_SKILL / "SKILL.md"
-        respond_block = runtime_metadata.default_program_map.get(AUTO_RESPONSE_SKILL)
-        if respond_block is None and respond_file.exists():
-            respond_block = extract_default_program_block(respond_file)
-        if respond_block is not None:
-            resolved.append(parse_program_block(respond_block))
-            warnings.append("Auto-appended $respond response layer.")
-
     out = Program()
 
     scope_candidates: List[str] = []
@@ -1095,7 +1062,7 @@ def format_program_one_liner(p: Program) -> str:
 def select_primary_skill(skills: List[str], skill_response_profile_map: Optional[Dict[str, str]] = None) -> str:
     explicit = [s.strip().lower() for s in skills if s and s.strip()]
     if not explicit:
-        return AUTO_RESPONSE_SKILL
+        return "compose"
 
     profile_map = skill_response_profile_map or SKILL_RESPONSE_PROFILE_MAP
 
@@ -1116,7 +1083,7 @@ def select_primary_skill(skills: List[str], skill_response_profile_map: Optional
     # Fallback: prefer any mapped non-compose skill in reverse order
     # so orchestration wrapper `$compose` does not hide explicit intent.
     for skill in reversed(explicit):
-        if skill in {"compose", "respond"}:
+        if skill == "compose":
             continue
         if skill in profile_map:
             return skill

@@ -17,13 +17,16 @@ Remove unnecessary legacy surface in a bounded scope, relink surviving reference
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need to delete unnecessary files, stale docs, completed planning artifacts, deprecated aliases, or obsolete glue in a bounded scope.
 - Need direct references updated as part of the same cleanup pass.
 - Need explicit verification that required surface still exists after the cleanup.
 
 ## Do Not Use When
-- Need release-only hygiene review rather than file changes; use `ship-check-hygiene`.
+- Need release-only hygiene review rather than file changes; use `release-check-hygiene`.
 - Need a broad structural refactor plan rather than bounded cleanup execution; use `tidy-reorganize`.
 - Need speculative simplification with no concrete legacy targets.
 
@@ -59,6 +62,19 @@ Remove unnecessary legacy surface in a bounded scope, relink surviving reference
 - Do not label something legacy without file, reference, or contract evidence.
 - Keep removed surface separate from follow-up improvement ideas.
 - If a target might still be live, record the verification gap instead of deleting on assumption.
+
+## Response Format
+
+Show what was removed or collapsed:
+- [path or surface] — action: [deleted/collapsed/relinked] — why: [legacy reason]
+
+Show reference updates: [file] — change: [what was updated]
+
+Show verification results: [check] — result: PASS / FAIL
+
+Flag any gaps: "[path or check] could not be fully verified — need: [cheapest next check]"
+
+Ask about any boundary decision if cleanup scope was deliberately constrained.
 
 ## Execution Constraints
 - Delete or collapse only the legacy surface named in LEGACY_TARGETS unless a directly dependent reference must change for correctness.

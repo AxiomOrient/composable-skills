@@ -1,8 +1,7 @@
 {
-  "name": "ship-check-repo",
+  "name": "release-check-repo",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "analysis_report",
   "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo |\n policy: evidence,safety-gates,quality-gates{release,git},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -32,8 +31,8 @@
       "description": "Extra repository preconditions such as clean worktree, tracking branch, or remote push access."
     }
   ],
-  "display_name": "Ship / Check Repo",
-  "browse_category": "ship",
+  "display_name": "Release / Check Repo",
+  "browse_category": "release",
   "browse_priority": 50,
   "is_category_default": false,
   "codex_surface": "expert",

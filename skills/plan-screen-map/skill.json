@@ -2,7 +2,6 @@
   "name": "plan-screen-map",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "ia_contract",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,ux},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
   "required_inputs": [
     {

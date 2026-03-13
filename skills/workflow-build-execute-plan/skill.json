@@ -1,8 +1,7 @@
 {
-  "name": "workflow-build-execute-loop",
+  "name": "workflow-build-execute-plan",
   "layer": "workflow",
   "layer_badge": "Workflow",
-  "response_profile": "implementation_delta",
   "default_program": "[stages: preflight>detect>select>implement>critique>sync>verify>loop>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,security},deterministic-output |\n lens: contract-evidence-verifier |\n output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -22,14 +21,14 @@
       "type": "list",
       "required": true,
       "shape": "{CONDITION, PROOF_REQUIRED}",
-      "description": "Explicit completion contract and the evidence required for each condition."
+      "description": "Explicit completion contract. Typically: all tasks complete + core tests pass."
     },
     {
       "name": "PLAN_ARTIFACTS",
       "type": "list",
-      "required": false,
+      "required": true,
       "shape": "{PATH, ROLE}",
-      "description": "Implementation plan and tasks ledger to consume. When present, uses plans/IMPLEMENTATION-PLAN.md and plans/TASKS.md by default. When absent, iterates from DONE_CONDITION."
+      "description": "Plan and task ledger documents to execute. Required — this workflow does not operate without plan documents. Defaults to plans/IMPLEMENTATION-PLAN.md + plans/TASKS.md. Without this, use build-until-done instead."
     },
     {
       "name": "CONSTRAINTS",
@@ -39,7 +38,7 @@
       "description": "Safety, rollout, compatibility, or non-goal constraints."
     }
   ],
-  "display_name": "Workflow / Build Execute Loop",
+  "display_name": "Workflow / Build Execute Plan",
   "browse_category": "build",
   "browse_priority": 20,
   "is_category_default": false,
@@ -47,7 +46,7 @@
   "starter_inputs": [
     {
       "key": "GOAL",
-      "label": "완수해야 할 미션",
+      "label": "Mission goal",
       "required": true,
       "maps_to": [
         "MISSION_GOAL"
@@ -56,7 +55,7 @@
     },
     {
       "key": "SCOPE",
-      "label": "작업 범위",
+      "label": "Target scope",
       "required": true,
       "maps_to": [
         "TARGET_SCOPE"
@@ -65,16 +64,17 @@
     },
     {
       "key": "DONE",
-      "label": "완료 계약",
+      "label": "Done condition",
       "required": true,
       "maps_to": [
         "DONE_CONDITION"
-      ]
+      ],
+      "derive_from_raw_request": true
     },
     {
-      "key": "EVIDENCE",
-      "label": "plan/task 문서 경로",
-      "required": false,
+      "key": "PLAN",
+      "label": "Plan/task document paths (required)",
+      "required": true,
       "maps_to": [
         "PLAN_ARTIFACTS"
       ],
@@ -82,7 +82,7 @@
     },
     {
       "key": "CONSTRAINTS",
-      "label": "제약",
+      "label": "Constraints",
       "required": false,
       "maps_to": [
         "CONSTRAINTS"
@@ -94,7 +94,6 @@
     "$build-write-code",
     "$check-improve-loop",
     "$plan-sync-tasks",
-    "$check-final-verify",
-    "$build-until-done"
+    "$check-final-verify"
   ]
 }

@@ -1,9 +1,9 @@
 ---
-name: ship-release-verdict
+name: release-verdict
 description: "Use when assessing release safety, rollout risk, compatibility impact, and rollback readiness. Use it for release verdict analysis, not for publication execution."
 ---
 
-# Ship / Release Verdict
+# Release / Verdict
 
 ## Purpose
 Judge release safety and rollback readiness.
@@ -17,6 +17,9 @@ Judge release safety and rollback readiness.
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `release-gatekeeper` because it keeps the work aligned with: Treat release as a sequence of explicit gates and judge only the gate in scope with concrete evidence.
+
 ## Use When
 - Need rollout, impact, or rollback judgement before release.
 - Need a release verdict grounded in release evidence.
@@ -24,9 +27,9 @@ Judge release safety and rollback readiness.
 
 ## Do Not Use When
 - Need direct implementation or bug debugging.
-- Need only repository or docs hygiene checks — use ship-check-hygiene instead.
+- Need only repository or docs hygiene checks — use release-check-hygiene instead.
 - Need actual branch, tag, or release publication execution — use release-publish instead.
-- Need only diff/PR gate audit without rollout or rollback judgment — use check-ship-risk instead.
+- Need only diff/PR gate audit without rollout or rollback judgment — use check-release-risk instead.
 
 ## Required Inputs
 - `RELEASE_SCOPE` (diff|repo|deployment-slice; required): Release scope under evaluation.
@@ -61,6 +64,19 @@ Judge release safety and rollback readiness.
 - Separate observed release evidence from the release verdict.
 - If rollback or monitoring evidence is missing, mark the decision as blocked.
 - Do not imply release readiness when approval or safety gates are unresolved.
+
+## Response Format
+
+Lead with the verdict: GO / NO-GO / BLOCKED.
+
+Show blast radius in one line: [who or what is affected and to what extent].
+
+List any blockers with severity:
+- [gate] — [issue] — severity: [critical/moderate]
+
+Show the rollback checklist: step → purpose.
+
+Ask: "Rollback path confirmed? Any gate still needs owner approval?"
 
 ## Execution Constraints
 - Do not mutate branches, tags, remotes, or release hosts from this skill.

@@ -1,6 +1,6 @@
 ---
 name: check-merge-ready
-description: "Neutral review-only verdict skill. Produce findings-first PR/code review with severity, confidence, file/line evidence, testing gaps, and integrate/hold judgement. Do not edit code or create implementation plans here. Compose with check-quality-scan for 9-item checklist coverage, or with check-ship-risk for release risk context."
+description: "Neutral review-only verdict skill. Produce findings-first PR/code review with severity, confidence, file/line evidence, testing gaps, and integrate/hold judgement. Do not edit code or create implementation plans here. Compose with check-quality-scan for 9-item checklist coverage, or with check-release-risk for release risk context."
 ---
 
 # Check / Merge Ready
@@ -16,6 +16,9 @@ Issue a findings-first review verdict with evidence.
  lens: kahneman-tversky |
  output: md(contract=v1)]
 ```
+
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
 
 ## Use When
 - Need a final findings-first review verdict.
@@ -61,6 +64,18 @@ Issue a findings-first review verdict with evidence.
 - Do not assume a finding exists; return no findings when evidence does not support one.
 - Separate observed behavior from inferred impact.
 - Do not convert maintainability preference into a blocker unless a concrete regression or risk exists.
+
+## Response Format
+
+Lead with the verdict: INTEGRATE or HOLD.
+
+Then show findings ordered by severity:
+- P0 / P1 / P2 — file:line — [issue] (confidence: high/medium/low)
+
+List testing gaps separately:
+- [gap] — cheapest check: [command or test]
+
+End with: "Fix P0s now, or want full findings list first?"
 
 ## Execution Constraints
 - Review is read-and-judge only; do not patch code or rewrite planning artifacts here.

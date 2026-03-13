@@ -13,6 +13,9 @@ Find missing, inconsistent, or unsafe error handling paths in a bounded target.
 [stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman` because it keeps the work aligned with: Reproduce first, use disprovable hypotheses, and explain the result plainly.
+
 ## Use When
 - Need to inspect only failure paths and cleanup behavior.
 - Need to verify exception, fallback, timeout, or rollback handling.
@@ -63,6 +66,17 @@ Find missing, inconsistent, or unsafe error handling paths in a bounded target.
 - Stay on unhappy-path behavior and cleanup logic only.
 - Do not rewrite the review into a general correctness or style pass.
 - Prefer concrete failure-mode traces over hypothetical robustness brainstorming.
+
+## Response Format
+
+Group findings by severity — P0 (unsafe), P1 (missing guard), P2 (inconsistent recovery):
+
+P0 — file:line — [failure mode]: [what breaks and how badly]
+P1 — file:line — [missing guard]: [what is unguarded]
+
+List RECOVERY_GAPS separately if any paths leave the system in a bad state.
+
+End with: "Fix P0s now, or want full gap list first?"
 
 ## Mandatory Rules
 - Stay on error paths only.

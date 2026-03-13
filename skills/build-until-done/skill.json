@@ -2,18 +2,17 @@
   "name": "build-until-done",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "analysis_report",
-  "default_program": "[stages: preflight>detect>analyze>evaluate>handoff>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,deterministic-output |\n lens: contract-evidence-verifier |\n output: md(contract=v1)]",
+  "default_program": "[stages: evaluate>select>implement>verify>loop>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,correctness-first,loop-until-done,approval-gates{blockers-only} |\n lens: contract-evidence-verifier |\n output: md(contract=v1)]",
   "required_inputs": [
     {
       "name": "MISSION_GOAL",
       "type": "string",
       "required": true,
-      "description": "One bounded mission that should either finish or stop with a real blocker."
+      "description": "One bounded mission to execute until the done contract is proven or a real blocker stops progress."
     },
     {
       "name": "TARGET_SCOPE",
-      "type": "path|module|folder|repo|artifact",
+      "type": "path|module|folder|repo",
       "required": true,
       "description": "Exact scope the mission is allowed to touch."
     },
@@ -22,58 +21,34 @@
       "type": "list",
       "required": true,
       "shape": "{CONDITION, PROOF_REQUIRED}",
-      "description": "Explicit completion contract and the evidence required for each condition."
+      "description": "Explicit completion contract. Each condition must be externally checkable — no vibe-based success language."
     },
     {
       "name": "CURRENT_EVIDENCE",
       "type": "list",
       "required": false,
       "shape": "{TYPE, REF, WHY_RELEVANT}",
-      "description": "Current outputs, tests, notes, or observations from prior passes."
-    },
-    {
-      "name": "PLAN_ARTIFACTS",
-      "type": "list",
-      "required": false,
-      "shape": "{PATH, ROLE}",
-      "description": "Implementation plan, tasks ledger, or execution docs that must be consumed and exhausted during the loop. When present, treat incomplete task rows as active work and keep consuming them until exhausted. When absent, drive iteration from DONE_CONDITION and prompt evidence."
-    },
-    {
-      "name": "COMPANION_SKILLS",
-      "type": "list",
-      "required": false,
-      "allowed_values": [
-        "build-write-code",
-        "test-write-guards",
-        "build-make-faster",
-        "debug-find-root-cause",
-        "check-final-verify",
-        "plan-sync-tasks",
-        "check-improve-loop",
-        "tidy-simplify"
-      ],
-      "shape": "{SKILL}",
-      "description": "Narrow code-path companion skills active in this compose chain. Declared by the caller — this skill uses them for next-pass handoff, not internal invocation."
+      "description": "Observations, test results, or notes from any prior pass. When absent, reads TARGET_SCOPE to build initial evidence."
     },
     {
       "name": "MAX_PASSES",
       "type": "integer",
       "required": false,
-      "description": "Safety budget for same-turn iteration. Default to 3, or 8 when PLAN_ARTIFACTS is present."
+      "description": "Safety ceiling for passes within one turn. Default: 5."
     },
     {
       "name": "CONSTRAINTS",
       "type": "list",
       "required": false,
       "shape": "{CONSTRAINT}",
-      "description": "Time, safety, approval, or non-goal constraints that limit the loop."
+      "description": "Safety, scope, or non-goal constraints."
     }
   ],
-  "display_name": "Build / Until Done",
+  "display_name": "Build / Until Done (Plan-Free)",
   "browse_category": "build",
-  "browse_priority": 50,
+  "browse_priority": 30,
   "is_category_default": false,
-  "codex_surface": "internal_control",
+  "codex_surface": "public_entry",
   "starter_inputs": [
     {
       "key": "GOAL",
@@ -95,7 +70,7 @@
     },
     {
       "key": "DONE",
-      "label": "완료 계약",
+      "label": "완료 계약 (검증 가능한 조건)",
       "required": true,
       "maps_to": [
         "DONE_CONDITION"
@@ -104,10 +79,9 @@
     },
     {
       "key": "EVIDENCE",
-      "label": "plan/task 문서와 현재 근거",
+      "label": "현재 상태 근거 (선택)",
       "required": false,
       "maps_to": [
-        "PLAN_ARTIFACTS",
         "CURRENT_EVIDENCE"
       ],
       "derive_from_raw_request": true

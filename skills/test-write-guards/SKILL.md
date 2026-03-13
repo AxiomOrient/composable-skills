@@ -17,6 +17,9 @@ Add or improve regression-prevention tests with an explicit scenario matrix and 
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kent-beck` because it keeps the work aligned with: Small safe iterations with explicit Red-Green-Refactor rhythm.
+
 ## Use When
 - Need to add or strengthen automated tests.
 - Need to convert a regression risk into concrete test protection.
@@ -63,6 +66,18 @@ Add or improve regression-prevention tests with an explicit scenario matrix and 
 - Prefer observable behavior over implementation-detail coupling.
 - If a case is speculative, mark it optional instead of mandatory.
 - Do not imply coverage the suite does not provide.
+
+## Response Format
+
+Show added tests as a compact list:
+- [test name] — behavior covered: [what it guards] — layer: [unit/integration/contract] — file
+
+Show verification results:
+- [command or test] — result: PASS / FAIL — [key signal]
+
+List any gaps not yet covered by the new guards.
+
+Ask: "Cover [specific remaining gap] now?"
 
 ## Execution Constraints
 - Do not write tests only to satisfy the current implementation details, mock call counts, or branch shape unless the contract explicitly requires that level.

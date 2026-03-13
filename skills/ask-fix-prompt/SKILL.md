@@ -13,6 +13,9 @@ Turn a failed answer into a controlled repair loop that explains the failure and
 [stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: feynman | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman` because it keeps the work aligned with: Reproduce first, use disprovable hypotheses, and explain the result plainly.
+
 ## Use When
 - Already received a weak, wrong, or structurally off-target answer.
 - Need to explain what was missing before retrying.
@@ -71,6 +74,17 @@ Turn a failed answer into a controlled repair loop that explains the failure and
 - Do not escalate to a broader redesign unless the failure is clearly structural.
 - Keep the repair delta narrowly tied to the observed failure mode.
 - Do not smuggle a new preferred answer into the repaired prompt.
+
+## Response Format
+
+Lead with the failure class and one sentence on why the answer failed.
+
+Then show the minimal repair:
+- What was missing
+- The smallest question change that would fix it
+- The repaired prompt (only if a delta alone is insufficient)
+
+Close with: "Re-run with the repaired prompt, or is the failure class wrong?"
 
 ## Mandatory Rules
 - Always explain why the answer failed before proposing a fix.

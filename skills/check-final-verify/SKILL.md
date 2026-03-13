@@ -17,6 +17,9 @@ Perform final contract and evidence verification.
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `contract-evidence-verifier` because it keeps the work aligned with: Check explicit contracts against fresh evidence, separate blockers from gaps, and do not claim pass without proof.
+
 ## Use When
 - Need explicit final checks before delivering an answer.
 - Need final verification of docs, outputs, tests, or task sync.
@@ -72,6 +75,18 @@ Perform final contract and evidence verification.
 - Keep blockers, evidence gaps, and residual polish items in separate buckets.
 - Do not escalate aesthetic preference into a blocker unless it violates an explicit contract or creates a concrete correctness, usability, or maintenance risk.
 - For test-related verification, prefer rerunning the smallest relevant behavior check over relying on broad `all green` summaries.
+
+## Response Format
+
+Lead with the status: PASS / BLOCKED / INCONCLUSIVE.
+
+If BLOCKED or INCONCLUSIVE, list blockers first:
+- [contract violated or gap] — file:section — [why it blocks delivery]
+
+Then show verified checks as a compact table:
+- Contract | Result | Evidence
+
+If any EVIDENCE_GAPS remain, list them with cheapest next check.
 
 ## Mandatory Rules
 - Do not modify files here; verification is read-and-check only.

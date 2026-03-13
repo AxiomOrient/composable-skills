@@ -13,6 +13,9 @@ Check whether a fix candidate removes the failure and whether the regression gua
 [stages: preflight>detect>verify>review>audit | scope: diff|repo|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: contract-evidence-verifier | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `contract-evidence-verifier` because it keeps the work aligned with: Check explicit contracts against fresh evidence, separate blockers from gaps, and do not claim pass without proof.
+
 ## Use When
 - Need to verify a fix candidate after root cause is already known.
 - Need to confirm the bug is gone and the guard is meaningful.
@@ -57,6 +60,18 @@ Check whether a fix candidate removes the failure and whether the regression gua
 - Do not call the fix confirmed without rerun evidence.
 - Separate fixed behavior from guard quality.
 - Mark inconclusive when the fix cannot be fully rechecked.
+
+## Response Format
+
+Lead with fix status: PASS / BLOCKED / INCONCLUSIVE.
+
+Show what was verified:
+- [behavior] → [result] — evidence: [test or command]
+
+Show guard status:
+- [guard] → [exists / weak / missing] — [why it matters]
+
+Ask: "Guard in place? Want regression test strengthened?"
 
 ## Execution Constraints
 - Do not turn this skill into another full root-cause report.

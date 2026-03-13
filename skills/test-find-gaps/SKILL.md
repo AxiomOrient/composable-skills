@@ -13,6 +13,9 @@ Identify exact regression-prevention gaps in a bounded target before test implem
 [stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: kent-beck | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kent-beck` because it keeps the work aligned with: Small safe iterations with explicit Red-Green-Refactor rhythm.
+
 ## Use When
 - Need to know what is not covered by current tests.
 - Need to review test gaps for core behavior, edge cases, or failure paths.
@@ -65,6 +68,17 @@ Identify exact regression-prevention gaps in a bounded target before test implem
 - Keep the report focused on regression protection rather than general code quality.
 - Prefer the smallest useful next test over broad speculative test suites.
 - Do not recommend tests whose only purpose is to satisfy CI or assert implementation trivia.
+
+## Response Format
+
+Show what is currently covered: [behavior] — evidence: [test or check]
+
+Then list missing test scenarios ordered by regression value:
+- [scenario] — risk: [what breaks if unguarded] — cheapest test: [what to add]
+
+Show priority order for the cheapest high-value tests to add.
+
+Ask: "Cover [top-priority gap] now?"
 
 ## Mandatory Rules
 - Do not equate low line coverage with a meaningful test gap automatically.

@@ -2,7 +2,6 @@
   "name": "tidy-simplify",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "implementation_delta",
   "default_program": "[stages: preflight>detect>analyze>implement>verify>review>audit |\n scope: diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
   "required_inputs": [
     {

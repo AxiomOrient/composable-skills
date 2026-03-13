@@ -2,7 +2,6 @@
   "name": "debug-find-root-cause",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "debug_report",
   "default_program": "[stages: preflight>detect>analyze>implement>verify>audit |\n scope: diff|repo |\n lens: feynman |\n output: md(contract=v1)]",
   "required_inputs": [
     {

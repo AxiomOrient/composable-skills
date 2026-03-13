@@ -13,6 +13,9 @@ Compose specific improvement scans with simplification and refactor intent into 
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need an explicit improvement map grounded in duplication and constant extraction evidence.
 - Need to decide whether simplification or refactoring is justified in a bounded scope.
@@ -60,6 +63,16 @@ Compose specific improvement scans with simplification and refactor intent into 
 - Do not hide workflow expansion behind generic prose; expose the atomic path explicitly.
 - Keep recommendations bounded to the supplied TARGET_SCOPE.
 - Do not turn style preference into an improvement mandate unless it removes accidental complexity or protects a meaningful user or maintenance outcome.
+
+## Response Format
+
+Lead with direction: **SIMPLIFY**, **REFACTOR**, or **HOLD**.
+
+Opportunities (evidence-backed, file:line cited):
+- [opportunity] — `file:line` — [recommended action and why]
+
+On HOLD: "No actionable duplication or complexity found — clean as-is."
+On SIMPLIFY/REFACTOR: "Start with [top opportunity] — or want full list sorted by impact?"
 
 ## Mandatory Rules
 - Keep improvement findings tied to explicit scan evidence.

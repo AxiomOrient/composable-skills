@@ -13,6 +13,9 @@ Make regression test coverage explicit before test implementation.
 [stages: preflight>detect>analyze>plan>handoff>audit | scope: diff|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: kent-beck | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kent-beck` because it keeps the work aligned with: Small safe iterations with explicit Red-Green-Refactor rhythm.
+
 ## Use When
 - Need a test matrix before writing or extending tests.
 - Need to prioritize happy, edge, and failure-path scenarios.
@@ -57,6 +60,21 @@ Make regression test coverage explicit before test implementation.
 - List observable behavior, not implementation-detail assertions.
 - Do not inflate speculative cases into mandatory tests without risk evidence.
 - Keep the matrix bounded and actionable.
+
+## Response Format
+
+Show the case matrix grouped by bucket:
+
+Happy path:
+- [case] — expected signal: [observable pass condition]
+
+Edge cases:
+- [case] — expected signal: [what distinguishes this from the happy path]
+
+Failure cases:
+- [case] — expected signal: [what the code should do instead of silently failing]
+
+Ask: "Cover [highest-risk gap case] now, or want full matrix written first?"
 
 ## Execution Constraints
 - Do not turn this skill into a verification-sequencing plan; it owns case inventory only.

@@ -13,6 +13,9 @@ Compose documentation inventory, curation, and writing into one default docs wor
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs,compat},deterministic-output | lens: nielsen-norman | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+
 ## Use When
 - Need one default docs entrypoint for a repo or docs subtree.
 - Need inventory, curation, and writing to stay connected in one path.
@@ -59,6 +62,20 @@ Compose documentation inventory, curation, and writing into one default docs wor
 ## Execution Constraints
 - Do not widen this workflow into root README publishing.
 - Prefer the smallest doc surface that improves findability and usefulness for the stated audience.
+
+## Response Format
+
+Show what was written and what's still missing — no chain commentary.
+
+```
+updated: `file` — [what changed and why]
+written: `file` — [new content added]
+```
+
+Gaps (couldn't verify or write):
+- `file` — [why — e.g., no source content, ambiguous scope]
+
+Ask: "Anything important missing in [section with lowest confidence]?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

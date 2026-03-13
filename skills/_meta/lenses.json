@@ -1,25 +1,24 @@
 {
-  "version": "1.2.0",
-  "updated": "2026-03-10",
+  "version": "1.2.2",
+  "updated": "2026-03-13",
   "notes": "Canonical lens catalog for compose macro parsing and skill documentation. Lenses are mental-model cards, not roleplay prompts.",
   "defaults": {
     "development": "hickey-carmack",
     "analysis": "kahneman-tversky",
-    "debug-find-root-cause": "feynman",
     "planning": "eisenhower",
-    "documentation": "minto-pyramid",
+    "documentation": "feynman-teaching",
     "question-design": "popper-falsification",
     "testing": "kent-beck",
-    "check-merge-ready": "kahneman-tversky",
     "performance": "goldratt-toc",
-    "tidy-reorganize": "fowler-strangler",
-    "check-security-holes": "nist-rmf",
-    "reliability": "sre-dora",
+    "non-code-completion": "craft-clarity",
+    "reliability": "release-gatekeeper",
     "ux": "nielsen-norman"
   },
   "catalog": {
     "active_lenses": [
+      "craft-clarity",
       "eisenhower",
+      "inversion-focus",
       "feynman",
       "feynman-teaching",
       "contract-evidence-verifier",
@@ -29,12 +28,11 @@
       "hickey-carmack",
       "kahneman-tversky",
       "kent-beck",
-      "kuhn-paradigm",
       "minto-pyramid",
       "nielsen-norman",
       "nist-rmf",
       "popper-falsification",
-      "sre-dora",
+      "release-gatekeeper",
       "uncle-bob"
     ],
     "reserve_lenses": [
@@ -42,20 +40,78 @@
       "ideo-design-thinking",
       "ive",
       "karpathy",
+      "kuhn-paradigm",
       "ries-lean",
       "shape-up",
+      "sre-dora",
       "sinek-miller",
       "wardley"
     ],
     "public_aliases": {
       "default": "hickey-carmack",
-      "debug-find-root-cause": "feynman",
+      "debug": "feynman",
       "plan": "eisenhower",
+      "finish": "craft-clarity",
       "ux": "nielsen-norman",
-      "check-security-holes": "nist-rmf"
+      "security": "nist-rmf"
     }
   },
   "lenses": [
+    {
+      "id": "craft-clarity",
+      "display_name": "Craft Clarity",
+      "category": "editorial-quality",
+      "status": "active",
+      "frame_name": "Reader-Usable Finisher",
+      "summary": "Treat clear, complete, reader-usable output as the real done condition, then keep iterating until the artifact stands on its own.",
+      "thesis": "Non-code work is not finished when text merely exists; it is finished when the intended reader can use it without guesswork, missing context, or silent gaps.",
+      "core_philosophy": "Prefer the smallest revision that materially improves clarity, completeness, or accuracy for the reader, and keep looping until the done contract is proven.",
+      "mental_model": [
+        "Read the artifact as the target reader, not as its author.",
+        "Treat ambiguity, missing context, and buried assumptions as unfinished work.",
+        "Improve the weakest section first instead of rewriting everything.",
+        "Use explicit evidence that the artifact is understandable, complete, and current."
+      ],
+      "decision_rules": [
+        "Prefer wording that reduces reader uncertainty over wording that sounds impressive.",
+        "If a section cannot stand alone for its intended reader, it is not done.",
+        "Revise the smallest section that advances the weakest done condition.",
+        "Keep looping until the artifact is reader-usable, not just structurally present."
+      ],
+      "anti_patterns": [
+        "Text that is technically present but still confusing",
+        "Polished wording over missing substance",
+        "Stopping after one pass when the weakest condition is still unproven"
+      ],
+      "good_for": [
+        "documentation revision",
+        "review writeups",
+        "planning documents",
+        "release-prep content",
+        "plan-free completion loops"
+      ],
+      "not_for": [
+        "root-cause debugging",
+        "security threat modelling",
+        "performance bottleneck analysis"
+      ],
+      "required_artifacts": [
+        "Reader Check",
+        "Weakest Condition",
+        "Smallest Useful Revision",
+        "Completion Evidence"
+      ],
+      "keywords": [
+        "clarity",
+        "reader-usable",
+        "revision loop",
+        "completion"
+      ],
+      "references": [
+        "https://developers.google.com/tech-writing",
+        "https://www.nngroup.com/articles/how-users-read-on-the-web/"
+      ]
+    },
     {
       "id": "feynman-teaching",
       "display_name": "Richard Feynman (Teaching by Reconstruction)",
@@ -232,7 +288,7 @@
       "good_for": [
         "neutral analysis",
         "check-merge-ready",
-        "check-ship-risk",
+        "check-release-risk",
         "risk judgement",
         "quality checklists"
       ],
@@ -834,7 +890,7 @@
         "rollout risk"
       ],
       "not_for": [
-        "question pack design",
+        "question design",
         "README information architecture",
         "dependency direction review"
       ],

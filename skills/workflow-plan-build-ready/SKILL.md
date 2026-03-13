@@ -13,6 +13,9 @@ Compose scope normalization, spec/design shaping, and task breakdown into one de
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs,compat},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need one planning workflow before writing code.
 - Need scope, design, and task artifacts to stay aligned in one path.
@@ -60,6 +63,19 @@ Compose scope normalization, spec/design shaping, and task breakdown into one de
 ## Execution Constraints
 - Do not collapse planning artifacts into one prose blob.
 - Prefer the minimum plan surface that makes the work implementable and verifiable.
+
+## Response Format
+
+Output the task table and open decisions — no chain commentary.
+
+Tasks:
+| ID | Goal | Scope | Verification |
+|----|----|----|----|
+
+Open decisions that must be resolved before building:
+- [decision] — options: [A] vs [B] — "Which approach?"
+
+If a step produced a blocker: name it and ask what needs clarifying before continuing.
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

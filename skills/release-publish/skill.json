@@ -2,7 +2,6 @@
   "name": "release-publish",
   "layer": "utility",
   "layer_badge": "Utility",
-  "response_profile": "generic",
   "default_program": "[stages: preflight>detect>plan>review>handoff>audit |\n scope: repo |\n policy: evidence,safety-gates,quality-gates{docs,tests,surface-sync,release},approval-gates{explicit,no-fallback},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -86,7 +85,7 @@
     }
   ],
   "display_name": "Release / Publish",
-  "browse_category": "utility",
+  "browse_category": "release",
   "browse_priority": 90,
   "is_category_default": false,
   "codex_surface": "internal_control",

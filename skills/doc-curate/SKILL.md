@@ -17,6 +17,9 @@ Reorganize non-root docs with explicit inventory, entry-structure planning, navi
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+
 ## Use When
 - Need documentation inventory, navigation, and cleanup planning.
 - Need to reorganize folder-level entry docs and guide entrypoints below the repo root.
@@ -63,6 +66,17 @@ Reorganize non-root docs with explicit inventory, entry-structure planning, navi
 - Read docs before classifying them stale or duplicate.
 - Keep delete recommendations tentative until evidence is explicit.
 - Separate navigation issues from content duplication issues.
+
+## Response Format
+
+Show what was found, then what changes:
+- Inventory: [count] docs — [N] active, [N] stale, [N] orphaned
+- Navigation map: [key links added or fixed]
+- Cleanup actions: [keep/merge/move/archive/delete] — file — reason
+
+Flag any actions that need a decision: "Left [file] as-is — unclear if it should be merged with [other file]."
+
+Ask about any boundary decision if scope was constrained.
 
 ## Execution Constraints
 - Do not author or rewrite the repo root README from this skill.

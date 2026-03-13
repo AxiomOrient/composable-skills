@@ -17,6 +17,9 @@ Run an explicitly requested Gemini CLI delegation and keep its output separated 
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman` because it keeps the work aligned with: Reproduce first, use disprovable hypotheses, and explain the result plainly.
+
 ## Use When
 - The user explicitly invokes gemini or $gemini.
 - Need large-context external analysis, web research, or session resume through Gemini CLI.
@@ -53,6 +56,16 @@ Run an explicitly requested Gemini CLI delegation and keep its output separated 
 ## Artifacts
 - `artifacts_in`: gemini-request.v1
 - `artifacts_out`: external-verification-report.v1
+
+## Response Format
+
+Show Gemini's output directly, attributed: "Gemini says: [finding or claim]"
+
+Then compare against local evidence: "Local evidence: [agrees / disagrees / insufficient]"
+
+List conflicts explicitly: "Gemini vs local: [what they disagree on]"
+
+Flag confidence: "Gemini confidence is low on [claim] — local evidence does not confirm."
 
 ## Neutrality Rules
 - Report Gemini output and local analysis separately.

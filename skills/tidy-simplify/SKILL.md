@@ -17,6 +17,9 @@ Apply the four-step cognitive-load reduction sequence to a bounded code scope wh
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need to apply actual code changes that reduce cognitive load in a concrete, bounded scope.
 - Need to remove indirection, nested branching, one-use helpers, or mutable state churn after the scope is clearly defined.
@@ -82,6 +85,20 @@ Apply the four-step cognitive-load reduction sequence to a bounded code scope wh
 - Reduce mutable state and one-use indirection before proposing new abstractions.
 - Keep the verification surface narrow and behavior-focused.
 - Do not turn this into a broad refactor or architecture rewrite.
+
+## Response Format
+
+State the intent: what the code must preserve after simplification.
+
+Show what changed and what was left alone:
+- Simplified: [move] — removed: [what abstraction or state]
+- Left alone: [structure] — reason: [carries real invariant]
+
+Show verification: [command or test] — result: PASS / FAIL
+
+If scope was constrained: "Stopped at [boundary] — [rest] would require a separate pass."
+
+Ask about any move where functional equivalence is uncertain.
 
 ## Mandatory Rules
 - Preserve functional equivalence — write INTENT_STATEMENT first, verify last.

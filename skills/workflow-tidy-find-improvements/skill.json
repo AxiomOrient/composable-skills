@@ -2,7 +2,6 @@
   "name": "workflow-tidy-find-improvements",
   "layer": "workflow",
   "layer_badge": "Workflow",
-  "response_profile": "analysis_report",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
   "required_inputs": [
     {

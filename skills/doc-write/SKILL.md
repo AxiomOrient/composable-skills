@@ -17,6 +17,9 @@ Write or refresh non-root documentation from repository evidence with audience-a
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman-teaching` because it keeps the work aligned with: Start from the simplest correct mental model, translate jargon into plain words, and add concrete examples before deeper detail.
+
 ## Use When
 - Need to create or refresh non-root guides, architecture docs, usage docs, or module notes.
 - Need to turn upstream stage payloads into documentation artifacts.
@@ -72,6 +75,15 @@ Write or refresh non-root documentation from repository evidence with audience-a
 - Write only claims grounded in repository evidence or upstream payloads.
 - If a section lacks support, mark it as needing confirmation instead of guessing.
 - Keep documentation structure separate from implementation or review advice.
+
+## Response Format
+
+List what was written or updated:
+- file:section — change kind (created/updated/expanded) — audience — form
+
+Flag unverified content: "Couldn't verify: [claim or section] — needs [source]"
+
+Ask about audience or tone if either was unclear from the evidence links.
 
 ## Execution Constraints
 - Prefer the minimum useful document structure that helps the stated audience understand, use, or operate the target.

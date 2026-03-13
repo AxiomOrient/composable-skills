@@ -13,6 +13,9 @@ Convert a vague thought into a bounded problem statement with a few stable quest
 [stages: preflight>detect>analyze>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: inversion-focus | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `inversion-focus` because it keeps the work aligned with: Reduce cognitive load, define by exclusions and one dominant constraint, then state the problem plainly.
+
 ## Use When
 - Need to turn a fuzzy thought into one clear question handle.
 - Need to reduce mental overload before deeper question design.
@@ -62,6 +65,17 @@ Convert a vague thought into a bounded problem statement with a few stable quest
 - Reduce the thought to three anchors, one dominant constraint, and one problem statement.
 - Prefer the shortest clear wording that helps the user take control of the question.
 - Do not expand into solution advice or answer content.
+
+## Response Format
+
+Output the PROBLEM_STATEMENT as a single sentence up front.
+
+Then show:
+- Anchors: [word1], [word2], [word3]
+- Avoid: [what the question should not become]
+- Dominant constraint: [one sentence]
+
+Follow immediately with the NEXT_RECOMMENDED_SKILL.
 
 ## Mandatory Rules
 - Always emit exactly one PROBLEM_STATEMENT.

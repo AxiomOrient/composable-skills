@@ -1,8 +1,7 @@
 {
-  "name": "workflow-ship-it",
+  "name": "workflow-release-publish",
   "layer": "workflow",
   "layer_badge": "Workflow",
-  "response_profile": "generic",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo | policy: evidence,safety-gates,quality-gates{docs,release,tests,security},approval-gates{explicit,no-fallback},deterministic-output | lens: release-gatekeeper | output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -134,17 +133,17 @@
       "description": "Path to release notes when using path mode."
     }
   ],
-  "display_name": "Workflow / Ship It",
-  "browse_category": "ship",
+  "display_name": "Workflow / Release Publish",
+  "browse_category": "release",
   "browse_priority": 20,
   "is_category_default": false,
   "codex_surface": "internal_control",
   "starter_inputs": [],
   "expands_to": [
-    "$ship-check-repo",
-    "$ship-check-hygiene",
+    "$release-check-repo",
+    "$release-check-hygiene",
     "$workflow-security-preflight",
-    "$ship-release-verdict",
+    "$release-verdict",
     "$release-publish"
   ]
 }

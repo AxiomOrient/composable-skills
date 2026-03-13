@@ -1,9 +1,9 @@
 ---
-name: workflow-ship-ready-check
+name: workflow-release-ready-check
 description: "Workflow skill that verifies repository reality, release hygiene, and final release readiness before publication. Use when the user wants a transparent release review instead of a single vague 'can we ship?' prompt."
 ---
 
-# Workflow / Ship Ready Check
+# Workflow / Release Ready Check
 
 ## Purpose
 
@@ -14,6 +14,9 @@ Compose repository prechecks, release hygiene gates, security preflight, and GO/
 ```text
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff | policy: evidence,safety-gates,quality-gates{docs,release,tests,security},deterministic-output | lens: release-gatekeeper | output: md(contract=v1)]
 ```
+
+## Lens Rationale
+This skill uses `release-gatekeeper` because it keeps the work aligned with: Treat release as a sequence of explicit gates and judge only the gate in scope with concrete evidence.
 
 ## Use When
 
@@ -26,7 +29,7 @@ Compose repository prechecks, release hygiene gates, security preflight, and GO/
 ## Do Not Use When
 
 - Need direct branch, tag, or GitHub release mutation; use release-publish instead.
-- Need the default review-plus-publish release flow; use workflow-ship-it instead.
+- Need the default review-plus-publish release flow; use workflow-release-publish instead.
 - Need only one narrow release concern rather than a combined release review.
 - Need runtime implementation or debugging rather than release gating.
 
@@ -86,6 +89,20 @@ Compose repository prechecks, release hygiene gates, security preflight, and GO/
 - If a required subcheck cannot be verified, surface that gap instead of pretending full release coverage.
 - Keep document gate status explicit because stale docs can block release.
 
+## Response Format
+
+Lead with release decision: GO / NO-GO / BLOCKED.
+
+Show per-step outcome (step → result):
+- release-check-repo → READY / BLOCKED
+- release-check-hygiene → doc gate + surface sync
+- workflow-security-preflight → PASS / BLOCKED
+- release-verdict → GO / NO-GO / BLOCKED
+
+List any blockers with severity and what resolves each.
+
+On GO: "All gates passed — ready to publish." No further question needed.
+
 ## Mandatory Rules
 
 - Expose repository, hygiene, and readiness subchecks explicitly.
@@ -94,15 +111,15 @@ Compose repository prechecks, release hygiene gates, security preflight, and GO/
 
 ## Expansion
 
-- `$ship-check-repo`
-- `$ship-check-hygiene`
+- `$release-check-repo`
+- `$release-check-hygiene`
 - `$workflow-security-preflight`
-- `$ship-release-verdict`
+- `$release-verdict`
 
 ## Example Invocation
 
 ```text
-$workflow-ship-ready-check
+$workflow-release-ready-check
 RELEASE_SCOPE: repo
 TARGET_BRANCHES:
   - {BRANCH: codex/dev, ROLE: source}

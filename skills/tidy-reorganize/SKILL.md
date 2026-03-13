@@ -17,6 +17,9 @@ Plan structure-preserving cleanup with explicit invariants, dependency rules, an
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `fowler-strangler` because it keeps the work aligned with: Use seams and staged cutovers for structural change.
+
 ## Use When
 - Need a behavior-preserving refactor plan.
 - Need dependency hygiene or module-boundary cleanup in a bounded scope.
@@ -45,6 +48,19 @@ Plan structure-preserving cleanup with explicit invariants, dependency rules, an
 ## Artifacts
 - `artifacts_in`: plan-dependency-rules.v1, boundary-contract-report.v1
 - `artifacts_out`: refactor-plan.v1
+
+## Response Format
+
+Show target dependency rules: allowed and forbidden directions.
+
+Show atomic refactor steps:
+1. [step] — why: [what coupling it removes]
+
+Show rollback conditions: [condition] → [stop or revert action]
+
+If scope was constrained, say so plainly: "Stopped at [boundary] — [rest] would require a separate run."
+
+Ask about any rollout or compatibility boundary that affects step ordering.
 
 ## Neutrality Rules
 - Keep behavior-preserving invariants explicit before proposing steps.

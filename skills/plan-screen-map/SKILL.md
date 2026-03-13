@@ -17,6 +17,9 @@ Define the content and navigation structure users must move through so later spe
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+
 ## Use When
 - Need a clear hierarchy for pages, screens, content groups, or routes.
 - Need navigation rules and user flows before screen-level design or implementation.
@@ -66,6 +69,18 @@ Define the content and navigation structure users must move through so later spe
 - Separate structure choices from visual styling or technical implementation assumptions.
 - Do not invent user flows or nodes that the supplied content and user goals do not support.
 - Keep ambiguous labels as notes or open edges rather than pretending the terminology is settled.
+
+## Response Format
+
+Lead with the IA summary in one sentence: how the hierarchy is organized and why.
+
+Show the hierarchy map as a compact tree or parent-child list.
+
+List core flows: [flow] → [steps] → [success end]
+
+Flag uncertain labels or open edges: "Label '[X]' is provisional — unclear if it matches user mental model."
+
+Ask: "Does this hierarchy support [primary user goal], or does [specific node] need to move?"
 
 ## Execution Constraints
 - Do not turn this skill into a visual design spec or backend architecture document.

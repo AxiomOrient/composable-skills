@@ -90,10 +90,6 @@ def run_parser_without_workflow_metadata(_macro: str) -> subprocess.CompletedPro
     with tempfile.TemporaryDirectory() as tmpdir:
         skills_root = Path(tmpdir)
         (skills_root / "_meta").mkdir(parents=True)
-        (skills_root / "_meta" / "response_profiles.json").write_text(
-            json.dumps({"required_sections": {"generic": ["결과", "근거", "다음에 할 것", "질문"]}}, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
-        )
         (skills_root / "_meta" / "lenses.json").write_text(
             json.dumps({"valid_ids": ["hickey-carmack"]}, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
@@ -120,8 +116,7 @@ def run_parser_with_skill_json_backed_workflow(_macro: str) -> subprocess.Comple
         skills_root = Path(tmpdir)
         skill_names = (
             "compose",
-            "respond",
-            "check-delivered",
+            "check-final-verify",
             "workflow-plan-build-ready",
             "scout-boundaries",
             "plan-what-it-does",
@@ -132,7 +127,7 @@ def run_parser_with_skill_json_backed_workflow(_macro: str) -> subprocess.Comple
             shutil.copytree(repo_root / "skills" / name, skills_root / name)
         shutil.copytree(repo_root / "skills" / "_meta", skills_root / "_meta")
         return run_parser(
-            "$compose + $workflow-plan-build-ready + $check-delivered",
+            "$compose + $workflow-plan-build-ready + $check-final-verify",
             extra_args=["--skills-root", str(skills_root)],
         )
 
@@ -146,14 +141,14 @@ def check_skill_json_backed_workflow(proc: subprocess.CompletedProcess[str], pay
             "plan-what-it-does",
             "plan-how-to-build",
             "plan-task-breakdown",
-            "check-delivered",
+            "check-final-verify",
         ],
         "skill.json-backed workflow expansion mismatch",
     )
     must(payload["response_profile"]["profile_id"] == "generic", "profile mismatch")
     must(
-        payload["response_profile"]["required_sections"] == ["결과", "근거", "다음에 할 것", "질문"],
-        "response profiles should come from direct _meta json",
+        payload["response_profile"]["required_sections"] == ["결과", "근거", "다음에 할 것", "질문(필요 시, 항상 맨 마지막)"],
+        "response profiles should fall back to parser defaults when direct profile metadata is absent",
     )
     warnings = payload.get("warnings", [])
     must(
@@ -193,7 +188,7 @@ def check_build_until_done_loop_profile(proc: subprocess.CompletedProcess[str], 
     must(payload["response_profile"]["profile_id"] == "analysis_report", "profile mismatch")
     must(payload["parsed"]["docs"] == ["docs/IMPLEMENTATION-PLAN.md", "docs/TASKS.md"], "docs capture mismatch")
     route_table = payload["routing"]["input_route_table"]
-    must(any(row["starter_key"] == "EVIDENCE" and row["target_field"] == "PLAN_ARTIFACTS" and row["status"] == "mapped" for row in route_table), "plan artifacts route missing")
+    must(any(row["starter_key"] == "EVIDENCE" and row["target_field"] == "CURRENT_EVIDENCE" and row["status"] == "mapped" for row in route_table), "current evidence route missing")
     must(any(row["starter_key"] == "DONE" and row["target_field"] == "DONE_CONDITION" and row["status"] == "derived" for row in route_table), "done route missing")
 
 
@@ -485,16 +480,16 @@ def check_technical_design_doc_profile(proc: subprocess.CompletedProcess[str], p
 
 def check_release_repo_check_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "ship-check-repo", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "release-check-repo", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "analysis_report", "profile mismatch")
-    must(payload["program"]["lens"] == "release-gatekeeper", "ship-check-repo lens mismatch")
+    must(payload["program"]["lens"] == "release-gatekeeper", "release-check-repo lens mismatch")
 
 
 def check_release_readiness_profile(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "ship-release-verdict", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "release-verdict", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "release_decision", "profile mismatch")
-    must(payload["program"]["lens"] == "release-gatekeeper", "ship-release-verdict lens mismatch")
+    must(payload["program"]["lens"] == "release-gatekeeper", "release-verdict lens mismatch")
 
 
 def check_wf_security_preflight(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
@@ -507,15 +502,15 @@ def check_wf_security_preflight(proc: subprocess.CompletedProcess[str], payload:
 
 def check_wf_release_review(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "workflow-ship-ready-check", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "workflow-release-ready-check", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "release_decision", "profile mismatch")
     must(payload["program"]["lens"] == "release-gatekeeper", "workflow lens mismatch")
     must(
         payload["parsed"]["expanded_skills"] == [
-            "ship-check-repo",
-            "ship-check-hygiene",
+            "release-check-repo",
+            "release-check-hygiene",
             "check-security-holes",
-            "ship-release-verdict",
+            "release-verdict",
         ],
         "workflow expansion mismatch",
     )
@@ -523,15 +518,15 @@ def check_wf_release_review(proc: subprocess.CompletedProcess[str], payload: dic
 
 def check_wf_release_ship(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "workflow-ship-it", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "workflow-release-publish", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "generic", "profile mismatch")
     must(payload["program"]["lens"] == "release-gatekeeper", "workflow lens mismatch")
     must(
         payload["parsed"]["expanded_skills"] == [
-            "ship-check-repo",
-            "ship-check-hygiene",
+            "release-check-repo",
+            "release-check-hygiene",
             "check-security-holes",
-            "ship-release-verdict",
+            "release-verdict",
             "release-publish",
         ],
         "workflow expansion mismatch",
@@ -547,22 +542,12 @@ def check_release_publish_profile(proc: subprocess.CompletedProcess[str], payloa
 
 def check_generic_required_sections(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
     must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "check-delivered", "primary skill mismatch")
+    must(payload["response_profile"]["primary_skill"] == "check-final-verify", "primary skill mismatch")
     must(payload["response_profile"]["profile_id"] == "self_verify_report", "profile mismatch")
     must(
         payload["response_profile"]["required_sections"]
         == ["결과", "막힌 것 또는 수정 필요 항목", "검증 근거", "남은 위험", "다음에 할 것(필요 시)"],
         "required sections parsing mismatch",
-    )
-
-
-def check_respond_canonical_policy(proc: subprocess.CompletedProcess[str], payload: dict) -> None:
-    must(proc.returncode == 0, f"expected success, got {proc.returncode}")
-    must(payload["response_profile"]["primary_skill"] == "respond", "primary skill mismatch")
-    policies = payload["program"]["policy"]
-    must(
-        "response-contract{plain-korean,feynman-clear,actionable,core-first,short-sentences,plain-words,concrete-details}" in policies,
-        "respond should use canonical concrete-details response-contract policy",
     )
 
 
@@ -674,11 +659,11 @@ def main() -> int:
         Case("information-architecture-profile", "$plan-screen-map", True, check_information_architecture_profile),
         Case("spec-profile", "$plan-what-it-does", True, check_spec_profile),
         Case("technical-design-doc-profile", "$plan-how-to-build", True, check_technical_design_doc_profile),
-        Case("release-repo-check-profile", "$ship-check-repo", True, check_release_repo_check_profile),
-        Case("release-readiness-profile", "$ship-release-verdict", True, check_release_readiness_profile),
+        Case("release-repo-check-profile", "$release-check-repo", True, check_release_repo_check_profile),
+        Case("release-readiness-profile", "$release-verdict", True, check_release_readiness_profile),
         Case("workflow-security-preflight", "$workflow-security-preflight", True, check_wf_security_preflight),
-        Case("workflow-ship-ready-check", "$workflow-ship-ready-check", True, check_wf_release_review),
-        Case("workflow-ship-it", "$workflow-ship-it", True, check_wf_release_ship),
+        Case("workflow-release-ready-check", "$workflow-release-ready-check", True, check_wf_release_review),
+        Case("workflow-release-publish", "$workflow-release-publish", True, check_wf_release_ship),
         Case("release-publish-profile", "$release-publish", True, check_release_publish_profile),
         Case("unknown-skill-hint", "$composer + $scout-structure-map", False, check_unknown_skill_hint),
         Case(
@@ -697,7 +682,7 @@ def main() -> int:
         ),
         Case(
             "skill-json-backed-workflow-expansion",
-            "$compose + $workflow-plan-build-ready + $check-delivered",
+            "$compose + $workflow-plan-build-ready + $check-final-verify",
             True,
             check_skill_json_backed_workflow,
             run_parser_with_skill_json_backed_workflow,
@@ -707,37 +692,36 @@ def main() -> int:
         Case("workflow-ask-get-clear", "$workflow-ask-get-clear", True, check_wf_question_map),
         Case(
             "plan-sync-tasks-implement-profile",
-            "$plan-sync-tasks $build-write-code $check-delivered docs/IMPLEMENTATION-PLAN.md docs/TASKS.md",
+            "$plan-sync-tasks $build-write-code $check-final-verify docs/IMPLEMENTATION-PLAN.md docs/TASKS.md",
             True,
             check_plan_driven_delivery_implement_profile,
         ),
         Case(
             "build-until-done-loop-profile",
-            "$compose + $build-until-done + $plan-sync-tasks + $build-write-code + $check-delivered @docs/IMPLEMENTATION-PLAN.md @docs/TASKS.md [Keep executing the task ledger until every required row is done.]",
+            "$compose + $build-until-done + $plan-sync-tasks + $build-write-code + $check-final-verify @docs/IMPLEMENTATION-PLAN.md @docs/TASKS.md [Keep executing the task ledger until every required row is done.]",
             True,
             check_build_until_done_loop_profile,
         ),
         Case(
             "build-until-done-custom-plan-names",
-            "$compose + $build-until-done + $plan-sync-tasks + $build-write-code + $check-delivered @docs/05_IMPLEMENTATION_MASTER_PLAN.md @docs/06_TASKS_BACKLOG.md [Keep executing the task ledger until every required row is done.]",
+            "$compose + $build-until-done + $plan-sync-tasks + $build-write-code + $check-final-verify @docs/05_IMPLEMENTATION_MASTER_PLAN.md @docs/06_TASKS_BACKLOG.md [Keep executing the task ledger until every required row is done.]",
             True,
             check_build_until_done_custom_plan_names,
         ),
         Case(
             "finish-until-done-loop-profile",
-            "$compose + $finish-until-done + $doc-write + $check-delivered @docs [Keep iterating until the guide is beginner-readable and every critical issue is resolved.]",
+            "$compose + $finish-until-done + $doc-write + $check-final-verify @docs [Keep iterating until the guide is beginner-readable and every critical issue is resolved.]",
             True,
             check_finish_until_done_loop_profile,
         ),
         Case("tidy-cut-fat-direct-profile", "$tidy-cut-fat", True, check_tidy_cut_fat_direct_profile),
         Case("tidy-reorganize-direct-profile", "$tidy-reorganize", True, check_tidy_reorganize_direct_profile),
-        Case("simplifier-profile", "$compose $tidy-cut-fat $check-delivered", True, check_simplifier_profile),
+        Case("simplifier-profile", "$compose $tidy-cut-fat $check-final-verify", True, check_simplifier_profile),
         Case("curate-docs-profile", "$compose $doc-curate @docs", True, check_curate_docs_profile),
-        Case("generic-required-sections", "$check-delivered", True, check_generic_required_sections),
-        Case("respond-canonical-policy", "$respond", True, check_respond_canonical_policy),
+        Case("generic-required-sections", "$check-final-verify", True, check_generic_required_sections),
         Case("removed-entry-syntax", "$phase:check-merge-ready", False, check_removed_entry_syntax),
         Case("docs-scope-tail", "$build-write-code docs/IMPLEMENTATION-PLAN.md docs/TASKS.md 그리고 계속 진행", True, check_docs_scope_tail),
-        Case("bracket-prompt-and-docs", "$compose $scout-structure-map $scout-scope $check-delivered [skills 폴더 구조 분석] @docs/IMPLEMENTATION-PLAN.md", True, check_bracket_prompt_and_docs),
+        Case("bracket-prompt-and-docs", "$compose $scout-structure-map $scout-scope $check-final-verify [skills 폴더 구조 분석] @docs/IMPLEMENTATION-PLAN.md", True, check_bracket_prompt_and_docs),
         Case("nested-bracket-and-escape", "$compose $scout-structure-map [[A\\+B] \\[raw\\]] @docs/TASKS.md", True, check_nested_bracket_and_escape),
         Case("at-folder-and-custom-prompt", "$compose $tidy-cut-fat @src [구조 단순화]", True, check_at_folder_and_custom_prompt),
         Case("simplifier-implement-combo", "$compose $tidy-cut-fat @src [바로 수정] $build-write-code", True, check_simplifier_implement_combo),

@@ -2,7 +2,6 @@
   "name": "tidy-find-magic-numbers",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "review_findings",
   "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]",
   "required_inputs": [
     {

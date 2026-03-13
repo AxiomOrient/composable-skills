@@ -21,7 +21,7 @@ Does the question avoid smuggling in a preferred conclusion?
 Would the answer change understanding, action, or prioritization?
 
 ## Hard fail conditions
-Any of the following should fail the pack:
+Any of the following should fail the question set:
 - conclusion baked into the question,
 - topic still too broad,
 - answer could be generic essay filler,

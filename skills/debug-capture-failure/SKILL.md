@@ -13,6 +13,9 @@ Convert a reported failure into concrete reproduction steps and explicit missing
 [stages: preflight>detect>analyze>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman` because it keeps the work aligned with: Reproduce first, use disprovable hypotheses, and explain the result plainly.
+
 ## Use When
 - Need a stable repro recipe before deeper debugging.
 - Need to turn a vague failure report into actionable reproduction steps.
@@ -56,6 +59,18 @@ Convert a reported failure into concrete reproduction steps and explicit missing
 - Capture reproduction without claiming root cause.
 - Separate missing repro data from debugging hypotheses.
 - Do not invent stable repro steps when evidence is incomplete.
+
+## Response Format
+
+State repro status first: STABLE / PARTIAL / MISSING.
+
+Show the repro recipe as numbered steps:
+1. [step] — expected signal: [what proves it triggered]
+
+List missing repro inputs explicitly:
+- [what is missing] — why it blocks a stable repro
+
+Ask: "Can you run these steps? Missing [most critical input]?"
 
 ## Execution Constraints
 - Do not jump to fix advice from this skill.

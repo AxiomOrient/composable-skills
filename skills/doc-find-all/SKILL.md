@@ -13,6 +13,9 @@ Create an evidence-backed documentation inventory before curation or refresh wor
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: nielsen-norman | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+
 ## Use When
 - Need to know which docs are active, stale, duplicate, or orphaned.
 - Need a bounded documentation inventory before curation — run this before doc-curate.
@@ -54,6 +57,17 @@ Create an evidence-backed documentation inventory before curation or refresh wor
 - Read docs before classifying them stale or duplicate.
 - Keep delete or archive conclusions tentative until evidence is explicit.
 - Separate navigation problems from content-quality problems.
+
+## Response Format
+
+Show the inventory as a compact list:
+- file — status (active/stale/orphaned/duplicate) — reason
+
+List the highest-value curation targets next: file — why now.
+
+Flag gaps: "Didn't check: [paths or areas outside scope]"
+
+Ask: "Want to curate [top target] first, or need to widen the inventory scope?"
 
 ## Execution Constraints
 - Do not rewrite docs from this skill; inventory only.

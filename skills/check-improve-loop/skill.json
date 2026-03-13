@@ -2,7 +2,6 @@
   "name": "check-improve-loop",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "analysis_report",
   "default_program": "[stages: preflight>detect>analyze>review>reflect>plan>handoff>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
   "required_inputs": [
     {

@@ -13,6 +13,9 @@ Compose repro capture, failure-surface reduction, debugging, and test-gap awaren
 [stages: preflight>detect>analyze>implement>verify>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: feynman | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman` because it keeps the work aligned with: Reproduce first, use disprovable hypotheses, and explain the result plainly.
+
 ## Use When
 - Need a bounded debug loop for a concrete failure.
 - Need to capture the repro and reduce failure surface before root-cause work.
@@ -60,6 +63,21 @@ Compose repro capture, failure-surface reduction, debugging, and test-gap awaren
 - Do not collapse mapped surface, root cause, and regression gaps into one blob report.
 - If reproduction or evidence is incomplete, keep the debug result inconclusive instead of overstating confidence.
 - Preserve the explicit expanded workflow path in the final output.
+
+## Response Format
+
+Lead with root cause in one line — or "inconclusive: [candidates]" if not yet confirmed.
+
+```
+Cause: [what broke and why]
+Evidence: [specific trace, log line, or test]
+Fix: `file:line` — [change made]
+```
+
+Regression gap (if any): [test to add]
+
+On inconclusive: "Narrowed to [N] candidates — cheapest next check: [X]. Run it?"
+On step failure: "Stuck at [step] — [what's needed to continue]"
 
 ## Mandatory Rules
 - Preserve the separation between mapped surface and confirmed cause.

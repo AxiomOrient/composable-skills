@@ -17,6 +17,9 @@ Write feature specifications that make required behavior, non-requirements, acce
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `minto-pyramid` because it keeps the work aligned with: Lead with the answer, group supporting points logically, and make scope and evidence hierarchy explicit.
+
 ## Use When
 - Need a build-ready feature or flow specification.
 - Need explicit functional requirements, non-requirements, and acceptance scenarios.
@@ -68,6 +71,18 @@ Write feature specifications that make required behavior, non-requirements, acce
 - Mark unresolved spec edges explicitly.
 - Keep every requirement implementable and testable.
 - Do not imply architecture, IA, or rollout decisions unless the input evidence makes them explicit.
+
+## Response Format
+
+Lead with the spec summary in one sentence: scope, core outcome, key constraint.
+
+Show the requirement list: FR-N | behavior | why it matters.
+
+List edge cases and the expected behavior for each.
+
+Flag any open edges: "FR-[N] cannot be specified yet — need: [what info]"
+
+Ask: "Does [most ambiguous requirement] have an expected behavior, or should it stay as an open edge?"
 
 ## Execution Constraints
 - Do not write technical solution design or navigation structure from this skill; keep the document centered on feature behavior and acceptance boundaries.

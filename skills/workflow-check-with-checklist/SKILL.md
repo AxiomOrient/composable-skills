@@ -13,6 +13,9 @@ Compose narrow review scans and the full quality checklist into one explicit pro
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests,security,perf,compat,style},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
+
 ## Use When
 - Need both explicit narrow review scans and the full 9-item checklist.
 - Need a named workflow instead of repeatedly typing `$workflow-check-full-review + $check-quality-scan`.
@@ -55,6 +58,20 @@ Compose narrow review scans and the full quality checklist into one explicit pro
 - Do not use this workflow as a shortcut for implementation or release rollout judgement.
 - If checklist coverage cannot be completed, keep that gap explicit in CHECKLIST_TABLE or accompanying notes.
 - Preserve the named combination of narrow review plus checklist instead of hiding one side.
+
+## Response Format
+
+Lead with verdict: **INTEGRATE** or **HOLD**.
+
+Checklist summary (9 items):
+| # | Item | pass / risk / unknown | Key evidence |
+
+P0/P1 findings that block merge:
+- P0 `file:line` — [issue]
+- Risk item #N — [finding] → [required action]
+
+On HOLD: "Fix [top finding] first — or want all risk items listed?"
+On step failure: name the step and ask what blocked it.
 
 ## Mandatory Rules
 - Keep the base review workflow narrow and the checklist workflow explicit.

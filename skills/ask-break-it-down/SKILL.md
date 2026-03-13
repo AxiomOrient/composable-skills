@@ -13,6 +13,9 @@ Turn one broad problem statement into a small, prioritized stack of askable subq
 [stages: preflight>detect>analyze>plan>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need to split one large question into smaller askable units.
 - Need to separate business, technical, and user layers instead of mixing them.
@@ -46,8 +49,8 @@ Turn one broad problem statement into a small, prioritized stack of askable subq
 - DATA_CONTROL_VIEW should make the flow or control boundary more concrete, not more abstract.
 
 ## Primary Lens
-- `primary_lens`: `hickey-carmack`
-- `why`: Question scaffolding should expose the core invariant, split layers cleanly, and choose the smallest explicit question stack that preserves the real decision.
+- `primary_lens`: `eisenhower`
+- `why`: Breaking one question into a prioritized stack requires separating what must be answered first (critical path) from what can wait, and pushing nice-to-have sub-questions out of the main layer so the core question stays reachable.
 
 ## Artifacts
 - `artifacts_in`: ask-form-question.v1
@@ -62,6 +65,17 @@ Turn one broad problem statement into a small, prioritized stack of askable subq
 - Separate business purpose, technical implementation, and user experience when the prompt mixes them.
 - Use Hickey-Carmack style data-first and explicit-control framing to remove hidden complexity.
 - Keep the stack minimal and focused on the core question.
+
+## Response Format
+
+State the CORE_QUESTION first, one sentence.
+
+Then show the question stack:
+- Layer | Question | Priority
+
+Follow with the DATA_CONTROL_VIEW in one short paragraph.
+
+Close with: "Start with [CORE_QUESTION], or want to reframe a different layer first?"
 
 ## Mandatory Rules
 - Return 3 to 5 QUESTION_LAYERS items total.

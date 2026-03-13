@@ -23,14 +23,7 @@ generated catalog, generated guides, registry materialization은 더 이상 runt
 - public entry surface는 작게 유지한다.
 - analysis/review 계열은 evidence-first로 간다.
 
-## No Pack Layer
-
-새 runtime layer로 `pack`은 두지 않는다.
-도메인 설명이 더 필요하면 README나 skill metadata를 정리한다.
-
 ## Validation
 
 - `scripts/skills.py validate`
-- `scripts/validate.sh`
-
-이 두 경로가 direct metadata 기반 구조를 검증한다.
+이 경로가 direct metadata 기반 구조를 검증한다.

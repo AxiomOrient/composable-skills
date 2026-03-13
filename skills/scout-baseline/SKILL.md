@@ -13,6 +13,9 @@ Prevent measurement-free optimization by locking metric, budget, and baseline fi
 [stages: preflight>detect>analyze>verify>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,perf-aware,deterministic-output | lens: goldratt-toc | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `goldratt-toc` because it keeps the work aligned with: Find the system constraint and optimize end-to-end throughput.
+
 ## Use When
 - Need to capture a performance baseline before optimization.
 - Need a metric definition and budget for perf work.
@@ -56,6 +59,18 @@ Prevent measurement-free optimization by locking metric, budget, and baseline fi
 - Keep metric definition and baseline separate from optimization ideas.
 - Mark noisy or unstable baseline measurements explicitly.
 - Do not compare incompatible metrics or environments.
+
+## Response Format
+
+Show the baseline as one line: [metric] = [value] [unit] — method: [how captured] — environment: [where]
+
+State the performance budget: [target] — basis: [where this number came from or "provisional"]
+
+Flag noise: "Baseline is unstable — variance [N]% — not safe for comparison yet."
+
+Didn't check: [anything outside the stated metric or measurement path].
+
+Ask: "Budget looks right? Want to lock this and move to optimization?"
 
 ## Execution Constraints
 - Do not turn this skill into optimization planning or code change work.

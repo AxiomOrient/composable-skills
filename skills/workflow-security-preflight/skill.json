@@ -2,7 +2,6 @@
   "name": "workflow-security-preflight",
   "layer": "workflow",
   "layer_badge": "Workflow",
-  "response_profile": "security_report",
   "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: diff|repo|paths(glob,...) | policy: evidence,safety-gates,quality-gates{security,git,hygiene},deterministic-output | lens: nist-rmf | output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -48,7 +47,7 @@
     }
   ],
   "display_name": "Workflow / Security Preflight",
-  "browse_category": "ship",
+  "browse_category": "security",
   "browse_priority": 15,
   "is_category_default": false,
   "codex_surface": "public_entry",

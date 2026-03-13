@@ -2,7 +2,6 @@
   "name": "plan-sync-tasks",
   "layer": "utility",
   "layer_badge": "Utility",
-  "response_profile": "implementation_delta",
   "default_program": "[stages: preflight>detect>plan>review>audit |\n scope: paths(plans/IMPLEMENTATION-PLAN.md,plans/TASKS.md) |\n policy: evidence,correctness-first,quality-gates{tests,docs,security},safety-gates,approval-gates{explicit,no-fallback},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
   "required_inputs": [
     {

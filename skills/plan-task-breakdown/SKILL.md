@@ -17,6 +17,9 @@ Create execution-ready plan and task artifacts with stable task ids and explicit
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `eisenhower` because it keeps the work aligned with: Prioritize by urgency and importance while keeping the critical path explicit.
+
 ## Use When
 - Need implementation-ready plan and task documents.
 - Need execution phases, decision gates, and verification strategy before coding.
@@ -72,6 +75,18 @@ Create execution-ready plan and task artifacts with stable task ids and explicit
 - Separate explicit requirements from planning assumptions.
 - If scope or done condition is unresolved, keep it as an open edge instead of guessing.
 - Keep task breakdown bounded to the stated goal and constraints.
+
+## Response Format
+
+Show the key decisions made in the plan:
+- Critical path: [first task → ... → final task]
+- Decision gates: [gate name] — passes when: [condition]
+
+List task rows as a compact table: TASK-ID | action | done when | depends on.
+
+Flag any open edges: "Scope of [task] is still unresolved — need: [what info]"
+
+Ask about the one decision that most affects the critical path if any remains open.
 
 ## Execution Constraints
 - Do not implement code or issue review verdicts from this skill; planning artifacts only.

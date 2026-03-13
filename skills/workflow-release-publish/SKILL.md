@@ -1,9 +1,9 @@
 ---
-name: workflow-ship-it
+name: workflow-release-publish
 description: "Workflow skill that runs repository checks, release hygiene, release readiness, and then the release-only commit/tag/publish flow as one explicit control workflow. Use when the user wants release preparation and publication without manually chaining review and publish skills."
 ---
 
-# Workflow / Ship It
+# Workflow / Release Publish
 
 ## Purpose
 
@@ -15,16 +15,19 @@ Compose repository prechecks, release hygiene, security preflight, release judge
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo | policy: evidence,safety-gates,quality-gates{docs,release,tests,security},approval-gates{explicit,no-fallback},deterministic-output | lens: release-gatekeeper | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `release-gatekeeper` because it keeps the work aligned with: Treat release as a sequence of explicit gates and judge only the gate in scope with concrete evidence.
+
 ## Use When
 
-- Need one explicit release control flow instead of manually chaining `workflow-ship-ready-check` and `release-publish`.
+- Need one explicit release control flow instead of manually chaining `workflow-release-ready-check` and `release-publish`.
 - Need repo checks, hygiene gates, release-only commit policy, tag creation, and publish status handled as one explicit flow.
 - Need security preflight to run before the release decision and publication steps.
 - Need `TARGET_BRANCHES` to be the single branch source of truth for both review and publish phases.
 
 ## Do Not Use When
 
-- Need only release judgement without any branch or tag mutation; use `workflow-ship-ready-check` instead.
+- Need only release judgement without any branch or tag mutation; use `workflow-release-ready-check` instead.
 - Need only low-level publish execution after some other gate system already ran; use `release-publish` instead.
 - Cannot tolerate branch, tag, or remote mutation in the current run.
 
@@ -75,7 +78,7 @@ Compose repository prechecks, release hygiene, security preflight, release judge
 ## Artifacts
 
 - `artifacts_in`: none
-- `artifacts_out`: release-ship-report.v1
+- `artifacts_out`: release-publish-workflow-report.v1
 
 ## Neutrality Rules
 
@@ -90,6 +93,21 @@ Compose repository prechecks, release hygiene, security preflight, release judge
 - If repo, hygiene, or readiness gates block the release, stop before mutating branches, tags, remotes, or release hosts.
 - If docs or public-surface cleanup is part of the release contract, keep publication blocked until those checks pass.
 
+## Response Format
+
+Show per-step outcome (step → result):
+- release-check-repo → READY / BLOCKED
+- release-check-hygiene → doc gate + surface sync
+- workflow-security-preflight → PASS / BLOCKED
+- release-verdict → GO / NO-GO / BLOCKED
+- release-publish → PUBLISHED / PREPARED / BLOCKED
+
+Lead with release status: PUBLISHED / PREPARED / BLOCKED.
+
+Show tag and commit refs. List any blockers with what unblocks them.
+
+Ask for confirmation before any branch or tag mutation that has not yet occurred.
+
 ## Mandatory Rules
 
 - Use `TARGET_BRANCHES` as the single branch source of truth for both review and publish stages.
@@ -98,16 +116,16 @@ Compose repository prechecks, release hygiene, security preflight, release judge
 
 ## Expansion
 
-- `$ship-check-repo`
-- `$ship-check-hygiene`
+- `$release-check-repo`
+- `$release-check-hygiene`
 - `$workflow-security-preflight`
-- `$ship-release-verdict`
+- `$release-verdict`
 - `$release-publish`
 
 ## Example Invocation
 
 ```text
-$compose + $workflow-ship-it + $check-final-verify
+$compose + $workflow-release-publish + $check-final-verify
 
 TARGET_BRANCHES:
   - {BRANCH: codex/dev, ROLE: source}

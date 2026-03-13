@@ -13,6 +13,9 @@ Parse explicit skill macros into one deterministic execution program without add
 [orchestration-only]
 ```
 
+## Lens Rationale
+Compose does not impose a domain lens of its own; it exists to preserve explicit lens selection, show where the final lens came from, and avoid hidden reasoning during orchestration.
+
 ## Use When
 - Need to normalize a multi-skill macro into one deterministic execution plan.
 - Need workflow expansion from direct per-skill metadata.
@@ -72,12 +75,21 @@ Parse explicit skill macros into one deterministic execution program without add
 - Collapse duplicate skills only after workflow expansion and report the collapse as a warning.
 - If two or more explicit skills remain in the macro, final response profile resolves to the generic composite profile.
 
+## Response Format
+
+Show the expanded skill chain in execution order:
+1. [skill-name] — [role in the chain]
+2. ...
+
+Flag any structural warnings or missing required inputs.
+
+Ask: "Does this chain look right before I execute?"
+
 ## Mandatory Rules
 - Require MACRO_EXPRESSION.
 - Prefer canonical workflow-* workflow names in new macros.
 
 ## Required References
-- `../_meta/response_profiles.json`
 - `../_meta/lenses.json`
 
 ## Example Invocation

@@ -1,9 +1,9 @@
 ---
-name: ship-commit
+name: commit-write-message
 description: "Use when generating Conventional Commit message candidates from an existing diff or change summary. Do not use when implementation, debugging, or review analysis is requested."
 ---
 
-# Ship / Commit
+# Commit / Write Message
 
 ## Purpose
 Generate precise Conventional Commit proposals from an existing diff or structured change summary.
@@ -16,6 +16,9 @@ Generate precise Conventional Commit proposals from an existing diff or structur
  lens: minto-pyramid |
  output: md(contract=v1)]
 ```
+
+## Lens Rationale
+This skill uses `minto-pyramid` because it keeps the work aligned with: Lead with the answer, group supporting points logically, and make scope and evidence hierarchy explicit.
 
 ## Use When
 - Need commit message candidates after the implementation is already done.
@@ -60,6 +63,19 @@ Generate precise Conventional Commit proposals from an existing diff or structur
 - Infer commit type from the diff, not from wishful framing.
 - If type or scope is ambiguous, surface alternatives explicitly.
 - Do not invent breaking-change claims without evidence.
+
+## Response Format
+
+Show the top candidate first, nothing else before it:
+
+```
+[type]([scope]): [concise description]
+```
+
+Then list alternatives with rationale:
+- [message] — why: [when this framing fits better]
+
+Show BREAKING CHANGE footer only when evidence supports it.
 
 ## Execution Constraints
 - Do not perform git mutations from this skill; message generation only.

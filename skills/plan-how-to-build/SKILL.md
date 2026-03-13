@@ -17,6 +17,9 @@ Translate approved product and feature intent into a buildable technical design 
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need a technical design before implementation starts.
 - Need to make component boundaries, data flow, and trade-offs explicit.
@@ -63,6 +66,18 @@ Translate approved product and feature intent into a buildable technical design 
 ## Artifacts
 - `artifacts_in`: plan-why-build-this.v1, spec-contract.v1, ia-map.v1
 - `artifacts_out`: plan-how-to-build.v1
+
+## Response Format
+
+Lead with the design summary in one sentence: what gets built and its central trade-off.
+
+Show key decisions made:
+- [decision] → [chosen option] — costs: [what was given up]
+
+Flag open decisions that need input before implementation can start:
+- Open: [decision] — options: [A vs B] — need: [what info resolves it]
+
+Ask about the one most critical open decision if any remain.
 
 ## Neutrality Rules
 - Separate upstream requirements from the chosen solution mechanism.

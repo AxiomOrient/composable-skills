@@ -2,7 +2,6 @@
   "name": "check-security-holes",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "security_report",
   "default_program": "[stages: preflight>detect>analyze>plan>verify>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,safety-gates,quality-gates{security,tests},deterministic-output |\n lens: nist-rmf |\n output: md(contract=v1)]",
   "required_inputs": [
     {

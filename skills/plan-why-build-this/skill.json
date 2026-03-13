@@ -2,7 +2,6 @@
   "name": "plan-why-build-this",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "brief_contract",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: christensen-jtbd |\n output: md(contract=v1)]",
   "required_inputs": [
     {

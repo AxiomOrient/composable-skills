@@ -2,7 +2,6 @@
   "name": "test-run-user-scenarios",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "analysis_report",
   "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo|paths(glob,...) |\n policy: evidence,deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
   "required_inputs": [
     {

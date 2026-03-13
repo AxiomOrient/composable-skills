@@ -16,6 +16,9 @@ Reproduce a concrete failure, confirm root cause, and isolate the minimal fix pa
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `feynman` because it keeps the work aligned with: Reproduce first, use disprovable hypotheses, and explain the result plainly.
+
 ## Use When
 - A concrete failure exists and reproducible RCA is required.
 - Need to move from symptom to confirmed cause and minimal fix direction.
@@ -63,6 +66,19 @@ Reproduce a concrete failure, confirm root cause, and isolate the minimal fix pa
 - Do not assume the first plausible cause is the root cause.
 - If reproduction is missing, say repro-missing rather than guessing the fix.
 - Separate symptom, cause hypothesis, and confirmed cause.
+
+## Response Format
+
+Lead with root cause in one line — or "inconclusive" if not yet confirmed.
+
+Then show:
+- Cause: [what is broken and why]
+- Evidence: [specific trace, log line, or test that confirms it]
+- Fix applied: [the minimal change made]
+
+List any regression guards added or recommended.
+
+Ask: "Reproduced the fix? Want regression test added?"
 
 ## Execution Constraints
 - Do not claim a confirmed cause until the observed evidence discriminates it from plausible alternatives.

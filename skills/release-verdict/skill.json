@@ -1,8 +1,7 @@
 {
-  "name": "ship-release-verdict",
+  "name": "release-verdict",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "release_decision",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: diff|repo |\n policy: evidence,safety-gates,quality-gates{compat,docs,security,tests},deterministic-output |\n lens: release-gatekeeper |\n output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -31,8 +30,8 @@
       "description": "Known tests, docs, approval, compatibility, or security signals."
     }
   ],
-  "display_name": "Ship / Release Verdict",
-  "browse_category": "ship",
+  "display_name": "Release / Verdict",
+  "browse_category": "release",
   "browse_priority": 50,
   "is_category_default": false,
   "codex_surface": "expert",

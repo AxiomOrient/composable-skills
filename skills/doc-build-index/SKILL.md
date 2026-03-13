@@ -17,6 +17,9 @@ Build hierarchical analysis docs and index files from folders, modules, librarie
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `nielsen-norman` because it keeps the work aligned with: Usability-first decisions based on explicit heuristics, scanning behavior, and information scent.
+
 ## Use When
 - Need per-folder, per-module, per-library, or per-paper explanation docs.
 - Need local README or index files that link analysis docs together.
@@ -72,6 +75,17 @@ Build hierarchical analysis docs and index files from folders, modules, librarie
 - Do not modify the repo root README from this skill.
 - Prefer a stable hierarchy: analysis doc -> local index -> guide index.
 - Define technical terms in plain words before using shorthand or specialist jargon when AUDIENCE_LEVEL is general or omitted.
+
+## Response Format
+
+List what was written, grouped by level:
+- Analysis docs: file:section — target — form (guide/reference/paper-summary)
+- Local indexes: file — covers
+- Guide index: file — aggregates
+
+Flag coverage gaps: "Couldn't verify: [target] — missing: [source]"
+
+Ask: "Want to go deeper on [most complex or under-documented target]?"
 
 ## Mandatory Rules
 - Keep every index file linked to the analysis docs it summarizes.

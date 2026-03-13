@@ -2,7 +2,6 @@
   "name": "gemini",
   "layer": "utility",
   "layer_badge": "Utility",
-  "response_profile": "external_verification",
   "default_program": "[stages: preflight>detect>analyze>verify>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,safety-gates,deterministic-output |\n lens: feynman |\n output: md(contract=v1)]",
   "required_inputs": [
     {

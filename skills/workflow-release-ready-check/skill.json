@@ -1,8 +1,7 @@
 {
-  "name": "workflow-ship-ready-check",
+  "name": "workflow-release-ready-check",
   "layer": "workflow",
   "layer_badge": "Workflow",
-  "response_profile": "release_decision",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff | policy: evidence,safety-gates,quality-gates{docs,release,tests,security},deterministic-output | lens: release-gatekeeper | output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -86,8 +85,8 @@
       "description": "Public-surface contracts such as registry/docs parity or root README ownership."
     }
   ],
-  "display_name": "Workflow / Ship Ready Check",
-  "browse_category": "ship",
+  "display_name": "Workflow / Release Ready Check",
+  "browse_category": "release",
   "browse_priority": 10,
   "is_category_default": true,
   "codex_surface": "public_entry",
@@ -119,9 +118,9 @@
     }
   ],
   "expands_to": [
-    "$ship-check-repo",
-    "$ship-check-hygiene",
+    "$release-check-repo",
+    "$release-check-hygiene",
     "$workflow-security-preflight",
-    "$ship-release-verdict"
+    "$release-verdict"
   ]
 }

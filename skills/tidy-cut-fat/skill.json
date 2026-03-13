@@ -2,7 +2,6 @@
   "name": "tidy-cut-fat",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "planning_doc",
   "default_program": "[stages: preflight>detect>analyze>plan>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,compat,style},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
   "required_inputs": [
     {

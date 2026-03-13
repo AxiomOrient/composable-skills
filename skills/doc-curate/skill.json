@@ -2,7 +2,6 @@
   "name": "doc-curate",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "documentation_report",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: nielsen-norman |\n output: md(contract=v1)]",
   "required_inputs": [
     {

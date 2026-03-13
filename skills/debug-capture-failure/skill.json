@@ -2,7 +2,6 @@
   "name": "debug-capture-failure",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "analysis_report",
   "default_program": "[stages: preflight>detect>analyze>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]",
   "required_inputs": [
     {

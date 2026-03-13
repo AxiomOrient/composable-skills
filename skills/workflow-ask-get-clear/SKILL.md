@@ -13,6 +13,9 @@ Compose question clarification and scaffolding into one reusable question-design
 [stages: preflight>detect>analyze>plan>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: inversion-focus | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `inversion-focus` because it keeps the work aligned with: Reduce cognitive load, define by exclusions and one dominant constraint, then state the problem plainly.
+
 ## Use When
 - Need a clear problem statement and question stack in one pass.
 - Need a reusable workflow entrypoint before deeper challenge or answer work.
@@ -54,6 +57,18 @@ Compose question clarification and scaffolding into one reusable question-design
 ## Execution Constraints
 - Prefer one usable problem statement over multiple half-bounded prompts.
 - Keep the stack focused on the core decision the audience actually needs.
+
+## Response Format
+
+Output the result directly — no preamble, no chain commentary.
+
+**CORE_QUESTION:** [one sentence, plain language]
+
+If a question stack was produced, show it:
+1. [most important] — why this matters
+2. [next]
+
+If a step failed, say which and ask: "Want to try a different angle?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

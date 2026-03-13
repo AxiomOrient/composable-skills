@@ -2,7 +2,6 @@
   "name": "plan-verify-order",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "planning_doc",
   "default_program": "[stages: preflight>detect>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{tests},deterministic-output | lens: kent-beck | output: md(contract=v1)]",
   "required_inputs": [
     {

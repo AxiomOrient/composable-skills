@@ -2,7 +2,6 @@
   "name": "scout-scope",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "clarify_question",
   "default_program": "[stages: preflight>detect>analyze>plan>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs},deterministic-output |\n lens: minto-pyramid |\n output: md(contract=v1)]",
   "required_inputs": [
     {

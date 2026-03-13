@@ -1,9 +1,9 @@
 ---
-name: ship-check-hygiene
+name: release-check-hygiene
 description: "Use when release readiness depends on legacy removal, document freshness, and public-surface sync. Do not use for branch mutation or rollout-risk judgement."
 ---
 
-# Ship / Check Hygiene
+# Release / Check Hygiene
 
 ## Purpose
 
@@ -19,6 +19,9 @@ Verify release hygiene gates such as required docs, stale or legacy surface remo
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `release-gatekeeper` because it keeps the work aligned with: Treat release as a sequence of explicit gates and judge only the gate in scope with concrete evidence.
+
 ## Use When
 
 - Need to confirm required release docs are upgraded and delivery-only implementation docs are removed before shipping.
@@ -27,8 +30,8 @@ Verify release hygiene gates such as required docs, stale or legacy surface remo
 
 ## Do Not Use When
 
-- Need git branch, tag, or remote state only; use ship-check-repo instead.
-- Need rollout risk or rollback judgement; use ship-release-verdict instead.
+- Need git branch, tag, or remote state only; use release-check-repo instead.
+- Need rollout risk or rollback judgement; use release-verdict instead.
 - Need to rewrite docs directly; use doc-write, doc-curate, or doc-publish-readme instead.
 
 ## Required Inputs
@@ -75,6 +78,19 @@ Verify release hygiene gates such as required docs, stale or legacy surface remo
 - Do not invent hygiene blockers when docs and public surface evidence is clean.
 - Treat missing release docs or stale public references as release risk, not as optional polish.
 - Keep release-blocking hygiene issues separate from non-blocking cleanup ideas.
+
+## Response Format
+
+Show gate status up front:
+- Doc gate: PASS / BLOCKED / INCONCLUSIVE
+- Surface sync: PASS / BLOCKED / INCONCLUSIVE
+
+List hygiene findings that block release:
+- [issue] — file or path — blocks release: yes/no
+
+Show required cleanup actions: [action] — [why]
+
+If clean: "Docs and public surface are ready — no required cleanup found."
 
 ## Execution Constraints
 

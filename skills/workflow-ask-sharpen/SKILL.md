@@ -13,6 +13,9 @@ Compose the core question-design path into one explicit ready-to-ask workflow.
 [stages: preflight>detect>analyze>plan>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: popper-falsification | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `popper-falsification` because it keeps the work aligned with: Prefer questions that expose testable claims, disconfirming edges, and evidence burdens.
+
 ## Use When
 - Need a question that is ready to ask, not just a rough draft.
 - Need assumption-challenging reframing after the first question stack is built.
@@ -55,6 +58,18 @@ Compose the core question-design path into one explicit ready-to-ask workflow.
 ## Execution Constraints
 - Keep the final question set short enough that a user can ask it immediately.
 - Prefer challenge questions that materially change the answer over stylistic rewording.
+
+## Response Format
+
+Output the sharpened result directly — no chain detail, no preamble.
+
+**Sharpened:** [the reframed question in plain language]
+
+Challenge questions:
+1. [assumption reversal]
+2. [perspective shift that changes what "good answer" means]
+
+If any step failed, name it and ask: "Which constraint should we relax?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

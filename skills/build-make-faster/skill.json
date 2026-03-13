@@ -2,7 +2,6 @@
   "name": "build-make-faster",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "performance_report",
   "default_program": "[stages: preflight>detect>analyze>plan>implement>verify>review>reflect>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,correctness-first,quality-gates{tests,security},perf-aware,safety-gates,deterministic-output |\n lens: goldratt-toc |\n output: md(contract=v1)]",
   "required_inputs": [
     {

@@ -17,6 +17,9 @@ Synchronize planning artifacts, task lifecycle, and implementation evidence in o
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need execution governed by plans/IMPLEMENTATION-PLAN.md and plans/TASKS.md.
 - Need task selection and status changes tied to explicit TASK-ID rows.
@@ -70,6 +73,16 @@ Synchronize planning artifacts, task lifecycle, and implementation evidence in o
   - Emits the next actionable task id, task row, and derived verification map.
 - `scripts/task_ledger.py summary --tasks <tasks-path> [--plan <plan-path>]`
   - Emits open/done/blocked counts and the first open task in file order.
+
+## Response Format
+
+Show which task rows were updated:
+- TASK-ID | from: [status] → to: [status] | evidence: [what proved it]
+
+Flag any rows that couldn't be resolved:
+- TASK-ID — blocked: [why linkage failed or evidence was missing]
+
+State the overall sync status: synced / blocked / partial.
 
 ## Mandatory Rules
 - Do not create new project plans here; plan-task-breakdown owns plan creation.

@@ -2,7 +2,6 @@
   "name": "build-write-code",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "implementation_delta",
   "default_program": "[stages: preflight>detect>implement>verify>review>audit |\n scope: diff |\n policy: evidence,correctness-first,safety-gates,approval-gates{explicit,no-fallback},deterministic-output |\n lens: hickey-carmack |\n output: md(contract=v1)]",
   "required_inputs": [
     {

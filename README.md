@@ -42,7 +42,7 @@ If the target ends with `/skills`, the scripts normalize it back to the `.agents
 
 - Public entry surface: `workflow-*`
 - Expert building blocks: atomic skills
-- Internal control surface: `compose`, `respond`, `plan-sync-tasks`, `build-until-done`, `finish-until-done`, `release-publish`
+- Internal control surface: `compose`, `plan-sync-tasks`, `build-until-done`, `finish-until-done`, `release-publish`
 
 The runtime reads direct skill metadata from skill folders.
 It does not require `_registry`, `_core`, generated guides, a committed `catalog.json`, or a separate docs package.
@@ -55,5 +55,5 @@ It does not require `_registry`, `_core`, generated guides, a committed `catalog
 
 - Public entry skills use `workflow-*` only.
 - `compose` stays an internal control engine, not a default discovery target.
-- Every shipped skill keeps explicit inputs, outputs, neutrality rules, and response profile.
+- Every shipped skill keeps explicit inputs, outputs, neutrality rules, and deterministic output contracts.
 - Temporary implementation docs such as `plans/IMPLEMENTATION-PLAN.md` and `plans/TASKS.md` do not ship in release commits.

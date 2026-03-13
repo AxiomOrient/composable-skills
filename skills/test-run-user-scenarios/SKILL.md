@@ -17,6 +17,9 @@ Simulate real user and agent usage with concrete inputs and expected outputs, th
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
+
 ## Use When
 - Need to validate the framework against realistic use cases instead of only happy-path examples.
 - Need concrete user and agent scenarios with varied inputs, expected outputs, and observable pass/fail signals.
@@ -65,6 +68,18 @@ Simulate real user and agent usage with concrete inputs and expected outputs, th
 - Do not invent passing outcomes for scenarios that were not actually exercised.
 - Prefer plausible misuse and ambiguity over theatrical nonsense.
 - Separate framework confusion, skill-contract ambiguity, and parser/runtime failure.
+
+## Response Format
+
+Show the execution log with status per scenario:
+- [scenario] — role: [user type] — status: PASS / FAIL / UNCLEAR — [one line on what happened]
+
+Group usability findings below:
+- [issue] — location: [skill or surface] — why it confuses or breaks
+
+List next fixes with the smallest check after each fix.
+
+Ask: "Fix [most impactful usability finding] first, or run more scenarios?"
 
 ## Execution Constraints
 - Act as both caller and agent when constructing and exercising scenarios.

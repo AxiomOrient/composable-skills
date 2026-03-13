@@ -13,6 +13,9 @@ Compose test-gap review, test-case design, and guard writing into one default te
 [stages: preflight>detect>analyze>plan>implement>verify>handoff>audit | scope: diff|paths(glob,...) | policy: evidence,quality-gates{tests,security},deterministic-output | lens: kent-beck | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kent-beck` because it keeps the work aligned with: Small safe iterations with explicit Red-Green-Refactor rhythm.
+
 ## Use When
 - Need one default test entrypoint to close meaningful regression gaps.
 - Need missing-test analysis, case design, and guard writing in one path.
@@ -59,6 +62,19 @@ Compose test-gap review, test-case design, and guard writing into one default te
 ## Execution Constraints
 - Do not widen the workflow into a generic code review.
 - Prefer the smallest guard set that closes the meaningful regression gap.
+
+## Response Format
+
+Show per-step outcome (step → result):
+- test-find-gaps → missing scenarios list
+- test-design-cases → case matrix (happy / edge / failure)
+- test-write-guards → tests added + verification results
+
+On failure at any step: stop and ask what is blocking.
+
+On success: show added tests and any remaining gaps.
+
+Ask: "Cover [specific remaining gap] now?"
 
 ## Mandatory Rules
 - Expose the expanded atomic path explicitly.

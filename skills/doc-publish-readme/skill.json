@@ -2,7 +2,6 @@
   "name": "doc-publish-readme",
   "layer": "atomic",
   "layer_badge": "Atomic",
-  "response_profile": "documentation_report",
   "default_program": "[stages: preflight>detect>analyze>plan>review>handoff>audit |\n scope: repo |\n policy: evidence,quality-gates{docs,compat},deterministic-output |\n lens: feynman-teaching |\n output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -40,7 +39,7 @@
       "type": "list",
       "required": false,
       "shape": "{LANG}",
-      "description": "Languages to publish under docs/i18n/<lang>/. Default localized set is ko, es, zh when omitted."
+      "description": "Languages to publish under /i18n/<lang>/. Default localized set is ko, es, zh when omitted."
     },
     {
       "name": "SOURCE_DOCS",

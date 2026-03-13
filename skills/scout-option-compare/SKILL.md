@@ -13,6 +13,9 @@ Turn a decision question and explicit option set into a disciplined evidence-bac
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
+
 ## Use When
 - Need to compare explicit options before planning or implementation.
 - Need trade-offs, not just raw observations.
@@ -66,6 +69,19 @@ Turn a decision question and explicit option set into a disciplined evidence-bac
 - If the evidence surface is long, extract 3-7 anchor facts before comparing options and include at least one anchor from the middle when it matters.
 - Before the final recommendation, ask 2-4 verification questions that could overturn the leading option and rescan the evidence against them.
 - If the first pass omits a salient entity, constraint, or counter-signal already present in the anchors, rewrite once with higher density instead of adding length.
+
+## Response Format
+
+State the recommendation in one line — or "inconclusive" if evidence cannot discriminate.
+
+Show the trade-off comparison:
+- Option | Upside | Downside | Fit for stated constraints
+
+Follow with the cheapest next check if the recommendation is still uncertain.
+
+Didn't check: [anything explicitly out of scope].
+
+Ask: "Does [downside of recommended option] change the decision?"
 
 ## Mandatory Rules
 - Do not emit `RECOMMENDATION` until the anchor facts and verification pass either support it or force an explicit inconclusive result.

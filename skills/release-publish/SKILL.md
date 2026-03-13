@@ -1,6 +1,6 @@
 ---
 name: release-publish
-description: "Use when a validated change set must be cleaned up, merged into the release branch as a release-only commit, tagged, and optionally published as a GitHub release. Do not use for release-risk judgement only; use ship-release-verdict or workflow-ship-ready-check for GO/NO-GO analysis."
+description: "Use when a validated change set must be cleaned up, merged into the release branch as a release-only commit, tagged, and optionally published as a GitHub release. Do not use for release-risk judgement only; use release-verdict or workflow-release-ready-check for GO/NO-GO analysis."
 ---
 
 # Release / Publish
@@ -19,6 +19,9 @@ Execute release preparation and publication with explicit cleanup, branch, tag, 
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `release-gatekeeper` because it keeps the work aligned with: Treat release as a sequence of explicit gates and judge only the gate in scope with concrete evidence.
+
 ## Use When
 
 - Need to turn a validated dev branch into a release-only commit on the target branch.
@@ -28,8 +31,8 @@ Execute release preparation and publication with explicit cleanup, branch, tag, 
 
 ## Do Not Use When
 
-- Need only release safety or rollout judgement; use ship-release-verdict or workflow-ship-ready-check instead.
-- Need the default end-to-end release flow; use workflow-ship-it instead.
+- Need only release safety or rollout judgement; use release-verdict or workflow-release-ready-check instead.
+- Need the default end-to-end release flow; use workflow-release-publish instead.
 - Need normal implementation, debugging, or documentation authoring work.
 - Cannot tolerate branch, tag, or remote mutation in the current run.
 
@@ -52,7 +55,7 @@ Execute release preparation and publication with explicit cleanup, branch, tag, 
 - TARGET_BRANCH is usually main when the project policy requires release-only commits on the primary branch.
 - LEGACY_CLEANUP_SCOPE is for bounded release hygiene checks, not for open-ended product backlog cleanup.
 - Delivery-only planning docs such as `plans/IMPLEMENTATION-PLAN.md` and `plans/TASKS.md` should be listed in LEGACY_CLEANUP_SCOPE and removed before the final public tag unless they were explicitly promoted to public docs.
-- Release publication should start only after repository prechecks, docs gate, and ship-release-verdict judgement have already returned ready/pass/go.
+- Release publication should start only after repository prechecks, docs gate, and release-verdict judgement have already returned ready/pass/go.
 
 ## Structured Outputs
 
@@ -84,7 +87,7 @@ Execute release preparation and publication with explicit cleanup, branch, tag, 
 - Do not report a release as published unless branch push, tag push, and release publication were actually confirmed.
 - If a required check fails or branch policy cannot be satisfied, stop with blocked instead of forcing publication.
 - Keep cleanup evidence separate from release safety judgement and from publish success claims.
-- If docs gate or ship-release-verdict evidence says blocked, keep publication blocked.
+- If docs gate or release-verdict evidence says blocked, keep publication blocked.
 - If branch, tag, or publish steps were not executed in this run, record them as explicit evidence gaps.
 
 ## Execution Constraints
@@ -96,6 +99,21 @@ Execute release preparation and publication with explicit cleanup, branch, tag, 
 - Prefer squash merge or equivalent single-commit release flow when the target branch policy requires a clean public release history.
 - If the remote or release host is unavailable, record prepared or blocked state rather than inventing success.
 
+## Response Format
+
+Lead with release status: PUBLISHED / PREPARED / BLOCKED.
+
+Show what happened:
+- Tag created: [ref] — pushed: [yes/no]
+- Release-only commit: [branch] — [commit ref]
+- GitHub release: [URL or blocked reason]
+
+List cleanup actions taken: [area] → [action] — [status]
+
+Flag execution evidence gaps: "[step] was not executed — need: [what to unblock]"
+
+Ask for confirmation before any push or publish action that has not yet occurred.
+
 ## Mandatory Rules
 
 - Run required checks before mutating the target branch or creating the final public tag.
@@ -105,7 +123,7 @@ Execute release preparation and publication with explicit cleanup, branch, tag, 
 ## Example Invocation
 
 ```text
-$compose + $workflow-ship-it + $check-final-verify
+$compose + $workflow-release-publish + $check-final-verify
 
 TARGET_BRANCHES:
   - {BRANCH: codex/dev, ROLE: source}

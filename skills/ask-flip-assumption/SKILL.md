@@ -13,6 +13,9 @@ Break question deadlock by exposing assumptions and generating a few high-value 
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: popper-falsification | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `popper-falsification` because it keeps the work aligned with: Prefer questions that expose testable claims, disconfirming edges, and evidence burdens.
+
 ## Use When
 - Need to break a question deadlock or escape one habitual framing.
 - Need to challenge hidden assumptions before asking the final question.
@@ -62,6 +65,15 @@ Break question deadlock by exposing assumptions and generating a few high-value 
 - List only the assumptions that materially shape the current question.
 - Prefer one strong reversal over many decorative what-if prompts.
 - Keep the challenge questions short, specific, and usable.
+
+## Response Format
+
+List the three assumptions holding the current question in place.
+
+Then show two challenge questions, each anchored to a reversal:
+- Assumption reversed → Challenge question → What new signal this would unlock
+
+No preamble, no "here are your questions." Let the two questions speak for themselves.
 
 ## Mandatory Rules
 - Return exactly two CHALLENGE_QUESTIONS.

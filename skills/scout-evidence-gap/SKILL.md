@@ -13,6 +13,9 @@ Turn a shaky claim into an explicit list of confidence limits and cheapest next 
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `kahneman-tversky` because it keeps the work aligned with: Separate observed evidence from inferred risk, expose uncertainty, and resist conclusion-first bias.
+
 ## Use When
 - Need to know what evidence is still missing before deciding.
 - Need to separate current proof from missing proof.
@@ -65,6 +68,21 @@ Turn a shaky claim into an explicit list of confidence limits and cheapest next 
 - If the evidence surface is long, extract 3-7 anchor facts first and include at least one anchor from the middle when it matters to the claim.
 - Before calling the claim supported or under-supported, ask 2-4 verification questions that force a fresh rescan against the current evidence.
 - If the first pass produces generic gaps or limits, rewrite once so the missing entities, signals, or checks become explicit without expanding into a plan.
+
+## Response Format
+
+State the current confidence level for the claim in one line: supported / under-supported / unsupported.
+
+List what exists as evidence: [observation] — [location]
+
+List what is missing: [gap] — why it blocks confidence
+
+Show the next checks ordered by information value:
+- [check] — expected signal: [what it would confirm or falsify]
+
+Didn't check: [explicitly out of scope areas]
+
+Ask: "Want to go deeper on [most informative gap]?"
 
 ## Mandatory Rules
 - Do not treat the claim as adequately supported unless the anchor facts and verification pass both support that conclusion for the stated scope.

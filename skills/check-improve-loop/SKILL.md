@@ -17,6 +17,9 @@ Drive bounded self-critique and improvement loops toward a simpler, higher-quali
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need iterative self-critique and improvement for one bounded artifact or scope.
 - Need to keep refining until the core quality bar is met while rejecting decorative over-engineering.
@@ -76,6 +79,18 @@ Drive bounded self-critique and improvement loops toward a simpler, higher-quali
 - Stop when the best remaining change is decorative, speculative, or outside TARGET_SCOPE.
 - Keep simplicity and essence-first judgement above ornamental polish.
 - Do not convert an implicit backlog into mandatory work unless the prompt or DONE_CONDITION makes it critical.
+
+## Response Format
+
+Lead with the loop status: DONE / CONTINUE / BLOCKED.
+
+If DONE: list each done condition with its proof evidence. Stop there.
+
+If CONTINUE: show the one next pass — goal, skill, pass condition. Say why this and not something else.
+
+If BLOCKED: name the blocker and the cheapest check to unblock it.
+
+Keep the self-feedback list tight: issue → why it matters → smallest fix.
 
 ## Mandatory Rules
 - Never emit `MISSION_STATUS=done` while any DONE_CONDITION row lacks proof.

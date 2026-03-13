@@ -13,10 +13,13 @@ Run a lightweight security gate before a GitHub commit or release.
 [stages: preflight>detect>analyze>review>handoff>audit | scope: diff|repo|paths(glob,...) | policy: evidence,safety-gates,quality-gates{security,git,hygiene},deterministic-output | lens: nist-rmf | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `nist-rmf` because it keeps the work aligned with: Systematic risk framing with controls and continuous monitoring lifecycle.
+
 ## Use When
 - Need a quick security pass before pushing to GitHub or cutting a release.
 - Need to catch secret files, ignore drift, tracked-sensitive-file mistakes, or platform config exposure with minimal development friction.
-- Need a named workflow that can compose with `ship-commit`, `workflow-ship-ready-check`, or `workflow-ship-it`.
+- Need a named workflow that can compose with `commit-write-message`, `workflow-release-ready-check`, or `workflow-release-publish`.
 
 ## Do Not Use When
 - Need a full threat model or deep vulnerability assessment; use `check-security-holes` directly.
@@ -60,6 +63,20 @@ Run a lightweight security gate before a GitHub commit or release.
 - Check both file content patterns and repo mechanics such as `.gitignore` and tracked status before declaring the repo safe.
 - If a file is build-required but usually public client config, request or infer an allowlist decision instead of auto-blocking from filename alone.
 
+## Response Format
+
+Lead with gate status: PASS / BLOCKED / INCONCLUSIVE.
+
+Show per-step outcome (step → result):
+- check-security-holes → [findings or clean]
+
+List findings that block push or release:
+- P0 — [file] — [what leaked and why it's a real secret]
+
+Show allowlist decisions: [file] → [public-client-config / allowlisted / unverified] — reason.
+
+On BLOCKED: "Fix [P0 finding] before push."
+
 ## Mandatory Rules
 - Differentiate public mobile client config from server credentials.
 - Block on concrete credential exposure before GitHub commit or release.
@@ -69,7 +86,7 @@ Run a lightweight security gate before a GitHub commit or release.
 
 ## Example Invocation
 ```text
-$compose + $workflow-security-preflight + $ship-commit
+$compose + $workflow-security-preflight + $commit-write-message
 SECURITY_STAGE: github-commit
 TARGET_SCOPE: diff
 SENSITIVE_SURFACES:

@@ -16,7 +16,6 @@ SKILL_META_FILE = "skill.json"
 TOP_LEVEL_SKILL_FILES = ["README.md"]
 TOP_LEVEL_SKILL_DIRS = ["_meta"]
 MANIFEST_FILE = ".composable-skills-manifest.txt"
-LEGACY_MANIFEST_FILES = [".composable-skill-packs-manifest.txt"]
 LEGACY_DOC_FILES = [
     "ATOMIC-SKILLS.md",
     "CODEX-SKILL-AUTHORING-GUIDE.md",
@@ -28,7 +27,6 @@ LEGACY_DOC_FILES = [
     "SKILL-REFACTORING-PLAN.md",
 ]
 DOCS_MANIFEST_FILE = ".composable-skills-docs-manifest.txt"
-LEGACY_DOCS_MANIFEST_FILES = [".composable-skill-packs-docs-manifest.txt"]
 
 DEFAULT_PROGRAM_PATTERN = re.compile(r"##\s+Default\s+Program\s*\n```text\n(.*?)\n```", flags=re.S)
 FRONTMATTER_DESCRIPTION_PATTERN = re.compile(r'^description:\s*"((?:\\"|[^"])*)"\s*$', flags=re.M)
@@ -49,10 +47,6 @@ def direct_meta_dir(skills_root: Path) -> Path:
 
 def lenses_path(skills_root: Path) -> Path:
     return direct_meta_dir(skills_root) / "lenses.json"
-
-
-def response_profiles_path(skills_root: Path) -> Path:
-    return direct_meta_dir(skills_root) / "response_profiles.json"
 
 
 def load_json(path: Path) -> dict:
@@ -198,7 +192,6 @@ def build_expected_openai_yaml(skills_root: Path, name: str, entry: dict) -> str
 def command_validate(skills_root: Path) -> int:
     errors: List[str] = []
     notes: List[str] = []
-    response_profiles = response_profiles_path(skills_root)
     lenses = lenses_path(skills_root)
     missing_agent_yaml: List[str] = []
 
@@ -212,18 +205,6 @@ def command_validate(skills_root: Path) -> int:
     missing_meta = sorted(set(all_skill_names) - set(direct_entries))
     if missing_meta:
         errors.append(f"Missing direct skill metadata for: {', '.join(missing_meta)}")
-
-    if response_profiles.exists():
-        direct_profiles = load_json(response_profiles)
-        direct_required = direct_profiles.get("required_sections")
-        if not isinstance(direct_required, dict) or not direct_required:
-            errors.append(f"{response_profiles}: missing valid `required_sections` map.")
-            direct_required = {}
-        else:
-            notes.append("Direct response profile metadata is present.")
-    else:
-        errors.append(f"Missing direct response profile metadata: {response_profiles}")
-        direct_required = {}
 
     if lenses.exists():
         direct_lenses = valid_lens_ids(load_json(lenses))
@@ -239,7 +220,6 @@ def command_validate(skills_root: Path) -> int:
         "name",
         "layer",
         "layer_badge",
-        "response_profile",
         "default_program",
         "required_inputs",
         "display_name",
@@ -286,10 +266,6 @@ def command_validate(skills_root: Path) -> int:
                 lens_id = lens_match.group(1).strip()
                 if direct_lenses and lens_id not in direct_lenses:
                     errors.append(f"{meta_path}: default program lens `{lens_id}` is not present in `{lenses}`.")
-
-        expected_profile = entry.get("response_profile")
-        if isinstance(expected_profile, str) and direct_required and expected_profile not in direct_required:
-            errors.append(f"{meta_path}: response_profile `{expected_profile}` missing from `{response_profiles}`.")
 
         try:
             current_description = extract_frontmatter_description(skill_md_path)
@@ -441,14 +417,6 @@ def command_sync(skills_root: Path, target_root: Path) -> int:
 
     if docs_manifest_path.exists():
         docs_manifest_path.unlink()
-    for legacy_manifest in LEGACY_MANIFEST_FILES:
-        stale = target_root / legacy_manifest
-        if stale.exists():
-            stale.unlink()
-    for legacy_docs_manifest in LEGACY_DOCS_MANIFEST_FILES:
-        stale = target_root / legacy_docs_manifest
-        if stale.exists():
-            stale.unlink()
 
     write_manifest(manifest_path, sorted(runtime_skills))
 

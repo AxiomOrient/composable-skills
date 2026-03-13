@@ -13,6 +13,9 @@ Verify that a bounded interface or module boundary has explicit contracts and do
 [stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: uncle-bob | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `uncle-bob` because it keeps the work aligned with: Strong boundaries and maintainable architecture with explicit dependency direction.
+
 ## Use When
 - Need to check whether a module or API boundary is explicit enough.
 - Need to verify ownership and responsibility separation across layers.
@@ -63,6 +66,17 @@ Verify that a bounded interface or module boundary has explicit contracts and do
 - Keep the check bounded to the named boundary and its immediate callers or callees.
 - Do not turn general naming or style preferences into boundary defects without contract evidence.
 - Prefer explicit contract hardening over architectural expansion.
+
+## Response Format
+
+State the current contract in one sentence: what the boundary exposes, what it hides.
+
+Then show leaks found:
+- P0 / P1 — file:line — [assumption leaking] — [why it matters]
+
+Follow with hardening actions: one line each, bounded to the boundary.
+
+Ask: "Harden boundary now, or want dependency rules defined first?"
 
 ## Mandatory Rules
 - Do not label a boundary broken without evidence of leakage or ambiguity.

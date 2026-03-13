@@ -13,6 +13,9 @@ Produce a structure-first map of the current system without turning the result i
 [stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,quality-gates{docs},deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need to understand the current structure before planning or refactoring.
 - Need to map boundaries, responsibilities, or key interactions inside a bounded scope.
@@ -66,6 +69,17 @@ Produce a structure-first map of the current system without turning the result i
 - If the source material is long, extract 3-7 anchor facts first and include at least one anchor from the middle when it changes the shape of the map.
 - Before finalizing the map, ask 2-4 verification questions about potentially missing boundaries, responsibilities, or interactions and rescan the evidence against them.
 - If the first pass misses a salient boundary or edge already named by the anchors, rewrite once with higher density instead of widening the scope.
+
+## Response Format
+
+Show the boundary map as a compact list:
+- [boundary] — owns: [responsibility] — interacts with: [other boundary]
+
+Follow with structure notes that explain any non-obvious shapes.
+
+Flag open questions: "Didn't check: [areas not covered by evidence]"
+
+Ask: "Want to go deeper on [most interesting or uncertain boundary]?"
 
 ## Mandatory Rules
 - Do not finalize `BOUNDARY_MAP` until the anchor facts and verification pass agree that the main current boundaries and interactions were actually covered.

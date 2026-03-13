@@ -1,101 +1,120 @@
 ---
 name: build-until-done
-description: "Atomic loop control primitive for code-changing work. Tracks done conditions against current evidence, selects the one concrete next pass, and keeps the mission moving until the explicit contract is proven or a real blocker stops progress. Use when you want direct control over which companion skills run in a compose chain. For fully automated plan-ledger execution with a fixed pipeline, use workflow-build-execute-loop instead."
+description: "Plan-free autonomous build loop. Drives a bounded code mission to completion without requiring plan or task documents. Evaluates current state, picks the smallest next code action, executes it, and loops until the done contract is proven or a real blocker stops progress. For document-driven execution with a TASKS.md ledger, use workflow-build-execute-plan instead."
 ---
 
-# Build / Until Done
+# Build / Until Done (Plan-Free)
 
 ## Purpose
-Own the loop control layer for a bounded code-changing mission: analyze current evidence against the done contract, decide continue/done/blocked, and produce exactly one concrete next pass when continuing. It is the control brain — the companion skills are the execution body.
+Autonomously drive a bounded code mission to completion without plan documents. Reads current code state, evaluates it against the done contract, picks the smallest useful next action, executes it, and loops immediately. No manual stepping. No stopping between passes — done or blocked is the only exit.
 
 ## Default Program
 ```text
-[stages: preflight>detect>analyze>evaluate>handoff>audit |
+[stages: evaluate>select>implement>verify>loop>audit |
  scope: diff|repo|paths(glob,...) |
- policy: evidence,deterministic-output |
+ policy: evidence,correctness-first,loop-until-done,approval-gates{blockers-only} |
  lens: contract-evidence-verifier |
  output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `contract-evidence-verifier` because it keeps the work aligned with: Check explicit contracts against fresh evidence, separate blockers from gaps, and do not claim pass without proof.
+
 ## Use When
-- Need to drive one bounded code-changing mission to completion within a compose chain.
-- Need a disciplined continue/done/blocked decision after a partial implementation, test, debug, or verification pass.
-- Need manual control over which companion skills execute each pass.
-- Need a plan or task document treated as a live execution ledger with per-task progress tracking.
+- Need to drive a code mission to completion without any plan or task documents.
+- DONE_CONDITION is clear but the implementation path is not fully mapped upfront.
+- Need ralph-mode execution: evaluate → act → verify → repeat until provably done.
+- A pass fails mid-loop — debug and retry within the same loop instead of stopping.
 
 ## Do Not Use When
-- Need fully automated end-to-end execution: write code → critique → sync → verify → repeat, driven by a plans/ task ledger. Use `workflow-build-execute-loop` instead.
-- Need broad multi-project orchestration or hidden retry automation.
-- Need only final read-only validation after work is already complete.
-- Need a documentation, review, planning, or release-prep loop with no code changes; use `finish-until-done` instead.
+- Have a plans/TASKS.md ledger — use `workflow-build-execute-plan` for document-driven execution.
+- Need only a single-pass implementation — use `build-write-code` directly.
+- Need non-code work (docs, review) — use `finish-until-done` instead.
 
 ## Required Inputs
-- `MISSION_GOAL` (string; required): One bounded mission that should either finish or stop with a real blocker.
-- `TARGET_SCOPE` (path|module|folder|repo|artifact; required): Exact scope the mission is allowed to touch.
-- `DONE_CONDITION` (list; required; shape: {CONDITION, PROOF_REQUIRED}): Explicit completion contract and the evidence required for each condition.
-- `CURRENT_EVIDENCE` (list; optional; shape: {TYPE, REF, WHY_RELEVANT}): Current outputs, tests, notes, or observations from prior passes.
-- `PLAN_ARTIFACTS` (list; optional; shape: {PATH, ROLE}): Implementation plan, tasks ledger, or execution docs that must be consumed and exhausted during the loop. When present, treat incomplete task rows as active work and keep consuming them until exhausted. When absent, drive iteration from DONE_CONDITION and prompt evidence.
-- `COMPANION_SKILLS` (list; optional; allowed: build-write-code|test-write-guards|build-make-faster|debug-find-root-cause|check-final-verify|plan-sync-tasks|check-improve-loop|tidy-simplify; shape: {SKILL}): Narrow code-path companion skills active in this compose chain. These are declared by the caller — this skill uses them for the next pass handoff, not internal invocation.
-- `MAX_PASSES` (integer; optional): Safety budget for same-turn iteration. Default to 3, or 8 when PLAN_ARTIFACTS is present.
-- `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Time, safety, approval, or non-goal constraints that limit the loop.
+- `MISSION_GOAL` (string; required): One bounded mission to execute until the done contract is proven or a real blocker stops progress.
+- `TARGET_SCOPE` (path|module|folder|repo; required): Exact scope the mission is allowed to touch.
+- `DONE_CONDITION` (list; required; shape: {CONDITION, PROOF_REQUIRED}): Explicit completion contract. Each condition must be externally checkable — no vibe-based success language.
+- `CURRENT_EVIDENCE` (list; optional; shape: {TYPE, REF, WHY_RELEVANT}): Observations, test results, or notes from any prior pass. When absent, reads TARGET_SCOPE to build initial evidence.
+- `MAX_PASSES` (integer; optional): Safety ceiling for passes within one turn. Default: 5.
+- `CONSTRAINTS` (list; optional; shape: {CONSTRAINT}): Safety, scope, or non-goal constraints.
 
 ## Input Contract Notes
-- DONE_CONDITION should contain externally checkable conditions, not vibe-based success language.
-- DONE_CONDITION should prioritize the core user-visible or contract-visible outcome before secondary polish or optional cleanup.
-- COMPANION_SKILLS declares what skills are available in this compose chain. The next pass handoff will route to one of these. If absent, this skill produces a NEXT_PASS recommendation for the caller to act on.
-- If PLAN_ARTIFACTS is present, treat incomplete task rows or unchecked execution items as active work, not as passive reference material.
-- If PLAN_ARTIFACTS is absent, iterate directly from DONE_CONDITION and fresh prompt evidence until the contract is satisfied or blocked.
-- MAX_PASSES is a safety ceiling for one turn, not a quality score. If omitted, use 3 by default, or 8 when PLAN_ARTIFACTS is present.
+- DONE_CONDITION must be externally checkable: test passing, file existing, behavior observable. "Looks good" is not valid.
+- When CURRENT_EVIDENCE is absent, read TARGET_SCOPE first to establish the baseline state.
+- If the mission goal is ambiguous, emit blocked immediately and ask for clarification. Do not guess.
+
+## Execution Loop
+
+Run this loop within a single turn until MISSION_STATUS=done or blocked:
+
+```
+1. Read current code state at TARGET_SCOPE
+2. Check each DONE_CONDITION against current evidence
+3. All conditions have proof → done, stop
+4. A real blocker exists → blocked, ask the user
+5. Pick the smallest action that advances the weakest done condition
+6. Execute: implement (build-write-code), verify (run tests), or debug (root cause)
+7. Update evidence with results
+8. Go back to step 2 immediately
+```
+
+**Do not stop between passes.** Each pass completes and immediately triggers the next evaluation.
 
 ## Structured Outputs
-- `MISSION_STATUS` (continue|done|blocked; required; allowed: continue|done|blocked): Whether the mission needs another pass, is complete, or is blocked.
-- `DONE_CONDITION_STATUS` (list; required; shape: {CONDITION, STATUS, EVIDENCE_OR_GAP}): Per-condition check status against the explicit completion contract.
-- `PLAN_TASK_STATUS` (list; optional; shape: {PATH_OR_TASK, STATUS, EVIDENCE_OR_GAP}): Optional status for plan/task ledger rows that materially affect the done contract.
-- `NEXT_PASS` (list; optional; required when MISSION_STATUS=continue; shape: {GOAL, RECOMMENDED_SKILL, PASS_CONDITION, WHY_THIS_FIRST}): Exactly one smallest next pass when the mission should continue.
-- `BLOCKERS` (list; optional; required when MISSION_STATUS=blocked; shape: {ISSUE, LOCATION, UNBLOCKING_CHECK}): Real blockers that stop progress and what would unblock them.
-- `LOOP_EXIT_REASON` (string; required): Why the loop stopped on done, blocked, or continue-for-another-pass.
+- `MISSION_STATUS` (done|blocked; required; allowed: done|blocked): Loop outcome. No `continue` output — if not done, keep looping.
+- `DONE_CONDITION_STATUS` (list; required; shape: {CONDITION, STATUS, EVIDENCE}): Evidence status for each condition.
+- `PASSES_COMPLETED` (integer; required): Number of implementation/verification passes executed.
+- `BLOCKERS` (list; optional; required when MISSION_STATUS=blocked; shape: {ISSUE, LOCATION, UNBLOCKING_CHECK}): What stopped progress and what would unblock it.
 
-## Output Contract Notes
-- Emit `done` only when every DONE_CONDITION row has evidence, not just partial progress.
-- Emit `continue` only when the next pass is known but cannot be safely executed within the current turn because of MAX_PASSES, a blocker, or missing proof. Do not return a backlog disguised as a next step.
-- Emit `blocked` only when an external dependency, missing input, approval gate, or pass-budget stop prevents the next pass.
+## Response Format
+
+Output one line per pass as it executes, then immediately continue.
+
+```
+Pass 1 → build-write-code: `session.ts:42` fix refreshToken expiry
+Pass 2 → verify: `npm test -- session` → ✓ 3/3
+Pass 3 → build-write-code: `token.ts:18` add auto-renewal on expiry
+Pass 4 → verify: `npm test` → ✓ 12/12
+```
+
+On loop exit:
+- **Done**: `Done ✓ (N passes)` — one line of evidence per condition
+- **Blocked**: `Blocked: [issue]` — ask immediately: "How should we unblock this?"
 
 ## Primary Lens
 - `primary_lens`: `contract-evidence-verifier`
-- `why`: Code completion looping should compare explicit done conditions against fresh evidence, force one smallest next code pass, and stop cleanly on real blockers instead of vibe-based progress claims.
+- `why`: Each pass must narrow the gap between current state and the done contract. Stop only when every condition has proof — not when momentum runs out.
 
 ## Artifacts
-- `artifacts_in`: implementation-delta.v1, test-report.v1, debug-report.v1, review-report.v1, self-verify-report.v1
-- `artifacts_out`: completion-contract-loop-report.v1
+- `artifacts_in`: none (plan-free — reads current code state directly)
+- `artifacts_out`: completion-evidence.v1
 
 ## Neutrality Rules
-- Do not declare the mission complete from momentum, partial progress, or intent.
-- Prefer the smallest discriminating next pass over a broad cleanup list.
-- If the done contract is ambiguous, surface the ambiguity as a blocker instead of guessing success.
+- Do not declare done from partial progress or intent. Every DONE_CONDITION row needs proof.
+- If a pass fails, debug and retry within the same loop. Only emit blocked when genuinely unresolvable.
+- Prefer the smallest discriminating next action over broad cleanup.
 
 ## Execution Constraints
-- This skill owns pass selection and stop conditions. It is the control layer — execution happens in the companion skills declared by the caller.
-- When PLAN_ARTIFACTS is present, first run `../plan-sync-tasks/scripts/task_ledger.py next --tasks <tasks-path> [--plan <plan-path>]` to extract the next actionable task id and verification map before producing the next-pass handoff.
-- If PLAN_ARTIFACTS is present, read the plan/task ledger before the first pass and keep selecting relevant incomplete rows until the ledger is exhausted, the done contract is proven, or a real blocker appears.
-- If `plan-sync-tasks` is present as a companion skill, synchronize plan/task artifacts after each material pass that changes task state or evidence.
-- Keep companion skills narrow and code-path only. If the mission requires broad cross-domain decomposition, hand off to `plan-task-breakdown` or a workflow instead of stretching this skill.
-- Do not keep the mission in `continue` for non-essential cleanup once the core done contract is already proven unless that cleanup was explicitly included in DONE_CONDITION.
+- Run the full loop within a single turn. Do not pause between passes for user confirmation unless a genuine blocker appears.
+- If a test fails, attempt to fix it within the same loop before declaring blocked.
+- Keep each pass bounded to the smallest action that advances the weakest done condition.
+- Do not drift into adjacent cleanup not in DONE_CONDITION.
 
 ## Mandatory Rules
-- Never emit `MISSION_STATUS=done` while any DONE_CONDITION row lacks proof.
-- If PLAN_ARTIFACTS is present, never emit `MISSION_STATUS=done` while relevant incomplete rows still block DONE_CONDITION.
-- When `MISSION_STATUS=continue`, NEXT_PASS must contain exactly one row.
+- Never emit MISSION_STATUS=done while any DONE_CONDITION row lacks proof.
+- Do not stop after one pass when the mission is not done. Continue immediately.
+- Stop and ask only when a genuine blocker exists. Do not guess or fabricate a workaround.
 
 ## Example Invocation
 
-플랜 없이 (DONE_CONDITION 기반 반복):
 ```text
-$compose + $build-until-done + $build-write-code + $check-improve-loop + $check-final-verify + @src/auth + [Keep implementing and self-critiquing until the done contract is proven.]
+$build-until-done
+GOAL: Keep the session alive after browser refresh
+SCOPE: src/auth
+DONE:
+  - session refresh test passes
+  - login state persists after browser refresh
 ```
 
-플랜 있을 때 (태스크 ledger 기반, 태스크별 피드백):
-```text
-$compose + $build-until-done + $plan-sync-tasks + $build-write-code + $check-improve-loop + $check-final-verify + @plans/IMPLEMENTATION-PLAN.md + @plans/TASKS.md + [Consume all task rows, run self-feedback after each implementation pass, and keep going until the done contract is proven.]
-```
-
-> 완전 자동화 실행이 필요하다면 `workflow-build-execute-loop`를 사용하세요. 이 스킬은 파이프라인을 직접 지정하고 싶을 때 사용합니다.
+> Have a TASKS.md plan? Use `workflow-build-execute-plan` for document-driven execution.

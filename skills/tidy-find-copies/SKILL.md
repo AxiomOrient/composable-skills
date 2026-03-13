@@ -13,6 +13,9 @@ Identify duplicated logic or structure that can be consolidated without changing
 [stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: hickey-carmack | output: md(contract=v1)]
 ```
 
+## Lens Rationale
+This skill uses `hickey-carmack` because it keeps the work aligned with: Data model first, explicit side effects, and explicit performance characteristics.
+
 ## Use When
 - Need evidence-backed duplication findings before simplification or refactoring.
 - Need to know whether similar code is accidental copy-paste or justified variation.
@@ -49,6 +52,17 @@ Identify duplicated logic or structure that can be consolidated without changing
 - Treat similar code as duplication only when behavior or structure truly overlaps.
 - Separate safe merge opportunities from look-alike but justified variation.
 - Do not recommend abstraction when it would hide useful domain differences.
+
+## Response Format
+
+Show duplication clusters with evidence locations:
+- [cluster name] — files: [list] — kind: [logic/structure/flow]
+
+Split into:
+- Safe to merge: [cluster] — merge target: [where]
+- Keep separate: [cluster] — reason: [why domain difference matters]
+
+Ask: "Consolidate [highest-value cluster] now, or want the full list reviewed first?"
 
 ## Mandatory Rules
 - Report evidence locations for every duplication cluster.
