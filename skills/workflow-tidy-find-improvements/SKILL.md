@@ -93,3 +93,11 @@ $workflow-tidy-find-improvements
 TARGET_SCOPE: src/auth
 IMPROVEMENT_GOAL: mixed
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 이 모듈에서 중복 코드나 복잡한 부분 찾아서 개선할 점 리스트업해줘. | YES | IMPROVEMENT_FINDINGS 존재 |
+| 코드 고치기 전에 단순화하거나 공통화할 기회가 있는지 분석해봐. | YES | SIMPLIFICATION_DIRECTION 존재 |
+| 바로 코드 고쳐서 깔끔하게 만들어줘. | NO | 분석/매핑 전용 — workflow-tidy-simplify-this 권장 |

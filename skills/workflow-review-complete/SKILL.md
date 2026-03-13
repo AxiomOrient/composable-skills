@@ -102,3 +102,11 @@ SCOPE: src/auth
 CHANGE: "Refactor auth middleware to use JWT"
 DEPTH: full
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 가장 꼼꼼하게 전체 리뷰 세션 돌려서 보안부터 품질까지 다 봐줘. | YES | FINAL_VERDICT 존재 |
+| 보안, 구조, 실패 경로, 품질 체크리스트까지 하나도 빠짐없이 검토해. | YES | QUALITY_RESULTS 존재 |
+| 출시 준비가 됐는지만 확인해줘. | NO | 코드 리뷰 중심 — workflow-release-ready-check 권장 |

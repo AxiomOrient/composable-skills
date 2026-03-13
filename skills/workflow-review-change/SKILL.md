@@ -95,3 +95,11 @@ $workflow-review-change
 TARGET_SCOPE: src/auth
 REVIEW_FOCUS: maintainability
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 이 폴더 안에 있는 코드들 중복이나 구조적 문제 없는지 리뷰해줘. | YES | REVIEW_FINDINGS 존재 |
+| 변경된 내용들 에러 경로나 테스트 빈틈 위주로 훑어봐. | YES | INTEGRATE_OR_HOLD 존재 |
+| 품질 체크리스트까지 다 돌려줘. | NO | 확장 점검 필요 — workflow-check-with-checklist 권장 |

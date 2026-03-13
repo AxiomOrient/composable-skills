@@ -95,3 +95,11 @@ Ask:
 - `$doc-find-all`
 - `$doc-curate`
 - `$doc-write`
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 오래된 문서들 정리하고 쓸모없는 건 지우거나 업데이트해줘. | YES | DOC_LIFECYCLE_MAP 존재 |
+| 전체 문서 인벤토리 만들고 어떻게 관리할지 결정해서 수정해. | YES | DOC_INVENTORY 존재 |
+| 코드랑 문서를 같이 고쳐줘. | NO | 문서 전용 워크플로우 — build-write-code 병행 권장 |

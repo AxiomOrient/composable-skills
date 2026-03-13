@@ -128,3 +128,11 @@ PLAN: plans/IMPLEMENTATION-PLAN.md, plans/TASKS.md
 ```
 
 > No plan documents? Use `control-build-until-done` for plan-free autonomous execution.
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| plans/TASKS.md에 있는 작업들 순서대로 다 구현해줘. | YES | MISSION_STATUS 존재 |
+| 남은 작업들 루프 돌면서 하나씩 완료하고 결과 알려줘. | YES | TASK_EXECUTION_LOG 존재 |
+| 새로 할 일을 계획해줘. | NO | 실행 전용 — workflow-plan-build-ready 권장 |

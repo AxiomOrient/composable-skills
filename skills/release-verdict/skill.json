@@ -35,5 +35,13 @@
   "browse_priority": 50,
   "is_category_default": false,
   "codex_surface": "expert",
-  "starter_inputs": []
+  "starter_inputs": [],
+  "outputs": [
+    {
+      "name": "RELEASE_DECISION",
+      "required": true,
+      "allowed_values": ["go", "no-go", "blocked"],
+      "description": "Go, no-go, or blocked decision with rationale."
+    }
+  ]
 }

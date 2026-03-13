@@ -30,6 +30,14 @@
   "is_category_default": false,
   "codex_surface": "expert",
   "expands_to": ["analyze-structure", "review-quality", "review-security", "review-failure-paths", "review-change"],
+  "outputs": [
+    {
+      "name": "FINAL_VERDICT",
+      "required": true,
+      "allowed_values": ["integrate", "hold"],
+      "description": "Synthesized integrate/hold decision."
+    }
+  ],
   "starter_inputs": [
     {
       "key": "SCOPE",

@@ -52,3 +52,11 @@ This skill uses `release-gatekeeper` because release docs should cover only the 
 ## Expansion
 - `$doc-find-all`
 - `$doc-write-release-docs`
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 이번 배포용 릴리즈 노트랑 변경 사항 정리해줘. | YES | RELEASE_DOCS 존재 |
+| 마이그레이션 가이드랑 호환성 노트 한 번에 작성해봐. | YES | BREAKING_CHANGE_SET 존재 |
+| 지금 바로 배포(Publish) 진행해줘. | NO | 문서 작성 전용 — release-publish 권장 |

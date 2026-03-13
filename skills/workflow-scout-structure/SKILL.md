@@ -96,3 +96,11 @@ REQUEST: understand the current auth structure before deciding where to change i
 TARGET_SCOPE: src/auth
 QUESTION: which module boundaries and responsibility splits matter most right now
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 수정하기 전에 지금 인증 모듈 구조가 어떻게 잡혀 있는지 먼저 파악해줘. | YES | BOUNDARY_MAP 존재 |
+| 코드 분석해서 경계랑 책임이 어떻게 나뉘어 있는지 지도로 그려봐. | YES | DRAFT_SCOPE_CONTRACT 존재 |
+| 더 나은 구조로 재설계해줘. | NO | 현상 파악 전용 — analyze-options 또는 tidy-reorganize 권장 |

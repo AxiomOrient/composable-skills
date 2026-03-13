@@ -90,3 +90,11 @@ $workflow-check-with-checklist
 TARGET_SCOPE: src/auth
 REVIEW_FOCUS: mixed
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 이 모듈 전체적으로 리뷰하고 9가지 품질 체크리스트 결과도 보여줘. | YES | CHECKLIST_TABLE 존재 |
+| 코드 리뷰랑 품질 점검 같이 해서 병합해도 될지 알려줘. | YES | INTEGRATE_OR_HOLD 존재 |
+| 보안 점검만 따로 해줘. | NO | 종합 점검 워크플로우 — review-security 권장 |

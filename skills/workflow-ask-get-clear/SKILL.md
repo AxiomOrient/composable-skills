@@ -87,3 +87,11 @@ $workflow-ask-get-clear
 TOPIC: Would adopting an AI code review tool actually improve team productivity?
 AUDIENCE: engineering manager
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 우리 팀에 AI 코드 리뷰 도구를 도입하는 게 맞을까? 생각 좀 정리하게 도와줘. | YES | PROBLEM_STATEMENT 존재 |
+| 마이크로서비스로 전환해야 할지 고민인데, 뭘 먼저 질문해야 할까? | YES | QUESTION_STACK 존재 |
+| 이 질문에 직접 답해줘. | NO | 답변이 아닌 질문 설계 단계 — 일반 응답 권장 |

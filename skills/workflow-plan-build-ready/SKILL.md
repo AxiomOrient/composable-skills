@@ -100,3 +100,11 @@ DONE_CONDITION:
 PLAN_OUTPUT_PATH: plans/IMPLEMENTATION-PLAN.md
 TASKS_OUTPUT_PATH: plans/TASKS.md
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 인증 모듈 단순화 작업을 위한 설계랑 작업 목록 좀 뽑아줘. | YES | TASK_ROWS 존재 |
+| 구현 들어가기 전에 범위 확정하고 실행 가능한 계획 세워봐. | YES | SCOPE_CONTRACT 존재 |
+| 계획 없이 그냥 바로 코딩 시작해. | NO | 계획 수립 단계 — control-build-until-done 권장 |

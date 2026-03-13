@@ -97,3 +97,11 @@ TARGET_BEHAVIORS:
   - password reset token validation
   - session persistence after login
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 비밀번호 재설정 로직에 빠진 테스트 케이스 찾아서 채워넣어줘. | YES | ADDED_TESTS 존재 |
+| 회귀 테스트 빈틈 분석하고 가드 테스트 새로 짜봐. | YES | TEST_MATRIX 존재 |
+| 테스트는 안 짜고 어디가 비었는지만 알려줘. | NO | 테스트 작성 포함 워크플로우 — test-find-gaps 권장 |

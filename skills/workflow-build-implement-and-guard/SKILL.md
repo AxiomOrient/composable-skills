@@ -101,3 +101,11 @@ VERIFICATION_MAP:
 TARGET_BEHAVIORS:
   - keep the session after refresh during an active login
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 세션 유지 기능 구현하고, 나중에 안 깨지게 테스트도 같이 짜줘. | YES | ADDED_TESTS 존재 |
+| 로그인 로직 고치고 회귀 테스트까지 한 번에 처리해. | YES | VERIFICATION_RESULTS 존재 |
+| 테스트는 빼고 코드만 고쳐줘. | NO | 가드 작성 포함 워크플로우 — build-write-code 권장 |

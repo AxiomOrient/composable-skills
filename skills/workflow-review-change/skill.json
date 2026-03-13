@@ -53,5 +53,13 @@
     "$check-failure-paths",
     "$test-find-gaps",
     "$check-change-review"
+  ],
+  "outputs": [
+    {
+      "name": "INTEGRATE_OR_HOLD",
+      "required": true,
+      "allowed_values": ["integrate", "hold"],
+      "description": "Final review stance."
+    }
   ]
 }

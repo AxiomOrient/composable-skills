@@ -148,3 +148,11 @@ REQUIRED_CHECKS:
 PUBLISH_TARGET: github
 RELEASE_NOTES_SOURCE: generate
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 릴리즈 점검부터 배포까지 한 번에 끝까지 자동으로 실행해줘. | YES | PUBLISH_RESULT 존재 |
+| 배포 가능 확인하고 바로 태그랑 릴리즈 생성까지 이어서 해줘. | YES | RELEASE_CHECKS_PASSED 존재 |
+| 배포 가능한지 판단만 해줘, 실제 배포는 아직이야. | NO | 판정 전용 — workflow-release-ready-check 권장 |

@@ -134,3 +134,11 @@ LEGACY_PATTERNS:
   - {PATTERN: ^plans/IMPLEMENTATION-PLAN\\.md$, WHY_BLOCKING: delivery-only implementation docs must not ship}
   - {PATTERN: ^plans/TASKS\\.md$, WHY_BLOCKING: delivery-only task ledgers must not ship}
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 배포하기 전에 보안이나 문서, 레포 상태 다 괜찮은지 최종 확인해줘. | YES | RELEASE_DECISION 존재 |
+| 출시해도 될지 GO/NO-GO 판정 좀 내려봐. | YES | HYGIENE_SUMMARY 존재 |
+| 태그 달고 릴리즈 생성해줘. | NO | 판정 전용 워크플로우 — release-publish 권장 |

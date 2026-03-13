@@ -96,3 +96,11 @@ $workflow-analyze-codebase
 SCOPE: src/
 GOAL: full
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 이 프로젝트 코드 구조랑 의존성 좀 전체적으로 분석해줘. | YES | ANALYTICAL_SUMMARY 존재 |
+| 어디가 제일 복잡하고 고치기 힘든 부분인지 전체 스캔해봐. | YES | COMPLEXITY_MAP 존재 |
+| 지금 바로 리팩토링 시작하자. | NO | 분석 전용 — build-write-code 또는 tidy-simplify 권장 |

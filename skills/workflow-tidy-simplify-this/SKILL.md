@@ -70,3 +70,11 @@ Think and operate in English, but deliver the final response in Korean.
 $workflow-tidy-simplify-this
 TARGET_SCOPE: diff
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 방금 수정한 내용들 중에 중복이나 비효율적인 거 있으면 깔끔하게 정리해줘. | YES | FIXED_FINDINGS 존재 |
+| 최근 변경 사항들 리뷰해서 제일 안전한 방식으로 코드 다듬어봐. | YES | VERIFICATION_STATUS 존재 |
+| 대대적으로 아키텍처를 새로 짜줘. | NO | 소폭 정리 전용 — tidy-reorganize 권장 |

@@ -37,6 +37,7 @@ DOCS_RELEASE_CONTROL_SKILLS = {"compose", "plan-sync-tasks", "control-release-pu
 DEFAULT_PROGRAM_PATTERN = re.compile(r"##\s+Default\s+Program\s*\n```text\n(.*?)\n```", flags=re.S)
 FRONTMATTER_DESCRIPTION_PATTERN = re.compile(r'^description:\s*"((?:\\"|[^"])*)"\s*$', flags=re.M)
 FRONTMATTER_NAME_PATTERN = re.compile(r"^name:\s*(\S+)", re.MULTILINE)
+EVAL_CASES_PATTERN = re.compile(r"^##\s+Eval\s+Cases\s*$", re.MULTILINE)
 SCAFFOLD_PLACEHOLDERS = (
     "TODO: replace with one-line trigger surface.",
     "TODO: state one bounded job for this skill.",
@@ -351,6 +352,11 @@ def command_validate(skills_root: Path) -> int:
         else:
             missing_agent_yaml.append(name)
 
+        if entry.get("layer") == "workflow" and skill_md_path.exists():
+            md_content = skill_md_path.read_text(encoding="utf-8")
+            if not EVAL_CASES_PATTERN.search(md_content):
+                notes.append(f"{skill_md_path}: missing '## Eval Cases' section (trigger precision not documented).")
+
         skill_placeholders = find_scaffold_placeholders(skill_md_path)
         if skill_placeholders:
             errors.append(f"{skill_md_path}: unresolved scaffold placeholders present: {', '.join(skill_placeholders)}")
@@ -507,6 +513,52 @@ def command_sync(skills_root: Path, target_root: Path, profile: str) -> int:
     return 0
 
 
+def command_check_output(skills_root: Path, skill_name: str, output_json: str) -> int:
+    meta_path = skills_root / skill_name / SKILL_META_FILE
+    if not meta_path.exists():
+        print(f"FAIL: skill '{skill_name}' not found at {meta_path}", file=sys.stderr)
+        return 1
+
+    entry = load_json(meta_path)
+    outputs_schema = entry.get("outputs")
+    if not outputs_schema:
+        print(f"SKIP: '{skill_name}' has no 'outputs' schema in skill.json — no enum constraints to check.")
+        return 0
+
+    try:
+        actual = json.loads(output_json)
+    except json.JSONDecodeError as exc:
+        print(f"FAIL: invalid JSON — {exc}", file=sys.stderr)
+        return 1
+
+    errors: List[str] = []
+    for spec in outputs_schema:
+        field = spec.get("name")
+        required = spec.get("required", False)
+        allowed = spec.get("allowed_values")
+
+        if field not in actual:
+            if required:
+                errors.append(f"Missing required output field '{field}'.")
+            continue
+
+        value = actual[field]
+        if allowed and value not in allowed:
+            errors.append(f"Field '{field}' = {value!r} not in allowed values {allowed}.")
+
+    if errors:
+        print("FAIL")
+        for err in errors:
+            print(f"- {err}")
+        return 1
+
+    print("PASS")
+    for spec in outputs_schema:
+        field = spec.get("name")
+        print(f"- {field} = {actual.get(field)!r} ✓")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Minimal skill runtime CLI.")
     parser.add_argument("--skills-root", default=str(SKILLS_ROOT), help="Path to skills root")
@@ -515,6 +567,9 @@ def build_parser() -> argparse.ArgumentParser:
     sync_parser = sub.add_parser("sync", help="Sync the runtime surface to a target .agents root.")
     sync_parser.add_argument("target_root", help="Target .agents root or a path ending in /skills.")
     sync_parser.add_argument("--profile", choices=SYNC_PROFILES, default="core", help="Runtime surface profile to sync.")
+    check_out_parser = sub.add_parser("check-output", help="Validate LLM output JSON against a skill's outputs schema.")
+    check_out_parser.add_argument("skill_name", help="Skill name (directory name under skills/).")
+    check_out_parser.add_argument("output_json", help="JSON string of the LLM output fields to validate.")
     return parser
 
 
@@ -527,6 +582,8 @@ def main() -> int:
         return command_validate(skills_root)
     if args.command == "sync":
         return command_sync(skills_root, Path(args.target_root), args.profile)
+    if args.command == "check-output":
+        return command_check_output(skills_root, args.skill_name, args.output_json)
 
     parser.error(f"Unknown command: {args.command}")
     return 2

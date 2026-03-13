@@ -89,3 +89,11 @@ $workflow-clarify-request
 TOPIC: Would introducing an AI code review tool actually improve productivity for our team?
 AUDIENCE: engineering manager
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 내가 질문하려는 내용이 좀 모호한데, 날카롭게 다듬어서 질문 리스트 좀 뽑아줘. | YES | CORE_QUESTION 존재 |
+| 이 주제로 관리자한테 물어보려는데, 놓치고 있는 반대 관점 질문도 같이 만들어봐. | YES | CHALLENGE_QUESTIONS 존재 |
+| 이미 답이 틀렸는데 질문을 어떻게 고칠까? | NO | 첫 질문 설계 단계 — ask-fix-prompt 권장 |

@@ -99,3 +99,11 @@ TARGET_SCOPE: src/session
 FAILURE_SYMPTOM: session disappears after refresh
 EXPECTED_BEHAVIOR: session persists after refresh
 ```
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 새로고침하면 세션이 사라지는데 원인 찾고 수정까지 해줘. | YES | REPRO_CAPTURE 존재 |
+| 로그 보니까 에러 나는데, 어디서 터지는지 좁혀서 고쳐봐. | YES | DEBUG_REPORT 존재 |
+| 전반적인 코드 리뷰 좀 해줘. | NO | 버그 수정 전용 — workflow-review-change 권장 |

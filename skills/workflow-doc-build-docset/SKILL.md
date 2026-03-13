@@ -52,3 +52,11 @@ This skill uses `nielsen-norman` because hierarchical docsets work only when lan
 ## Expansion
 - `$doc-find-all`
 - `$doc-build-index`
+
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| 이 폴더 트리 전체를 문서화하고 상위 README랑 상세 문서들 만들어줘. | YES | PARENT_ENTRY_DOCS 존재 |
+| 모듈별로 설명서 계층 구조로 쫙 뽑아줘. | YES | DOCSET_NAV_MAP 존재 |
+| 루트 README 하나만 업데이트해줘. | NO | 계층 문서 생성용 — doc-publish-readme 권장 |
