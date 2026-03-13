@@ -105,12 +105,20 @@ Atomic 스킬 카테고리:
 
 ```
 skills/               런타임 스킬 surface
-  <name>/SKILL.md     사람이 읽는 스킬 설명서
-  <name>/skill.json   런타임이 읽는 기계용 계약
+  <name>/SKILL.md     사람이 읽는 스킬 설명서 (workflow는 ## Eval Cases 포함)
+  <name>/skill.json   런타임이 읽는 기계용 계약 (판정 스킬은 outputs 스키마 포함)
   _meta/              공통 메타데이터
 docs/                 상세 문서
 scripts/sync.sh       스킬 설치/업데이트
 scripts/skills.py     검증 및 sync CLI
+```
+
+### CLI 주요 명령
+
+```bash
+python3 scripts/skills.py validate            # 전체 계약 검증
+python3 scripts/skills.py check-output <스킬> '<json>'  # LLM 출력 enum 검증
+python3 scripts/skills.py sync ~/.agents      # 직접 설치
 ```
 
 ## Requirements

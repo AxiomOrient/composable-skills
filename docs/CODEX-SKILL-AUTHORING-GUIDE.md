@@ -31,6 +31,21 @@ workflow면 추가로:
 
 - `expands_to`
 
+판정 enum 출력이 있는 스킬은 선택적으로:
+
+- `outputs` — enum 값이 고정된 필드만 등록한다 (`check-output` 검증 대상)
+
+```json
+"outputs": [
+  {
+    "name": "INTEGRATE_OR_HOLD",
+    "required": true,
+    "allowed_values": ["integrate", "hold"],
+    "description": "Final review stance."
+  }
+]
+```
+
 ## 새 skill 뼈대 만들기
 
 기본은 dry-run 이다.
@@ -64,6 +79,25 @@ python3 scripts/skills.py refresh-agent-yaml workflow-build-implement-and-guard
 
 문제가 없으면 `--write` 로 반영한다.
 
+## Eval Cases — workflow 스킬 필수 섹션
+
+모든 workflow/control 레이어 스킬은 `SKILL.md` 끝에 `## Eval Cases` 섹션을 포함해야 한다.
+`validate` 가 이 섹션이 없으면 경고를 낸다.
+
+```markdown
+## Eval Cases
+
+| Prompt | Should Trigger | Key Output Check |
+|--------|---------------|-----------------|
+| <YES 트리거 프롬프트 1> | YES | <출력 필드명> 존재 |
+| <YES 트리거 프롬프트 2> | YES | <출력 필드명> 존재 |
+| <경계 케이스 — 트리거 안 돼야 하는 것> | NO | <이유 + 대안 스킬> |
+```
+
+목적:
+- **트리거 정밀도** — 어떤 요청이 이 스킬을 선택해야 하는지, 어떤 것은 선택하면 안 되는지 명시
+- **출력 기대값** — 스킬 실행 후 어떤 필드가 반드시 있어야 하는지 기록
+
 ## 어떻게 검증하나
 
 ```bash
@@ -75,6 +109,29 @@ python3 scripts/skills.py validate
 - 모든 skill folder에 `skill.json`이 있는지
 - `SKILL.md`의 Default Program이 메타데이터와 맞는지
 - `_meta`의 lens metadata가 유효한지
+- workflow 레이어 스킬에 `## Eval Cases` 섹션이 있는지
+
+### LLM 출력 계약 검증
+
+`outputs` 스키마가 있는 스킬은 실제 LLM 출력을 바로 검증할 수 있다:
+
+```bash
+# PASS 예시
+python3 scripts/skills.py check-output workflow-review-change '{"INTEGRATE_OR_HOLD": "integrate"}'
+
+# FAIL 예시 — 허용값 외
+python3 scripts/skills.py check-output release-verdict '{"RELEASE_DECISION": "yes"}'
+```
+
+현재 `outputs` 스키마가 등록된 스킬:
+
+| 스킬 | 필드 | 허용값 |
+|------|------|--------|
+| `workflow-review-change` | `INTEGRATE_OR_HOLD` | integrate, hold |
+| `workflow-review-complete` | `FINAL_VERDICT` | integrate, hold |
+| `workflow-check-with-checklist` | `INTEGRATE_OR_HOLD` | integrate, hold |
+| `release-verdict` | `RELEASE_DECISION` | go, no-go, blocked |
+| `release-check-repo` | `REPO_RELEASE_STATUS` | ready, blocked, inconclusive |
 
 ## 어떻게 sync 하나
 
