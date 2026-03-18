@@ -6,6 +6,9 @@
   "required": [
     "summary",
     "proposal",
+    "work_summary",
+    "work_output",
+    "output_artifacts",
     "must_keep",
     "must_avoid",
     "assumptions",
@@ -21,6 +24,21 @@
     "proposal": {
       "type": "string",
       "minLength": 1
+    },
+    "work_summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "work_output": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     },
     "must_keep": {
       "type": "array",
@@ -65,6 +83,7 @@
       "required": [
         "statement",
         "why",
+        "anchors",
         "support",
         "confidence"
       ],
@@ -76,6 +95,13 @@
         "why": {
           "type": "string",
           "minLength": 1
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         },
         "support": {
           "type": "string",

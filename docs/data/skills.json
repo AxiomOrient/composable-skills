@@ -365,16 +365,17 @@
     },
     {
       "name": "workflow-consensus-engine",
-      "description": "Workflow skill that locks a bounded scope contract and then runs the consensus engine to arbitrate one design, debugging, or planning decision across Codex, Claude Code, and Gemini CLI. Use when the public entrypoint should expose multi-model consensus without hiding the boundary-setting step.",
-      "summaryKo": "범위와 완료 조건을 먼저 잠근 뒤, Codex, Claude Code, Gemini CLI의 독립 응답과 반박 라운드를 통해 권고안, 남는 충돌, 가장 싼 다음 확인을 정리한다.",
-      "purpose": "Public entrypoint for bounded multi-model consensus: first lock the boundary, then run the script-backed engine.",
+      "description": "Workflow skill that runs a bounded multi-model consensus mission across Codex, Claude Code, and Gemini CLI, optionally using an explicit compose macro as the shared execution contract. Use when docs, implementation proposals, PRD drafts, research reports, or decision work should be produced independently and then converged through one consensus engine.",
+      "summaryKo": "범위와 완료 조건을 먼저 잠근 뒤, 필요하면 compose 매크로를 공유 실행 계약으로 써서 Codex, Claude Code, Gemini CLI가 각자 초안/제안/리포트를 만들고, 합의 엔진이 가장 강한 산출물과 남는 충돌을 정리한다.",
+      "purpose": "Public entrypoint for bounded multi-model consensus: lock the contract, run the shared mission independently, then converge on the best-supported output.",
       "useWhen": [
-        "Need a public entrypoint for choosing between design, refactor, debugging, or plan alternatives.",
+        "Need a public entrypoint for docs, implementation proposals, PRD drafts, research reports, or decision work that benefits from parallel independent passes.",
         "Need the engine to preserve disagreement instead of reducing everything to a single prose answer.",
-        "Need scope, constraints, and done condition locked before multi-model arbitration starts."
+        "Need scope, constraints, and done condition locked before multi-model arbitration starts.",
+        "Need one explicit compose macro executed independently by all three providers."
       ],
       "doNotUseWhen": [
-        "Need direct code changes right away.",
+        "Need one-model direct execution right away.",
         "The task is a deterministic computation or a simple factual lookup.",
         "External CLI use is disallowed for this mission.",
         "The request is still too fuzzy and needs a clarify workflow first."
@@ -396,8 +397,8 @@
         "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
       },
       "quickPick": {
-        "need": "설계안, 리팩터링 방향, 디버깅 가설을 3개 모델 합의로 좁히고 싶다",
-        "why": "경계를 먼저 잠그고 다중 모델 합의를 돌려 권고안과 충돌 지점을 분리한다"
+        "need": "설계안, 문서 초안, 구현 제안, PRD, 리서치를 3개 모델이 각각 만들고 합의로 좁히고 싶다",
+        "why": "필요하면 compose 계약을 공유해서 세 모델이 각자 작업하고, 가장 강한 산출물과 남는 충돌을 분리한다"
       },
       "sourcePath": "skills/workflow-consensus-engine/SKILL.md",
       "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-consensus-engine/SKILL.md",
@@ -407,7 +408,7 @@
       "name": "workflow-debug-this",
       "description": "Workflow skill that captures the repro, narrows the failure surface, performs root-cause debugging, and checks regression protection. Use when the user wants one default debug entrypoint instead of a broad 'fix the bug' instruction.",
       "summaryKo": "증상을 재현 가능한 실패로 바꾸고, 실패 범위를 좁히고, 원인을 찾고, 정말 고쳐졌는지까지 확인한다. 디버깅 풀코스라고 생각하면 된다.",
-      "purpose": "Compose repro capture, failure-surface reduction, debugging, and test-gap awareness into one explicit debug workflow.",
+      "purpose": "Compose repro capture, failure-surface reduction, root-cause debugging, fix confirmation, and test-gap awareness into one explicit debug workflow.",
       "useWhen": [
         "Need a bounded debug loop for a concrete failure.",
         "Need to capture the repro and reduce failure surface before root-cause work.",
@@ -422,6 +423,7 @@
         "debug-capture-failure",
         "debug-map-impact",
         "debug-find-root-cause",
+        "debug-confirm-fix",
         "test-find-gaps"
       ],
       "layer": "workflow",
@@ -616,7 +618,7 @@
         "Need release review built from explicit repository, hygiene, and readiness subchecks.",
         "Need repo-exposure and secret-leak gates checked before shipping.",
         "Need document-upgrade and legacy-removal gates checked before shipping.",
-        "Need a named release-review workflow that can still be extended with check-final-verify or release-publish.",
+        "Need a named release-review workflow that can still be extended with review-final-verify or release-publish.",
         "Need release judgement only, while keeping branch, tag, and publish mutation outside the current run."
       ],
       "doNotUseWhen": [
@@ -1996,11 +1998,19 @@
     },
     {
       "name": "review-change",
-      "description": "Contract file missing in repository snapshot.",
+      "description": "Review changed code with prioritized findings, testing gaps, and an integrate or hold verdict. Use when you need a findings-first merge judgement rather than implementation work.",
       "summaryKo": "PR 리뷰처럼 문제를 우선순위와 근거와 함께 정리한다. 승인할지 보류할지 판단하는 공구다.",
-      "purpose": "Contract file is missing in this repository snapshot.",
-      "useWhen": [],
-      "doNotUseWhen": [],
+      "purpose": "Issue a findings-first review verdict with concrete evidence.",
+      "useWhen": [
+        "Need a final findings-first review verdict.",
+        "Need prioritized review findings with file and line evidence.",
+        "Need integrate or hold judgement after reviewing changed code."
+      ],
+      "doNotUseWhen": [
+        "Need direct code implementation.",
+        "Need only the 9-item checklist without verdict synthesis.",
+        "Need a narrow single-concern scan instead of a broad review verdict."
+      ],
       "expansion": [],
       "layer": "atomic",
       "layerLabel": {
@@ -2015,17 +2025,25 @@
         "summary_ko": "위험과 품질을 명시적으로 판정한다."
       },
       "quickPick": null,
-      "sourcePath": "skills/review-change",
-      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-change",
-      "missingContract": true
+      "sourcePath": "skills/review-change/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/review-change/SKILL.md",
+      "missingContract": false
     },
     {
       "name": "review-failure-paths",
-      "description": "Contract file missing in repository snapshot.",
+      "description": "Review only the failure paths, exception handling, fallback logic, and cleanup behavior of a bounded scope. Use when the goal is unhappy-path inspection rather than a broad review.",
       "summaryKo": "정상 경로가 아니라 실패 경로만 집중해서 본다. 예외 처리와 복구가 약한지 점검할 때 맞다.",
-      "purpose": "Contract file is missing in this repository snapshot.",
-      "useWhen": [],
-      "doNotUseWhen": [],
+      "purpose": "Find missing, inconsistent, or unsafe error-handling paths in a bounded target.",
+      "useWhen": [
+        "Need to inspect only failure paths and cleanup behavior.",
+        "Need to verify exception, fallback, timeout, or recovery handling.",
+        "Need a bounded review focused on unhappy-path behavior."
+      ],
+      "doNotUseWhen": [
+        "Need a broad review across all concerns.",
+        "Need to implement the fix immediately without first checking error-path coverage.",
+        "The target has no relevant failure or cleanup paths."
+      ],
       "expansion": [],
       "layer": "atomic",
       "layerLabel": {
@@ -2040,17 +2058,25 @@
         "summary_ko": "위험과 품질을 명시적으로 판정한다."
       },
       "quickPick": null,
-      "sourcePath": "skills/review-failure-paths",
-      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-failure-paths",
-      "missingContract": true
+      "sourcePath": "skills/review-failure-paths/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/review-failure-paths/SKILL.md",
+      "missingContract": false
     },
     {
       "name": "review-final-verify",
-      "description": "Contract file missing in repository snapshot.",
+      "description": "Final verification skill for explicit done criteria after work output is complete. Use when delivery needs a last read-and-check pass, not new implementation.",
       "summaryKo": "작업이 끝난 뒤, 약속한 완료 조건이 정말 충족됐는지 마지막으로 확인한다.",
-      "purpose": "Contract file is missing in this repository snapshot.",
-      "useWhen": [],
-      "doNotUseWhen": [],
+      "purpose": "Perform final contract and evidence verification.",
+      "useWhen": [
+        "Need explicit final checks before delivering an answer.",
+        "Need final verification of docs, outputs, tests, or task sync.",
+        "Need a separate validation gate after implementation or review."
+      ],
+      "doNotUseWhen": [
+        "Need feature implementation.",
+        "Need broad analysis instead of final verification.",
+        "Need a domain-specific review rather than final validation."
+      ],
       "expansion": [],
       "layer": "atomic",
       "layerLabel": {
@@ -2065,17 +2091,25 @@
         "summary_ko": "위험과 품질을 명시적으로 판정한다."
       },
       "quickPick": null,
-      "sourcePath": "skills/review-final-verify",
-      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-final-verify",
-      "missingContract": true
+      "sourcePath": "skills/review-final-verify/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/review-final-verify/SKILL.md",
+      "missingContract": false
     },
     {
       "name": "review-quality",
-      "description": "Contract file missing in repository snapshot.",
+      "description": "Checklist-only quality review for changed code. Verify the fixed 9-item quality table and surface pass, risk, or unknown rows with evidence.",
       "summaryKo": "정해진 9개 품질 항목으로 바뀐 코드를 훑는다. 체크리스트 검사관에 가깝다.",
-      "purpose": "Contract file is missing in this repository snapshot.",
-      "useWhen": [],
-      "doNotUseWhen": [],
+      "purpose": "Check code quality against a fixed checklist without replacing verdict review.",
+      "useWhen": [
+        "Need the mandatory 9-item checklist evaluated.",
+        "Need explicit pass, risk, or unknown output across fixed quality dimensions.",
+        "Need checklist evidence before a final review or audit."
+      ],
+      "doNotUseWhen": [
+        "Need direct code implementation.",
+        "Need a single narrow scan instead of the full checklist.",
+        "Need final integrate or hold verdict only."
+      ],
       "expansion": [],
       "layer": "atomic",
       "layerLabel": {
@@ -2090,17 +2124,27 @@
         "summary_ko": "위험과 품질을 명시적으로 판정한다."
       },
       "quickPick": null,
-      "sourcePath": "skills/review-quality",
-      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-quality",
-      "missingContract": true
+      "sourcePath": "skills/review-quality/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/review-quality/SKILL.md",
+      "missingContract": false
     },
     {
       "name": "review-security",
-      "description": "Contract file missing in repository snapshot.",
+      "description": "Run a bounded security review for repo exposure, vulnerability risk, or mitigation verification with prioritized findings. Use when security-specific judgement is needed.",
       "summaryKo": "보안 노출, 비밀 정보 유출, OWASP 취약 지점을 우선순위와 함께 검토한다.",
-      "purpose": "Contract file is missing in this repository snapshot.",
-      "useWhen": [],
-      "doNotUseWhen": [],
+      "purpose": "Surface concrete security issues and repo-exposure risks without turning every hardening idea into a blocker.",
+      "useWhen": [
+        "Need a pre-commit or pre-release security pass focused on secret exposure, ignore drift, or shipped credentials.",
+        "Need vulnerability, threat-model, or mitigation-verification output.",
+        "Need security-specific review with prioritized findings.",
+        "Need exploitability or mitigation evidence before merge or release."
+      ],
+      "doNotUseWhen": [
+        "Need always-on development policing or a broad hardening backlog.",
+        "Need general debugging or performance analysis.",
+        "Need direct implementation.",
+        "Need broad review or release judgement instead of security-specific output."
+      ],
       "expansion": [],
       "layer": "atomic",
       "layerLabel": {
@@ -2118,9 +2162,9 @@
         "need": "보안 노출만 좁게 보고 싶다",
         "why": "비밀키, ignore drift, 공개 설정 노출 같은 위험만 좁게 본다"
       },
-      "sourcePath": "skills/review-security",
-      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-security",
-      "missingContract": true
+      "sourcePath": "skills/review-security/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/review-security/SKILL.md",
+      "missingContract": false
     },
     {
       "name": "tidy-analyze",
@@ -2351,7 +2395,7 @@
     {
       "name": "tidy-review",
       "description": "Read-only cleanup review skill. Inspect a bounded scope for missed reuse opportunities, code-quality issues, and efficiency problems. Produces structured findings that feed into tidy-apply-review-fixes. Use before applying cleanup edits.",
-      "summaryKo": "",
+      "summaryKo": "최근 변경분을 재사용, 구조 품질, 효율 세 렌즈로 한 번에 읽기 전용 리뷰한다.",
       "purpose": "Inspect a bounded scope through up to three cleanup lenses — reuse, quality, and efficiency — and produce structured findings without touching any code.",
       "useWhen": [
         "Need read-only inspection for reuse, quality, or efficiency opportunities before editing code.",
@@ -2738,7 +2782,7 @@
         "Need direct implementation or bug debugging.",
         "Need only repository or docs hygiene checks — use release-check-hygiene instead.",
         "Need actual branch, tag, or release publication execution — use release-publish instead.",
-        "Need only diff/PR gate audit without rollout or rollback judgment — use check-release-risk instead."
+        "Need only diff or PR gate audit without rollout or rollback judgment — use analyze-release-risk instead."
       ],
       "expansion": [],
       "layer": "atomic",
@@ -2926,21 +2970,22 @@
     },
     {
       "name": "consensus-engine",
-      "description": "Run a script-backed three-agent consensus pass for one bounded decision, design, debugging, or planning question. Use when Codex, Claude Code, and Gemini CLI should answer independently, challenge only the disagreement surface, and end with evidence-weighted arbitration instead of naive majority vote.",
+      "description": "Run a script-backed three-agent consensus pass for one bounded decision or one explicit compose execution contract. Use when Codex, Claude Code, and Gemini CLI should work independently, challenge only the disagreement surface, and converge on the strongest recommendation or work product instead of naive majority vote.",
       "summaryKo": "",
       "purpose": "Produce one auditable consensus artifact set from Codex, Claude Code, and Gemini CLI without collapsing disagreement into fake certainty.",
       "useWhen": [
         "Need one bounded recommendation for architecture, refactoring, debugging, migration, or implementation strategy.",
         "Need Codex, Claude Code, and Gemini CLI to answer the same mission independently before seeing disagreement only.",
         "Need a durable artifact set that preserves accepted decisions, provisional lean, unresolved conflicts, and cheapest next checks.",
-        "Need deterministic orchestration through a script because the workflow depends on external CLIs and structured output collection."
+        "Need deterministic orchestration through a script because the workflow depends on external CLIs and structured output collection.",
+        "Need one explicit compose macro executed in parallel for docs, implementation proposals, PRD drafts, or research reports."
       ],
       "doNotUseWhen": [
         "One model is enough.",
         "The task is deterministic and debate adds no value.",
         "Required CLIs are unavailable, unauthenticated, or forbidden in the environment.",
         "The prompt contains secrets or regulated data that must not be sent to external model CLIs.",
-        "The main job is direct implementation rather than analysis."
+        "The main job is direct shared-workspace mutation instead of parallel draft/proposal convergence."
       ],
       "expansion": [],
       "layer": "atomic",

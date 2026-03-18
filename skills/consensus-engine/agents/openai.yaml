@@ -1,6 +1,6 @@
 interface:
   display_name: "Consensus Engine"
-  short_description: "Run a script-backed three-agent consensus pass for one bounded decision, design, debugging, or planning question. Use when Codex, Claude Code, and Gemini CLI should answer independently, challenge only the disagreement surface, and end with evidence-weighted arbitration instead of naive majority vote."
+  short_description: "Run a script-backed three-agent consensus pass for one bounded decision or one explicit compose execution contract. Use when Codex, Claude Code, and Gemini CLI should work independently, challenge only the disagreement surface, and converge on the strongest recommendation or work product instead of naive majority vote."
   default_prompt: "$consensus-engine"
 policy:
   allow_implicit_invocation: false

@@ -83,7 +83,7 @@ Atomic 스킬 카테고리:
 | 질문/요청이 흐리다, 뭘 해야 할지 모르겠다 | [`workflow-clarify-request`](./skills/workflow-clarify-request/SKILL.md) |
 | 코드 구조·복잡도·의존성을 한 번에 분석하고 싶다 | [`workflow-analyze-codebase`](./skills/workflow-analyze-codebase/SKILL.md) |
 | 현재 코드 구조와 범위를 먼저 파악하고 싶다 | [`workflow-scout-structure`](./skills/workflow-scout-structure/SKILL.md) |
-| 설계안이나 디버깅 가설을 Codex/Claude/Gemini 합의로 좁히고 싶다 | [`workflow-consensus-engine`](./skills/workflow-consensus-engine/SKILL.md) |
+| 설계안, 문서 초안, 구현 제안, PRD, 리서치를 3개 모델이 각각 만들고 합의로 좁히고 싶다 | [`workflow-consensus-engine`](./skills/workflow-consensus-engine/SKILL.md) |
 | 간단한 코드 리뷰가 필요하다 | [`workflow-review-change`](./skills/workflow-review-change/SKILL.md) |
 | 구조·품질·보안·실패경로 완전한 리뷰가 필요하다 | [`workflow-review-complete`](./skills/workflow-review-complete/SKILL.md) |
 | 버그를 처음부터 끝까지 잡고 싶다 | [`workflow-debug-this`](./skills/workflow-debug-this/SKILL.md) |

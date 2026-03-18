@@ -77,12 +77,17 @@ def find_scaffold_placeholders(path: Path) -> List[str]:
     return [marker for marker in SCAFFOLD_PLACEHOLDERS if marker in content]
 
 
-def iter_skill_dirs(skills_root: Path) -> Iterable[Path]:
+def iter_declared_skill_dirs(skills_root: Path) -> Iterable[Path]:
     for path in sorted(skills_root.iterdir()):
         if not path.is_dir() or path.name.startswith("."):
             continue
         if path.name == "_meta":
             continue
+        yield path
+
+
+def iter_skill_dirs(skills_root: Path) -> Iterable[Path]:
+    for path in iter_declared_skill_dirs(skills_root):
         if (path / "SKILL.md").exists():
             yield path
 
@@ -157,6 +162,21 @@ def extract_frontmatter_name(skill_md_path: Path) -> str:
     return match.group(1).strip()
 
 
+def extract_expansion_list(skill_md_path: Path) -> List[str]:
+    content = skill_md_path.read_text(encoding="utf-8")
+    match = re.search(r"^##\s+Expansion\s*$\n(.*?)(?:\n##\s+|\Z)", content, flags=re.S | re.M)
+    if not match:
+        return []
+
+    expansion: List[str] = []
+    for raw_line in match.group(1).splitlines():
+        stripped = raw_line.strip()
+        bullet_match = re.match(r"^- `\$(.+)`$", stripped)
+        if bullet_match:
+            expansion.append(bullet_match.group(1).strip())
+    return expansion
+
+
 def parse_openai_yaml(agent_yaml_path: Path) -> Dict[str, str]:
     if not agent_yaml_path.exists():
         raise ValueError(f"Missing agent metadata file: {agent_yaml_path}")
@@ -227,14 +247,33 @@ def command_validate(skills_root: Path) -> int:
     lenses = lenses_path(skills_root)
     missing_agent_yaml: List[str] = []
 
+    declared_skill_dirs = list(iter_declared_skill_dirs(skills_root))
+    declared_skill_names = [path.name for path in declared_skill_dirs]
+    valid_contract_skill_names = {
+        path.name
+        for path in declared_skill_dirs
+        if (path / "SKILL.md").exists() and (path / SKILL_META_FILE).exists()
+    }
+
+    incomplete_contracts = []
+    for path in declared_skill_dirs:
+        missing_files = []
+        if not (path / "SKILL.md").exists():
+            missing_files.append("SKILL.md")
+        if not (path / SKILL_META_FILE).exists():
+            missing_files.append(SKILL_META_FILE)
+        if missing_files:
+            incomplete_contracts.append(f"{path.name} ({', '.join(missing_files)} missing)")
+    if incomplete_contracts:
+        errors.append(f"Incomplete skill contracts: {', '.join(incomplete_contracts)}")
+
     direct_entries = direct_skill_entries(skills_root)
-    all_skill_names = [path.name for path in iter_skill_dirs(skills_root)]
     if not direct_entries:
         errors.append(f"No direct skill metadata files found under `{skills_root}`.")
     else:
         notes.append(f"Validated {len(direct_entries)} direct skill metadata file(s).")
 
-    missing_meta = sorted(set(all_skill_names) - set(direct_entries))
+    missing_meta = sorted(set(declared_skill_names) - set(direct_entries))
     if missing_meta:
         errors.append(f"Missing direct skill metadata for: {', '.join(missing_meta)}")
 
@@ -309,6 +348,27 @@ def command_validate(skills_root: Path) -> int:
 
         if entry.get("layer") == "workflow" and isinstance(entry.get("expands_to"), list) and len(entry["expands_to"]) < 2:
             notes.append(f"{meta_path}: workflow expands_to has fewer than 2 steps; review whether it should remain a workflow.")
+
+        if entry.get("layer") == "workflow":
+            try:
+                md_expansion = extract_expansion_list(skill_md_path)
+            except ValueError as exc:
+                errors.append(str(exc))
+                md_expansion = []
+
+            json_expansion = []
+            for raw in entry.get("expands_to", []):
+                if isinstance(raw, str) and raw:
+                    json_expansion.append(raw[1:] if raw.startswith("$") else raw)
+                else:
+                    errors.append(f"{meta_path}: workflow expands_to contains invalid token `{raw}`.")
+
+            if md_expansion != json_expansion:
+                errors.append(f"{meta_path}: expands_to drift detected against `{skill_md_path}`.")
+
+            missing_targets = [target for target in json_expansion if target not in valid_contract_skill_names]
+            if missing_targets:
+                errors.append(f"{meta_path}: expands_to targets missing contracts: {', '.join(missing_targets)}")
 
         try:
             current_program = extract_default_program(skill_md_path)

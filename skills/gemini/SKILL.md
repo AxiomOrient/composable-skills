@@ -78,7 +78,7 @@ Flag confidence: "Gemini confidence is low on [claim] — local evidence does no
 
 ## Example Invocation
 ```text
-$compose + $gemini + $check-final-verify
+$compose + $gemini + $review-final-verify
 
 GEMINI_MODE: new
 GEMINI_GOAL: Compare the current auth token refresh flow against official provider docs.

@@ -287,8 +287,8 @@
       ],
       "good_for": [
         "neutral analysis",
-        "check-change-review",
-        "check-release-risk",
+        "review-change",
+        "analyze-release-risk",
         "risk judgement",
         "quality checklists"
       ],

@@ -1,7 +1,7 @@
 {
   "name": "consensus-engine",
-  "layer": "atomic",
-  "layer_badge": "Atomic",
+  "layer": "utility",
+  "layer_badge": "Utility",
   "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,safety-gates,deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
   "required_inputs": [
     {
@@ -12,9 +12,9 @@
     },
     {
       "name": "CONSENSUS_MODE",
-      "type": "analysis|plan|implement-review",
+      "type": "execute|analysis|plan|implement-review",
       "required": false,
-      "description": "Output mode. Defaults to analysis."
+      "description": "Output mode. Defaults to execute."
     },
     {
       "name": "CONSTRAINTS",
@@ -43,12 +43,18 @@
       "required": false,
       "shape": "{FACT}",
       "description": "Already verified facts that should anchor the run."
+    },
+    {
+      "name": "MACRO_EXPRESSION",
+      "type": "string",
+      "required": false,
+      "description": "Optional explicit compose macro that defines the shared execution contract."
     }
   ],
   "display_name": "Consensus Engine",
-  "browse_category": "analyze",
+  "browse_category": "control",
   "browse_priority": 30,
   "is_category_default": false,
-  "codex_surface": "expert",
+  "codex_surface": "internal_control",
   "starter_inputs": []
 }

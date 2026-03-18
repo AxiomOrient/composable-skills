@@ -61,10 +61,8 @@
     }
   ],
   "expands_to": [
-    "$tidy-review-reuse",
-    "$tidy-review-quality",
-    "$tidy-review-efficiency",
+    "$tidy-review",
     "$tidy-apply-review-fixes",
-    "$check-final-verify"
+    "$review-final-verify"
   ]
 }

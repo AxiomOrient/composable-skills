@@ -26,6 +26,33 @@ SUPPORT_WEIGHTS = {
 }
 SIMILARITY_THRESHOLD = 0.80
 HELP_TIMEOUT_SEC = 15
+# Arbitration thresholds for classify_cluster.
+# Unanimous acceptance: all 3 agents agree and average support score exceeds "speculative" (1.0).
+# 1.4 sits between speculative(1.0) and reasoned(2.0), requiring at least mixed-quality evidence.
+UNANIMOUS_AVG_SCORE_THRESHOLD = 1.4
+# Provisional acceptance: 2 agents agree with aggregate score above a two-reasoned baseline (2×1.25).
+PROVISIONAL_TOTAL_SCORE_THRESHOLD = 2.5
+# Evidence floor: at minimum 2 anchor mentions AND at least 1 concrete anchor (file/symbol/prefix).
+EVIDENCE_FLOOR_MIN_ANCHORS = 2
+EVIDENCE_FLOOR_MIN_QUALITY = 1
+ANCHOR_PREFIXES = (
+    "constraint:",
+    "constraints:",
+    "done:",
+    "done_signal:",
+    "done_signals:",
+    "context:",
+    "path:",
+    "symbol:",
+    "request_summary:",
+    "request_packet.",
+    "request_packet:",
+)
+NEGATION_PATTERNS = (
+    re.compile(r"^(?:do not|don't|never)\s+(.+)$", flags=re.I),
+    re.compile(r"^avoid\s+(.+)$", flags=re.I),
+    re.compile(r"^no\s+(.+)$", flags=re.I),
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -36,9 +63,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--task", required=True, help="Bounded mission or decision question")
     parser.add_argument(
         "--mode",
-        default="analysis",
-        choices=("analysis", "plan", "implement-review"),
+        default="execute",
+        choices=("execute", "analysis", "plan", "implement-review"),
         help="Mission mode",
+    )
+    parser.add_argument(
+        "--macro-expression",
+        default="",
+        help="Optional explicit compose macro expression. When supplied, the engine runs the shared composed contract in parallel before consensus.",
+    )
+    parser.add_argument(
+        "--skills-root",
+        default="",
+        help="Optional skills root path used when parsing a compose macro. Defaults to the repository skills root.",
     )
     parser.add_argument(
         "--constraint",
@@ -106,6 +143,14 @@ def parse_args() -> argparse.Namespace:
 
 def skill_root() -> Path:
     return Path(__file__).resolve().parents[1]
+
+
+def runtime_skills_root() -> Path:
+    return skill_root().parent
+
+
+def compose_parser_path() -> Path:
+    return runtime_skills_root() / "compose" / "scripts" / "parse_macro.py"
 
 
 def now_stamp() -> str:
@@ -210,6 +255,35 @@ def dedupe_preserve(items: Iterable[str]) -> List[str]:
     return result
 
 
+def anchor_quality(anchors: Iterable[str]) -> int:
+    score = 0
+    for item in anchors:
+        if re.search(r"[A-Za-z0-9_./-]+\.[A-Za-z0-9]+", item):
+            score += 1
+        elif "/" in item or "::" in item or "()" in item:
+            score += 1
+        elif item.lower().startswith(ANCHOR_PREFIXES):
+            score += 1
+    return score
+
+
+def trim_statement(statement: str) -> str:
+    return re.sub(r"[\s:;,.]+$", "", statement.strip())
+
+
+def canonicalize_decision(statement: str, polarity: str) -> Tuple[str, str]:
+    raw = trim_statement(statement)
+    if not raw:
+        return "", polarity
+    for pattern in NEGATION_PATTERNS:
+        match = pattern.match(raw)
+        if not match:
+            continue
+        canonical = trim_statement(match.group(1))
+        return canonical or raw, "avoid"
+    return raw, polarity
+
+
 def load_context_files(paths: List[str], max_chars: int) -> List[Dict[str, Any]]:
     items: List[Dict[str, Any]] = []
     for raw in paths:
@@ -230,21 +304,133 @@ def load_context_files(paths: List[str], max_chars: int) -> List[Dict[str, Any]]
     return items
 
 
-def build_request_packet(args: argparse.Namespace, contexts: List[Dict[str, Any]]) -> Dict[str, Any]:
+def selected_skills_root(args: argparse.Namespace) -> Path:
+    return Path(args.skills_root).resolve() if args.skills_root else runtime_skills_root()
+
+
+def load_compose_contract(args: argparse.Namespace, out_dir: Path) -> Optional[Dict[str, Any]]:
+    if not args.macro_expression.strip():
+        return None
+
+    parser_path = compose_parser_path()
+    if not parser_path.exists():
+        raise FileNotFoundError(f"compose parser not found: {parser_path}")
+
+    proc = subprocess.run(
+        [
+            sys.executable,
+            str(parser_path),
+            "--macro",
+            args.macro_expression,
+            "--skills-root",
+            str(selected_skills_root(args)),
+            "--format",
+            "json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=HELP_TIMEOUT_SEC,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"compose parser failed: rc={proc.returncode} stderr={proc.stderr.strip() or proc.stdout.strip()}"
+        )
+    payload = json.loads(proc.stdout)
+    write_json(out_dir / "compose.contract.json", payload)
+    return payload
+
+
+def compose_missing_inputs(compose_contract: Optional[Dict[str, Any]]) -> List[str]:
+    if not compose_contract:
+        return []
+    rows = compose_contract.get("contract_outputs", {}).get("MISSING_REQUIRED_INPUTS", [])
+    items = []
+    for row in rows:
+        target_skill = row.get("target_skill", "unknown-skill")
+        target_field = row.get("target_field", "unknown-field")
+        starter_key = row.get("suggested_starter_key", "unknown")
+        reason = row.get("reason", "missing")
+        items.append(
+            f"{target_skill}.{target_field} unresolved — suggested input {starter_key} ({reason})"
+        )
+    return items
+
+
+def compose_blockers(compose_contract: Optional[Dict[str, Any]]) -> List[str]:
+    return compose_missing_inputs(compose_contract)
+
+
+def compose_contract_for_packet(compose_contract: Optional[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    if not compose_contract:
+        return None
+    contract = compose_contract.get("contract_outputs", {})
+    response_profile = contract.get("RESPONSE_PROFILE") or {}
+    return {
+        "macro_expression": compose_contract.get("input_macro", ""),
+        "program": contract.get("PROGRAM", ""),
+        "normalized_scope": contract.get("NORMALIZED_SCOPE", ""),
+        "effective_skills": contract.get("EFFECTIVE_SKILLS", []),
+        "expanded_skills": contract.get("EXPANDED_SKILLS", []),
+        "parsed_doc_inputs": contract.get("PARSED_DOC_INPUTS", []),
+        "prompt_tail": contract.get("PROMPT_TAIL", ""),
+        "starter_input_values": contract.get("STARTER_INPUT_VALUES", {}),
+        "response_profile": {
+            "primary_skill": response_profile.get("primary_skill"),
+            "profile_id": response_profile.get("profile_id"),
+            "required_sections": response_profile.get("required_sections", []),
+        },
+        "missing_required_inputs": contract.get("MISSING_REQUIRED_INPUTS", []),
+        "structural_warnings": contract.get("STRUCTURAL_WARNINGS", []),
+    }
+
+
+def build_request_packet(
+    args: argparse.Namespace,
+    contexts: List[Dict[str, Any]],
+    compose_contract: Optional[Dict[str, Any]],
+) -> Dict[str, Any]:
     done_signals = args.done_signal[:] or [
         "Return one defensible recommendation, preserve disagreements, and list cheapest next checks"
     ]
+    if compose_contract:
+        profile_sections = (
+            compose_contract.get("contract_outputs", {})
+            .get("RESPONSE_PROFILE", {})
+            .get("required_sections", [])
+        )
+        if profile_sections and not args.done_signal:
+            done_signals = [
+                "Produce one work product that covers the required response profile sections: "
+                + ", ".join(profile_sections)
+            ]
+
+    task_kind = "compose-execution" if compose_contract else "decision"
+    effective_mode = args.mode
+    if compose_contract and args.mode == "execute":
+        effective_mode = "execute"
+
     return {
         "request_summary": args.task.strip(),
-        "mode": args.mode,
+        "mode": effective_mode,
+        "task_kind": task_kind,
         "scope": {
-            "in": ["the bounded mission in --task", "supplied context files", "supplied local evidence"],
-            "out": ["product code edits", "silent majority vote", "fabricated certainty"],
+            "in": [
+                "the bounded mission in --task",
+                "supplied context files",
+                "supplied local evidence",
+            ]
+            + (["shared compose execution contract"] if compose_contract else []),
+            "out": [
+                "silent majority vote",
+                "fabricated certainty",
+                "shared-workspace concurrent edits",
+            ],
         },
         "constraints": args.constraint[:],
         "done_signals": done_signals,
         "local_evidence": args.local_evidence[:],
-        "open_questions": [],
+        "open_questions": compose_missing_inputs(compose_contract),
         "safety": {
             "external_model_access_ok": True,
             "secrets_redacted": True,
@@ -258,12 +444,14 @@ def build_request_packet(args: argparse.Namespace, contexts: List[Dict[str, Any]
             }
             for item in contexts
         ],
+        "compose_contract": compose_contract_for_packet(compose_contract),
     }
 
 
 def format_request_packet_for_prompt(packet: Dict[str, Any], contexts: List[Dict[str, Any]]) -> str:
     lines = [
         f"request_summary: {packet['request_summary']}",
+        f"task_kind: {packet['task_kind']}",
         f"mode: {packet['mode']}",
         "constraints:",
     ]
@@ -278,6 +466,11 @@ def format_request_packet_for_prompt(packet: Dict[str, Any], contexts: List[Dict
         lines.extend([f"- {x}" for x in packet["local_evidence"]])
     else:
         lines.append("- none")
+    lines.append("open_questions:")
+    if packet["open_questions"]:
+        lines.extend([f"- {x}" for x in packet["open_questions"]])
+    else:
+        lines.append("- none")
     if contexts:
         lines.append("context_files:")
         for item in contexts:
@@ -288,6 +481,36 @@ def format_request_packet_for_prompt(packet: Dict[str, Any], contexts: List[Dict
                 lines.append(f"    {line}")
     else:
         lines.append("context_files: []")
+    compose_contract = packet.get("compose_contract")
+    if compose_contract:
+        lines.append("compose_contract:")
+        lines.append(f"- macro_expression: {compose_contract.get('macro_expression') or '(none)'}")
+        lines.append(f"- program: {compose_contract.get('program') or '(none)'}")
+        lines.append(f"- normalized_scope: {compose_contract.get('normalized_scope') or '(none)'}")
+        lines.append(
+            "- effective_skills: "
+            + (", ".join(compose_contract.get("effective_skills", [])) or "none")
+        )
+        lines.append(
+            "- expanded_skills: "
+            + (", ".join(compose_contract.get("expanded_skills", [])) or "none")
+        )
+        starter_input_values = compose_contract.get("starter_input_values") or {}
+        if starter_input_values:
+            lines.append(
+                "- starter_input_values: "
+                + json.dumps(starter_input_values, ensure_ascii=False, sort_keys=True)
+            )
+        response_profile = compose_contract.get("response_profile") or {}
+        lines.append(f"- response_profile_id: {response_profile.get('profile_id') or 'none'}")
+        lines.append(
+            "- required_sections: "
+            + (", ".join(response_profile.get("required_sections", [])) or "none")
+        )
+        lines.append(
+            "- structural_warnings: "
+            + (", ".join(compose_contract.get("structural_warnings", [])) or "none")
+        )
     return "\n".join(lines)
 
 
@@ -381,6 +604,8 @@ def build_round1_prompt(
     schema_text: str,
 ) -> str:
     lens = LENSES[agent]
+    task_kind = packet.get("task_kind", "decision")
+    compose_contract = packet.get("compose_contract")
     agent_guidance = {
         "codex": (
             "Drive toward an executable, testable, implementation-facing contract. "
@@ -395,6 +620,42 @@ def build_round1_prompt(
             "Prefer plain language over jargon when possible."
         ),
     }[agent]
+    mission_text = (
+        "Execute the shared composed workflow contract below and return one concrete work product plus the key decisions behind it."
+        if task_kind == "compose-execution"
+        else "Produce one bounded recommendation for the request packet below."
+    )
+    task_rules = [
+        "- Round 1 is independent. Do not assume or simulate peer answers.",
+        "- Do not invoke skills, slash commands, subagents, or hidden delegation loops.",
+        "- Do not expose chain-of-thought. Return only conclusions, work product, atomic decisions, and explicit uncertainty.",
+        "- Always fill `work_summary` with the concrete deliverable summary and `work_output` with the full draft, recommendation, report, or patch-style proposal you want selected.",
+        "- Use `output_artifacts` for intended artifact paths or output units. Leave it empty only when no concrete artifact target exists.",
+        "- Express every decision as a positive action phrase. Example: use `inspect repository files`, not `do not inspect repository files`; use `must_keep` or `must_avoid` for polarity.",
+        "- Every item in `must_keep` and `must_avoid` must include `anchors` using canonical prefixes like `constraints:`, `done_signals:`, `path:`, `symbol:`, `request_summary:`, or `request_packet...`. If no concrete anchor exists, leave `anchors` empty and do not mark the claim as `grounded`.",
+        "- Use `grounded` only for claims anchored in explicit evidence or specifications.",
+        "- Use `reasoned` for justified inference.",
+        "- Use `speculative` for plausible but weakly grounded ideas.",
+        "- Prefer saying uncertain over guessing.",
+    ]
+    if task_kind == "compose-execution":
+        task_rules.extend(
+            [
+                "- This is not analysis-only. Produce the actual deliverable in `work_output`.",
+                "- Keep the deliverable aligned to the compose response profile required sections.",
+                "- When required sections are present, render each section label verbatim as a Markdown heading inside `work_output`.",
+                "- Do not edit repository files directly. Put the full draft, proposed patch, doc, PRD, or research output in `work_output` and list the intended artifact targets in `output_artifacts`.",
+                "- For code-oriented work, prefer concise unified diff blocks or file-scoped patch sections inside `work_output`.",
+            ]
+        )
+    else:
+        task_rules.append("- Keep the run analysis-oriented. Do not edit files.")
+    compose_hint = ""
+    if compose_contract:
+        compose_hint = (
+            "\nCompose execution contract:\n"
+            f"{json.dumps(compose_contract, ensure_ascii=False, indent=2)}\n"
+        )
     return textwrap.dedent(
         f"""
         You are participating in a three-agent consensus engine.
@@ -403,24 +664,17 @@ def build_round1_prompt(
         Lens: {lens}
 
         Mission:
-        Produce one bounded recommendation for the request packet below.
+        {mission_text}
 
         Hard rules:
-        - Round 1 is independent. Do not assume or simulate peer answers.
-        - Do not invoke skills, slash commands, subagents, or hidden delegation loops.
-        - Do not expose chain-of-thought. Return only conclusions, atomic decisions, and explicit uncertainty.
-        - This is analysis-only. Do not edit files.
-        - Every item in `must_keep` and `must_avoid` must be a short atomic decision sentence.
-        - Use `grounded` only for claims anchored in explicit evidence or specifications.
-        - Use `reasoned` for justified inference.
-        - Use `speculative` for plausible but weakly grounded ideas.
-        - Prefer saying uncertain over guessing.
+        {chr(10).join(task_rules)}
 
         Lens guidance:
         {agent_guidance}
 
         Request packet:
         {packet_text}
+        {compose_hint}
 
         Required output schema:
         {schema_text}
@@ -439,12 +693,18 @@ def summarize_decisions(responses: Dict[str, Dict[str, Any]]) -> List[Dict[str, 
     for agent, payload in responses.items():
         for polarity, field in (("keep", "must_keep"), ("avoid", "must_avoid")):
             for entry in payload.get(field, []):
+                statement, canonical_polarity = canonicalize_decision(
+                    entry.get("statement", "").strip(),
+                    polarity,
+                )
                 items.append(
                     {
                         "agent": agent,
-                        "polarity": polarity,
-                        "statement": entry.get("statement", "").strip(),
+                        "polarity": canonical_polarity,
+                        "statement": statement,
+                        "raw_statement": entry.get("statement", "").strip(),
                         "why": entry.get("why", "").strip(),
+                        "anchors": dedupe_preserve(entry.get("anchors", [])),
                         "support": entry.get("support", "speculative"),
                         "confidence": float(entry.get("confidence", 0.0)),
                         "score": support_score(entry),
@@ -536,6 +796,8 @@ def build_disagreement_packet(responses: Dict[str, Dict[str, Any]]) -> Dict[str,
                 "slot": slots[agent],
                 "summary": payload.get("summary", ""),
                 "proposal": payload.get("proposal", ""),
+                "work_summary": payload.get("work_summary", ""),
+                "output_artifacts": payload.get("output_artifacts", []),
                 "confidence": payload.get("confidence", 0.0),
             }
         )
@@ -548,9 +810,20 @@ def build_disagreement_packet(responses: Dict[str, Dict[str, Any]]) -> Dict[str,
         )
     )
 
+    work_summary_variants = {
+        normalize_text(payload.get("work_summary", ""))
+        for payload in responses.values()
+        if payload.get("work_summary", "").strip()
+    }
+    needs_rebuttal = any(
+        item["status"] not in {"keep-unanimous", "avoid-unanimous"}
+        for item in packet_clusters
+    ) or len(work_summary_variants) > 1
+
     return {
         "anonymous_proposal_summaries": proposal_summaries,
         "decision_clusters": packet_clusters,
+        "requires_rebuttal": needs_rebuttal,
         "instructions": [
             "Challenge weak claims instead of following the majority.",
             "Update only when the evidence packet justifies it.",
@@ -561,11 +834,13 @@ def build_disagreement_packet(responses: Dict[str, Dict[str, Any]]) -> Dict[str,
 
 def build_round2_prompt(
     agent: str,
+    packet: Dict[str, Any],
     packet_text: str,
     schema_text: str,
     disagreement_packet: Dict[str, Any],
 ) -> str:
     lens = LENSES[agent]
+    task_kind = packet.get("task_kind", "decision")
     return textwrap.dedent(
         f"""
         You are participating in round 2 of a three-agent consensus engine.
@@ -582,8 +857,11 @@ def build_round2_prompt(
         - Update your position only when the disagreement packet materially changes your view.
         - Do not invoke skills, slash commands, subagents, or hidden delegation loops.
         - Do not expose chain-of-thought.
-        - Keep `must_keep` and `must_avoid` atomic and comparison-friendly.
+        - Keep `work_summary` and `work_output` aligned with your final position.
+        - Express every decision as a positive action phrase. Example: use `inspect repository files`, not `do not inspect repository files`; use `must_keep` or `must_avoid` for polarity.
+        - Every item in `must_keep` and `must_avoid` must include `anchors` using canonical prefixes like `constraints:`, `done_signals:`, `path:`, `symbol:`, `request_summary:`, or `request_packet...`. If no concrete anchor exists, leave `anchors` empty and do not mark the claim as `grounded`.
         - Preserve explicit uncertainty where the tie cannot be broken.
+        {'- If you change the underlying deliverable, update `work_summary`, `work_output`, and `output_artifacts` as well. Keep required section labels verbatim as Markdown headings when the compose contract lists them.' if task_kind == 'compose-execution' else '- Keep the focus on the recommendation rather than stylistic drift.'}
 
         Original request packet:
         {packet_text}
@@ -663,6 +941,9 @@ def validate_agent_response(data: Any) -> List[str]:
     required = [
         "summary",
         "proposal",
+        "work_summary",
+        "work_output",
+        "output_artifacts",
         "must_keep",
         "must_avoid",
         "assumptions",
@@ -674,13 +955,17 @@ def validate_agent_response(data: Any) -> List[str]:
         if key not in data:
             errors.append(f"missing field: {key}")
 
-    for key in ("summary", "proposal"):
+    for key in ("summary", "proposal", "work_summary", "work_output"):
         if key in data and not isinstance(data[key], str):
             errors.append(f"{key} must be a string")
 
-    for key in ("must_keep", "must_avoid", "assumptions", "uncertainties", "next_checks"):
+    for key in ("output_artifacts", "must_keep", "must_avoid", "assumptions", "uncertainties", "next_checks"):
         if key in data and not isinstance(data[key], list):
             errors.append(f"{key} must be a list")
+    if "output_artifacts" in data and isinstance(data["output_artifacts"], list):
+        for index, item in enumerate(data["output_artifacts"]):
+            if not isinstance(item, str) or not item.strip():
+                errors.append(f"output_artifacts[{index}] must be a non-empty string")
 
     confidence = data.get("confidence")
     if not isinstance(confidence, (int, float)):
@@ -699,10 +984,17 @@ def validate_agent_response(data: Any) -> List[str]:
             for key in ("statement", "why", "support", "confidence"):
                 if key not in item:
                     errors.append(f"{field}[{index}] missing {key}")
+            if "anchors" not in item:
+                errors.append(f"{field}[{index}] missing anchors")
             if "statement" in item and not isinstance(item["statement"], str):
                 errors.append(f"{field}[{index}].statement must be a string")
             if "why" in item and not isinstance(item["why"], str):
                 errors.append(f"{field}[{index}].why must be a string")
+            if "anchors" in item and (
+                not isinstance(item["anchors"], list)
+                or any(not isinstance(anchor, str) or not anchor.strip() for anchor in item["anchors"])
+            ):
+                errors.append(f"{field}[{index}].anchors must be a list of non-empty strings")
             if "support" in item and item["support"] not in SUPPORT_WEIGHTS:
                 errors.append(
                     f"{field}[{index}].support must be one of {sorted(SUPPORT_WEIGHTS.keys())}"
@@ -883,11 +1175,16 @@ def run_one_agent(
 def classify_cluster(cluster: Dict[str, Any]) -> Dict[str, Any]:
     keep_scores: Dict[str, float] = {}
     avoid_scores: Dict[str, float] = {}
+    keep_anchors: Dict[str, List[str]] = {}
+    avoid_anchors: Dict[str, List[str]] = {}
 
     for item in cluster["items"]:
-        target = keep_scores if item["polarity"] == "keep" else avoid_scores
-        prev = target.get(item["agent"], 0.0)
-        target[item["agent"]] = max(prev, item["score"])
+        target_scores = keep_scores if item["polarity"] == "keep" else avoid_scores
+        target_anchors = keep_anchors if item["polarity"] == "keep" else avoid_anchors
+        prev = target_scores.get(item["agent"], 0.0)
+        if item["score"] >= prev:
+            target_scores[item["agent"]] = item["score"]
+            target_anchors[item["agent"]] = dedupe_preserve(item.get("anchors", []))
 
     keep_count = len(keep_scores)
     avoid_count = len(avoid_scores)
@@ -895,6 +1192,14 @@ def classify_cluster(cluster: Dict[str, Any]) -> Dict[str, Any]:
     avoid_total = round(sum(avoid_scores.values()), 3)
     keep_avg = (keep_total / keep_count) if keep_count else 0.0
     avoid_avg = (avoid_total / avoid_count) if avoid_count else 0.0
+    keep_anchor_list = [anchor for anchors in keep_anchors.values() for anchor in anchors]
+    avoid_anchor_list = [anchor for anchors in avoid_anchors.values() for anchor in anchors]
+    keep_anchor_mentions = len(keep_anchor_list)
+    avoid_anchor_mentions = len(avoid_anchor_list)
+    keep_anchor_quality = anchor_quality(keep_anchor_list)
+    avoid_anchor_quality = anchor_quality(avoid_anchor_list)
+    keep_evidence_floor = keep_anchor_mentions >= EVIDENCE_FLOOR_MIN_ANCHORS and keep_anchor_quality >= EVIDENCE_FLOOR_MIN_QUALITY
+    avoid_evidence_floor = avoid_anchor_mentions >= EVIDENCE_FLOOR_MIN_ANCHORS and avoid_anchor_quality >= EVIDENCE_FLOOR_MIN_QUALITY
 
     classification = "unresolved"
     rationale = "insufficient aligned evidence"
@@ -902,24 +1207,24 @@ def classify_cluster(cluster: Dict[str, Any]) -> Dict[str, Any]:
     if keep_count and avoid_count:
         classification = "unresolved"
         rationale = "direct keep/avoid collision"
-    elif keep_count == 3 and keep_avg >= 1.4:
+    elif keep_count == 3 and keep_avg >= UNANIMOUS_AVG_SCORE_THRESHOLD and keep_evidence_floor:
         classification = "accepted_keep"
         rationale = "3 keep / 0 avoid with adequate average evidence"
-    elif avoid_count == 3 and avoid_avg >= 1.4:
+    elif avoid_count == 3 and avoid_avg >= UNANIMOUS_AVG_SCORE_THRESHOLD and avoid_evidence_floor:
         classification = "accepted_avoid"
         rationale = "0 keep / 3 avoid with adequate average evidence"
-    elif keep_count >= 2 and avoid_count == 0 and keep_total >= 2.5:
+    elif keep_count >= 2 and avoid_count == 0 and keep_total >= PROVISIONAL_TOTAL_SCORE_THRESHOLD and keep_evidence_floor:
         classification = "provisional_keep"
         rationale = "2 keep / 0 avoid with stronger aggregate evidence"
-    elif avoid_count >= 2 and keep_count == 0 and avoid_total >= 2.5:
+    elif avoid_count >= 2 and keep_count == 0 and avoid_total >= PROVISIONAL_TOTAL_SCORE_THRESHOLD and avoid_evidence_floor:
         classification = "provisional_avoid"
         rationale = "0 keep / 2 avoid with stronger aggregate evidence"
-    elif keep_count == 3 and keep_avg < 1.4:
-        classification = "provisional_keep"
-        rationale = "unanimous keep but weak evidence"
-    elif avoid_count == 3 and avoid_avg < 1.4:
-        classification = "provisional_avoid"
-        rationale = "unanimous avoid but weak evidence"
+    elif keep_count >= 2 and avoid_count == 0:
+        classification = "needs_more_evidence"
+        rationale = "aligned keep votes but evidence floor not met"
+    elif avoid_count >= 2 and keep_count == 0:
+        classification = "needs_more_evidence"
+        rationale = "aligned avoid votes but evidence floor not met"
 
     return {
         "statement": cluster["statement"],
@@ -929,6 +1234,14 @@ def classify_cluster(cluster: Dict[str, Any]) -> Dict[str, Any]:
         "avoid_by": sorted(avoid_scores.keys()),
         "keep_strength": keep_total,
         "avoid_strength": avoid_total,
+        "keep_evidence_floor_met": keep_evidence_floor,
+        "avoid_evidence_floor_met": avoid_evidence_floor,
+        "keep_anchor_mentions": keep_anchor_mentions,
+        "avoid_anchor_mentions": avoid_anchor_mentions,
+        "keep_anchor_quality": keep_anchor_quality,
+        "avoid_anchor_quality": avoid_anchor_quality,
+        "keep_anchors": dedupe_preserve(keep_anchor_list),
+        "avoid_anchors": dedupe_preserve(avoid_anchor_list),
     }
 
 
@@ -948,7 +1261,135 @@ def aggregate_next_checks(responses: Dict[str, Dict[str, Any]]) -> List[str]:
     return [text for text, _ in ranked[:10]]
 
 
+def payload_aligns_with_statement(payload: Dict[str, Any], statement: str, expected_polarity: str) -> bool:
+    for field, fallback_polarity in (("must_keep", "keep"), ("must_avoid", "avoid")):
+        for item in payload.get(field, []):
+            candidate, candidate_polarity = canonicalize_decision(
+                item.get("statement", ""),
+                fallback_polarity,
+            )
+            if candidate_polarity != expected_polarity:
+                continue
+            if decision_similarity(candidate, statement) >= SIMILARITY_THRESHOLD:
+                return True
+    return False
+
+
+def required_sections_for_packet(packet: Dict[str, Any]) -> List[str]:
+    compose_contract = packet.get("compose_contract") or {}
+    response_profile = compose_contract.get("response_profile") or {}
+    sections = response_profile.get("required_sections", [])
+    return [section for section in sections if isinstance(section, str) and section.strip()]
+
+
+def section_coverage(work_output: str, required_sections: List[str]) -> Dict[str, Any]:
+    if not required_sections:
+        return {
+            "matched": [],
+            "missing": [],
+            "complete": True,
+        }
+    normalized_lines = []
+    for raw in work_output.splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        line = re.sub(r"^[#*\-\d.\)\s]+", "", line).strip()
+        normalized_lines.append(line.lower())
+    matched = []
+    for section in required_sections:
+        lowered = section.strip().lower()
+        if any(
+            line == lowered
+            or line.startswith(f"{lowered}:")
+            or line.startswith(f"{lowered} -")
+            for line in normalized_lines
+        ):
+            matched.append(section)
+    missing = [section for section in required_sections if section not in matched]
+    return {
+        "matched": matched,
+        "missing": missing,
+        "complete": not missing,
+    }
+
+
+def select_work_product(
+    packet: Dict[str, Any],
+    verdict: str,
+    final_responses: Dict[str, Dict[str, Any]],
+    accepted_keep: List[Dict[str, Any]],
+    accepted_avoid: List[Dict[str, Any]],
+    provisional_keep: List[Dict[str, Any]],
+    provisional_avoid: List[Dict[str, Any]],
+) -> Dict[str, Any]:
+    required_sections = required_sections_for_packet(packet)
+    candidates = []
+    for agent, payload in final_responses.items():
+        fit_score = 0.0
+        for item in accepted_keep:
+            if payload_aligns_with_statement(payload, item["statement"], "keep"):
+                fit_score += 3.0
+        for item in accepted_avoid:
+            if payload_aligns_with_statement(payload, item["statement"], "avoid"):
+                fit_score += 3.0
+        for item in provisional_keep:
+            if payload_aligns_with_statement(payload, item["statement"], "keep"):
+                fit_score += 1.5
+        for item in provisional_avoid:
+            if payload_aligns_with_statement(payload, item["statement"], "avoid"):
+                fit_score += 1.5
+        fit_score += float(payload.get("confidence", 0.0))
+        coverage = section_coverage(payload.get("work_output", ""), required_sections)
+        candidate = {
+            "agent": agent,
+            "fit_score": round(fit_score, 3),
+            "confidence": payload.get("confidence", 0.0),
+            "work_summary": payload.get("work_summary", ""),
+            "output_artifacts": payload.get("output_artifacts", []),
+            "work_output": payload.get("work_output", ""),
+            "required_sections_complete": coverage["complete"],
+            "matched_required_sections": coverage["matched"],
+            "missing_required_sections": coverage["missing"],
+        }
+        candidates.append(candidate)
+
+    candidates.sort(
+        key=lambda item: (
+            0 if item["required_sections_complete"] else 1,
+            -len(item["matched_required_sections"]),
+            -item["fit_score"],
+            -item["confidence"],
+            item["agent"],
+        )
+    )
+
+    selected = None
+    status = "withheld"
+    reason = "no candidate work products were produced"
+    if candidates and verdict != "no-consensus":
+        eligible = candidates
+        if required_sections:
+            eligible = [item for item in candidates if item["required_sections_complete"]]
+        if eligible:
+            selected = eligible[0]
+            status = "selected"
+            reason = "highest-fit candidate among eligible work products"
+        elif required_sections:
+            reason = "withheld because no candidate covered all required sections"
+    elif verdict == "no-consensus":
+        reason = "withheld because the consensus verdict is no-consensus"
+
+    return {
+        "selected": selected,
+        "status": status,
+        "reason": reason,
+        "candidates": [{k: v for k, v in item.items() if k != "work_output"} for item in candidates],
+    }
+
+
 def build_consensus_result(
+    packet: Dict[str, Any],
     final_responses: Dict[str, Dict[str, Any]],
     out_dir: Path,
 ) -> Dict[str, Any]:
@@ -960,6 +1401,7 @@ def build_consensus_result(
     provisional_keep = [x for x in classified if x["classification"] == "provisional_keep"]
     provisional_avoid = [x for x in classified if x["classification"] == "provisional_avoid"]
     unresolved = [x for x in classified if x["classification"] == "unresolved"]
+    needs_more_evidence = [x for x in classified if x["classification"] == "needs_more_evidence"]
 
     if (accepted_keep or accepted_avoid) and not unresolved:
         verdict = "strong-consensus"
@@ -967,6 +1409,16 @@ def build_consensus_result(
         verdict = "provisional-consensus"
     else:
         verdict = "no-consensus"
+
+    work_product_bundle = select_work_product(
+        packet,
+        verdict,
+        final_responses,
+        accepted_keep,
+        accepted_avoid,
+        provisional_keep,
+        provisional_avoid,
+    )
 
     recommendation_lines: List[str] = []
     if accepted_keep:
@@ -989,6 +1441,11 @@ def build_consensus_result(
             "Do not lock in unresolved items yet: "
             + "; ".join(item["statement"] for item in unresolved[:5])
         )
+    if needs_more_evidence:
+        recommendation_lines.append(
+            "These directions still lack the evidence floor: "
+            + "; ".join(item["statement"] for item in needs_more_evidence[:5])
+        )
     if not recommendation_lines:
         recommendation_lines.append(
             "No decision reached the acceptance threshold. Break the tie with the cheapest next checks."
@@ -1010,13 +1467,19 @@ def build_consensus_result(
         "provisional_keep": provisional_keep,
         "provisional_avoid": provisional_avoid,
         "unresolved": unresolved,
+        "needs_more_evidence": needs_more_evidence,
         "cheapest_next_checks": aggregate_next_checks(final_responses),
         "agent_status": agent_status,
+        "selected_work_product": work_product_bundle["selected"],
+        "work_product_selection_status": work_product_bundle["status"],
+        "work_product_selection_reason": work_product_bundle["reason"],
+        "candidate_work_products": work_product_bundle["candidates"],
         "artifacts": {
             "out_dir": str(out_dir),
             "report": str(out_dir / "consensus.report.md"),
             "result": str(out_dir / "consensus.result.json"),
         },
+        "task_kind": packet.get("task_kind", "decision"),
     }
     return result
 
@@ -1036,6 +1499,16 @@ def format_section(title: str, items: List[Dict[str, Any]]) -> str:
         lines.append(
             f"  - keep_strength: {item['keep_strength']} | avoid_strength: {item['avoid_strength']}"
         )
+        lines.append(
+            f"  - keep_evidence_floor: {'yes' if item['keep_evidence_floor_met'] else 'no'} ({item['keep_anchor_mentions']} anchors, quality={item['keep_anchor_quality']})"
+        )
+        lines.append(
+            f"  - avoid_evidence_floor: {'yes' if item['avoid_evidence_floor_met'] else 'no'} ({item['avoid_anchor_mentions']} anchors, quality={item['avoid_anchor_quality']})"
+        )
+        if item["keep_anchors"]:
+            lines.append(f"  - keep_anchors: {', '.join(item['keep_anchors'][:4])}")
+        if item["avoid_anchors"]:
+            lines.append(f"  - avoid_anchors: {', '.join(item['avoid_anchors'][:4])}")
     return "\n".join(lines) + "\n"
 
 
@@ -1046,12 +1519,14 @@ def build_report(
     constraints = packet["constraints"] or ["none"]
     done_signals = packet["done_signals"] or ["none"]
     checks = result["cheapest_next_checks"] or ["none"]
+    selected_work = result.get("selected_work_product")
 
     lines = [
         "# Consensus Report",
         "",
         "## Request",
         f"- Summary: {packet['request_summary']}",
+        f"- Task kind: {packet['task_kind']}",
         f"- Mode: {packet['mode']}",
         "- Constraints:",
     ]
@@ -1071,12 +1546,53 @@ def build_report(
         ]
     )
 
+    if packet.get("compose_contract"):
+        compose_contract = packet["compose_contract"]
+        lines.extend(
+            [
+                "## Compose Contract",
+                f"- Macro: {compose_contract.get('macro_expression') or 'none'}",
+                f"- Program: {compose_contract.get('program') or 'none'}",
+                "- Expanded skills: " + (", ".join(compose_contract.get("expanded_skills", [])) or "none"),
+                "- Required sections: "
+                + (
+                    ", ".join(
+                        (compose_contract.get("response_profile") or {}).get("required_sections", [])
+                    )
+                    or "none"
+                ),
+                "",
+            ]
+        )
+
+    if selected_work and selected_work.get("work_summary"):
+        lines.extend(
+            [
+                "## Selected Work Product",
+                f"- Agent: {selected_work['agent']}",
+                f"- Fit score: {selected_work['fit_score']}",
+                f"- Summary: {selected_work['work_summary']}",
+                "- Output artifacts: " + (", ".join(selected_work.get("output_artifacts", [])) or "none"),
+                "",
+            ]
+        )
+    else:
+        lines.extend(
+            [
+                "## Selected Work Product",
+                f"- Selection status: {result.get('work_product_selection_status', 'withheld')}",
+                f"- Reason: {result.get('work_product_selection_reason', 'none')}",
+                "",
+            ]
+        )
+
     for title, key in (
         ("Accepted Keep", "accepted_keep"),
         ("Accepted Avoid", "accepted_avoid"),
         ("Provisional Keep", "provisional_keep"),
         ("Provisional Avoid", "provisional_avoid"),
         ("Unresolved", "unresolved"),
+        ("Needs More Evidence", "needs_more_evidence"),
     ):
         lines.append(format_section(title, result[key]).rstrip())
         lines.append("")
@@ -1088,6 +1604,13 @@ def build_report(
     lines.append("## Agent Status")
     for agent, payload in result["agent_status"].items():
         lines.append(f"- {agent}: {payload['status']} (confidence={payload['confidence']})")
+    if result.get("candidate_work_products"):
+        lines.append("")
+        lines.append("## Candidate Work Products")
+        for item in result["candidate_work_products"]:
+            lines.append(
+                f"- {item['agent']}: fit={item['fit_score']} sections={'complete' if item['required_sections_complete'] else 'incomplete'} summary={item['work_summary'] or 'none'}"
+            )
     lines.append("")
     return "\n".join(lines)
 
@@ -1099,8 +1622,15 @@ def main() -> int:
     ensure_dir(out_dir)
 
     contexts = load_context_files(args.context_file, args.max_context_chars)
-    packet = build_request_packet(args, contexts)
+    compose_contract = load_compose_contract(args, out_dir)
+    packet = build_request_packet(args, contexts, compose_contract)
     write_text(out_dir / "request.packet.yaml", yaml_dump(packet) + "\n")
+    blockers = compose_blockers(compose_contract)
+    if blockers:
+        write_json(out_dir / "contract.blockers.json", {"blockers": blockers})
+        raise RuntimeError(
+            "compose contract has unresolved required inputs: " + "; ".join(blockers)
+        )
 
     schema_path = root / "assets" / "agent-response.schema.json"
     schema_text = read_text(schema_path)
@@ -1119,6 +1649,8 @@ def main() -> int:
             "out_dir": str(out_dir),
             "written": [str(out_dir / f"{agent}.round1.prompt.txt") for agent in AGENTS],
         }
+        if compose_contract:
+            result["compose_contract"] = str(out_dir / "compose.contract.json")
         write_json(out_dir / "dry-run.json", result)
         if args.json:
             print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -1146,10 +1678,10 @@ def main() -> int:
     write_json(out_dir / "disagreement.packet.json", disagreement_packet)
 
     final_responses = round1
-    if args.rounds == 2:
+    if args.rounds == 2 and disagreement_packet.get("requires_rebuttal", True):
         round2 = {}
         for agent in AGENTS:
-            prompt = build_round2_prompt(agent, packet_text, schema_text, disagreement_packet)
+            prompt = build_round2_prompt(agent, packet, packet_text, schema_text, disagreement_packet)
             round2[agent] = run_one_agent(
                 agent=agent,
                 args=args,
@@ -1163,9 +1695,15 @@ def main() -> int:
             )
         final_responses = round2
 
-    result = build_consensus_result(final_responses, out_dir)
-    write_json(out_dir / "consensus.result.json", result)
+    result = build_consensus_result(packet, final_responses, out_dir)
+    selected_work = result.get("selected_work_product")
+    if selected_work and selected_work.get("work_output"):
+        work_product_path = out_dir / "consensus.work-product.md"
+        write_text(work_product_path, selected_work["work_output"])
+        result["artifacts"]["work_product"] = str(work_product_path)
+
     write_text(out_dir / "consensus.report.md", build_report(packet, result))
+    write_json(out_dir / "consensus.result.json", result)
 
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2))
@@ -1176,4 +1714,8 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except Exception as exc:  # noqa: BLE001 - CLI should fail with concise error text
+        print(f"[ERROR] {exc}", file=sys.stderr)
+        sys.exit(1)

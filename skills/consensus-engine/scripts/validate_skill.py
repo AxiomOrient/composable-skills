@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 import argparse
 import json
+import py_compile
 import re
+import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -166,6 +169,56 @@ def validate(skill_dir: Path) -> Dict[str, object]:
             text = read_text(script)
             if not text.startswith("#!/usr/bin/env python3"):
                 errors.append(f"{script.name} must start with #!/usr/bin/env python3")
+            try:
+                py_compile.compile(str(script), doraise=True)
+            except py_compile.PyCompileError as exc:
+                errors.append(f"py_compile failed for {script.name}: {exc.msg}")
+
+    runner = skill_dir / "scripts" / "run_consensus.py"
+    if runner.exists():
+        with tempfile.TemporaryDirectory(prefix="consensus-engine-validate-") as tmpdir:
+            proc = subprocess.run(
+                [
+                    sys.executable,
+                    str(runner),
+                    "--task",
+                    "Smoke-test the consensus engine installation",
+                    "--done-signal",
+                    "Return one recommendation plus unresolved risks",
+                    "--dry-run",
+                    "--out-dir",
+                    tmpdir,
+                ],
+                text=True,
+                capture_output=True,
+                check=False,
+            )
+            if proc.returncode != 0:
+                errors.append(f"dry-run failed: rc={proc.returncode} stderr={proc.stderr.strip()}")
+            else:
+                for expected in (
+                    "request.packet.yaml",
+                    "codex.round1.prompt.txt",
+                    "claude.round1.prompt.txt",
+                    "gemini.round1.prompt.txt",
+                    "dry-run.json",
+                ):
+                    if not (Path(tmpdir) / expected).exists():
+                        errors.append(f"dry-run missing artifact: {expected}")
+
+    golden = skill_dir / "scripts" / "run_consensus_golden_test.py"
+    if golden.exists():
+        proc = subprocess.run(
+            [sys.executable, str(golden)],
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        if proc.returncode != 0:
+            errors.append(
+                "run_consensus_golden_test.py failed: "
+                + (proc.stderr.strip() or proc.stdout.strip() or f"rc={proc.returncode}")
+            )
 
     return {
         "status": "ok" if not errors else "error",

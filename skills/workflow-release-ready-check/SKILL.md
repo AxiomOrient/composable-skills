@@ -23,7 +23,7 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 - Need release review built from explicit repository, hygiene, and readiness subchecks.
 - Need repo-exposure and secret-leak gates checked before shipping.
 - Need document-upgrade and legacy-removal gates checked before shipping.
-- Need a named release-review workflow that can still be extended with check-final-verify or release-publish.
+- Need a named release-review workflow that can still be extended with review-final-verify or release-publish.
 - Need release judgement only, while keeping branch, tag, and publish mutation outside the current run.
 
 ## Do Not Use When

@@ -59,8 +59,8 @@ Run this loop within a single turn until MISSION_STATUS=done or blocked:
 3. All conditions met with reader-verifiable proof → done
 4. A real blocker exists (missing source, unclear audience, approval needed) → blocked, ask
 5. Pick smallest improvement that advances the weakest done condition
-6. Execute: write/revise content (doc-write), review (check-quality-scan / check-change-review),
-            structure (plan-task-breakdown), or verify (check-final-verify)
+6. Execute: write/revise content (doc-write), review (review-quality / review-change),
+            structure (plan-task-breakdown), or verify (review-final-verify)
 7. Update evidence with results
 8. Go back to step 2 immediately
 ```
@@ -82,8 +82,8 @@ Do not summarize the process. Output one line per pass as it executes, then keep
 
 ```
 Pass 1 → doc-write: `docs/auth.md §session` — added refresh flow explanation
-Pass 2 → check-quality-scan: clarity P1 in intro — revised lead sentence
-Pass 3 → check-final-verify: ✓ all conditions met
+Pass 2 → review-quality: clarity P1 in intro — revised lead sentence
+Pass 3 → review-final-verify: ✓ all conditions met
 ```
 
 On done:

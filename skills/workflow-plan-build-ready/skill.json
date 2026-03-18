@@ -86,7 +86,7 @@
     }
   ],
   "expands_to": [
-    "$scout-boundaries",
+    "$clarify-boundaries",
     "$plan-what-it-does",
     "$plan-how-to-build",
     "$plan-task-breakdown"

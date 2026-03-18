@@ -1,0 +1,62 @@
+{
+  "name": "review-failure-paths",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>audit | scope: repo|diff|paths(glob,...) | policy: evidence,deterministic-output | lens: feynman | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo",
+      "required": true,
+      "description": "Where to inspect failure paths."
+    },
+    {
+      "name": "FAILURE_FOCUS",
+      "type": "exceptions|fallbacks|recovery|all",
+      "required": false,
+      "allowed_values": ["exceptions", "fallbacks", "recovery", "all"],
+      "description": "Which unhappy-path slice to emphasize. Defaults to all."
+    },
+    {
+      "name": "FAILURE_MODES",
+      "type": "list",
+      "required": false,
+      "shape": "{MODE, WHY_RELEVANT}",
+      "description": "Known failure modes to prioritize."
+    }
+  ],
+  "display_name": "Review / Failure Paths",
+  "browse_category": "review",
+  "browse_priority": 40,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "점검 범위",
+      "required": true,
+      "maps_to": ["TARGET_SCOPE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "FOCUS",
+      "label": "실패 경로 초점",
+      "required": false,
+      "maps_to": ["FAILURE_FOCUS"]
+    },
+    {
+      "key": "MODES",
+      "label": "특히 볼 실패 모드",
+      "required": false,
+      "maps_to": ["FAILURE_MODES"]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "FAILURE_PATH_STATUS",
+      "required": true,
+      "allowed_values": ["clean", "needs-fix", "inconclusive"],
+      "description": "Overall unhappy-path review state."
+    }
+  ]
+}

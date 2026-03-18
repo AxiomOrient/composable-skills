@@ -1,0 +1,77 @@
+{
+  "name": "review-security",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>plan>verify>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,safety-gates,quality-gates{security,tests},deterministic-output |\n lens: nist-rmf |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "SECURITY_GOAL",
+      "type": "audit|repo-exposure-review|threat-model|mitigation-verify",
+      "required": true,
+      "allowed_values": ["audit", "repo-exposure-review", "threat-model", "mitigation-verify"],
+      "description": "Security objective."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "file|module|service|repo|diff",
+      "required": true,
+      "description": "Scope to inspect."
+    },
+    {
+      "name": "REVIEW_STAGE",
+      "type": "github-commit|release|general",
+      "required": false,
+      "allowed_values": ["github-commit", "release", "general"],
+      "description": "Delivery stage that triggered the review."
+    },
+    {
+      "name": "SENSITIVE_SURFACES",
+      "type": "list",
+      "required": false,
+      "shape": "{SURFACE, WHY_RELEVANT}",
+      "description": "Assets, trust boundaries, config files, ignore targets, or entrypoints to prioritize."
+    },
+    {
+      "name": "KNOWN_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Scans, prior findings, logs, or threat notes."
+    }
+  ],
+  "display_name": "Review / Security",
+  "browse_category": "review",
+  "browse_priority": 50,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "보안 점검 목적",
+      "required": true,
+      "maps_to": ["SECURITY_GOAL"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "점검 범위",
+      "required": true,
+      "maps_to": ["TARGET_SCOPE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "STAGE",
+      "label": "언제 하는 점검인지",
+      "required": false,
+      "maps_to": ["REVIEW_STAGE"]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "SECURITY_STATUS",
+      "required": true,
+      "allowed_values": ["safe", "at-risk", "blocked"],
+      "description": "Overall security review state."
+    }
+  ]
+}

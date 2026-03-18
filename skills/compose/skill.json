@@ -9,7 +9,7 @@
       "type": "string",
       "required": true,
       "shape": "$skill + $workflow-name + @path + [prompt]",
-      "description": "Explicit macro text such as $workflow-review-change + @src/auth + $check-final-verify."
+      "description": "Explicit macro text such as $workflow-review-change + @src/auth + $review-final-verify."
     },
     {
       "name": "LENS_OVERRIDE",

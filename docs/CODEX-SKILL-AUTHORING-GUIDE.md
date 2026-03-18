@@ -46,38 +46,11 @@ workflow면 추가로:
 ]
 ```
 
-## 새 skill 뼈대 만들기
+## 새 skill 만들기
 
-기본은 dry-run 이다.
-
-```bash
-python3 scripts/skills.py new build-example --layer atomic
-```
-
-실제로 만들려면 `--write`를 붙인다.
-
-```bash
-python3 scripts/skills.py new build-example --layer atomic --write
-```
-
-생성물은:
-
-- `skills/<name>/SKILL.md`
-- `skills/<name>/skill.json`
-
-이 scaffold 는 일부러 placeholder 상태로 만들어진다.
+`skills/<name>/SKILL.md` 와 `skills/<name>/skill.json` 을 직접 만든다.
+`agents/openai.yaml` 은 `sync` 가 direct contract 기준으로 자동 렌더링한다.
 placeholder 를 실제 계약으로 바꾸기 전에는 `python3 scripts/skills.py validate` 가 통과하지 않는다.
-또 `agents/openai.yaml` 도 `SKILL.md` 와 `skill.json` 에 맞게 유지되어야 한다.
-runtime install 에서는 `sync` 가 그 파일을 direct contract 기준으로 다시 렌더링한다.
-source repo 에서 그 파일이 빠져 있어도 `validate` 와 `sync` 는 direct contract 기준으로 계속 동작한다.
-
-drift 를 수동으로 고치기 싫다면 먼저 dry-run:
-
-```bash
-python3 scripts/skills.py refresh-agent-yaml workflow-build-implement-and-guard
-```
-
-문제가 없으면 `--write` 로 반영한다.
 
 ## Eval Cases — workflow 스킬 필수 섹션
 

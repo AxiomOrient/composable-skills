@@ -1,12 +1,12 @@
 ---
 name: workflow-consensus-engine
-description: "Workflow skill that locks a bounded scope contract and then runs the consensus engine to arbitrate one design, debugging, or planning decision across Codex, Claude Code, and Gemini CLI. Use when the public entrypoint should expose multi-model consensus without hiding the boundary-setting step."
+description: "Workflow skill that runs a bounded multi-model consensus mission across Codex, Claude Code, and Gemini CLI, optionally using an explicit compose macro as the shared execution contract. Use when docs, implementation proposals, PRD drafts, research reports, or decision work should be produced independently and then converged through one consensus engine."
 ---
 
 # Workflow / Consensus Engine
 
 ## Purpose
-Public entrypoint for bounded multi-model consensus: first lock the boundary, then run the script-backed engine.
+Public entrypoint for bounded multi-model consensus: lock the contract, run the shared mission independently, then converge on the best-supported output.
 
 ## Default Program
 ```text
@@ -17,12 +17,13 @@ Public entrypoint for bounded multi-model consensus: first lock the boundary, th
 This workflow uses `kahneman-tversky` because it should separate observed evidence from confidence, show where options collide, and avoid treating weak agreement as proof.
 
 ## Use When
-- Need a public entrypoint for choosing between design, refactor, debugging, or plan alternatives.
+- Need a public entrypoint for docs, implementation proposals, PRD drafts, research reports, or decision work that benefits from parallel independent passes.
 - Need the engine to preserve disagreement instead of reducing everything to a single prose answer.
 - Need scope, constraints, and done condition locked before multi-model arbitration starts.
+- Need one explicit `compose` macro executed independently by all three providers.
 
 ## Do Not Use When
-- Need direct code changes right away.
+- Need one-model direct execution right away.
 - The task is a deterministic computation or a simple factual lookup.
 - External CLI use is disallowed for this mission.
 - The request is still too fuzzy and needs a clarify workflow first.
@@ -33,22 +34,27 @@ This workflow uses `kahneman-tversky` because it should separate observed eviden
 - `DONE_CONDITION` (list; required; shape: `{CONDITION}`): What the final recommendation must prove or include.
 - `CONSTRAINTS` (list; optional; shape: `{CONSTRAINT}`): Hard limits and non-goals.
 - `CONTEXT_FILES` (list; optional; shape: `{PATH}`): Local files or notes to include in the packet.
-- `CONSENSUS_MODE` (analysis|plan|implement-review; optional): Consensus output mode. Defaults to `analysis`.
+- `CONSENSUS_MODE` (execute|analysis|plan|implement-review; optional): Consensus output mode. Defaults to `execute`.
+- `MACRO_EXPRESSION` (string; optional): Explicit compose macro shared by all providers.
 
 ## Input Contract Notes
-- This workflow expects one bounded decision surface. If the user asks for multiple unrelated choices, split them first.
+- This workflow expects one bounded mission surface. If the user asks for multiple unrelated choices, split them first.
 - `DONE_CONDITION` should describe observable answer requirements, not vague quality wishes.
 - `CONTEXT_FILES` should stay bounded and relevant to the scoped question.
+- When `MACRO_EXPRESSION` is present, the engine uses compose's normalized program and response profile as the shared execution contract.
+- If the compose contract still reports missing required inputs, the workflow must stop before provider execution.
 
 ## Structured Outputs
 - `BOUNDARY_CONTRACT` (object; required; shape: `{GOAL, IN_SCOPE, OUT_OF_SCOPE, DONE_CONDITION}`): Locked scope contract produced before consensus.
 - `CONSENSUS_VERDICT` (strong-consensus|provisional-consensus|no-consensus; required): Final consensus strength.
 - `CONSENSUS_RECOMMENDATION` (string; required): Best current recommendation after arbitration.
+- `SELECTED_WORK_PRODUCT` (object|null; required): Chosen draft, proposal, or report after consensus fit scoring, or `null` when selection is withheld.
 - `UNRESOLVED_CONFLICTS` (list; required): Conflicts that still block a fully accepted recommendation.
 - `CHEAPEST_NEXT_CHECKS` (list; required): Next checks that would most reduce remaining uncertainty.
 
 ## Output Contract Notes
 - The workflow must expose both the boundary contract and the final consensus output.
+- `SELECTED_WORK_PRODUCT` should be concrete enough to use as the next artifact when present, and stay `null` when consensus or contract checks do not justify selection.
 - `UNRESOLVED_CONFLICTS` may be empty only when the disagreement surface has been reduced cleanly.
 - Do not hide the `clarify-boundaries` step or rewrite its output as if it never happened.
 
@@ -62,7 +68,8 @@ This workflow uses `kahneman-tversky` because it should separate observed eviden
 - Keep unresolved collisions explicit.
 
 ## Execution Constraints
-- This is analysis-only. Do not patch repository files from this workflow.
+- This workflow converges on one selected work product or recommendation. It does not mutate the shared workspace directly.
+- When the compose contract is under-specified, stop instead of letting providers fill the gaps by guesswork.
 - Keep the mission bounded to one decision surface per run.
 
 ## Response Format
@@ -77,11 +84,13 @@ Think and operate in English, but deliver the final response in Korean.
 그 다음 합의 결과:
 - 합의 강도
 - 권고안
+- 선택된 산출물
 - 남는 충돌
 - 가장 싼 다음 확인
 
 ## Mandatory Rules
 - `clarify-boundaries` 출력 없이 바로 consensus-engine을 호출하지 않는다.
+- `MACRO_EXPRESSION`이 있으면 compose 계약을 공유 실행 계약으로 취급한다.
 - 합의 결과는 accepted, provisional, unresolved를 구분한다.
 
 ## Expansion
@@ -98,6 +107,7 @@ DONE_CONDITION:
   - list remaining risks
 CONSTRAINTS:
   - keep public API stable
+MACRO_EXPRESSION: $workflow-build-implement-and-guard + @src/auth + [GOAL: keep the session after refresh] + [DONE: session refresh test => stay signed in after refresh] + [CONTEXT: keep the session after refresh during an active login] + [CONSTRAINTS: keep public API stable]
 ```
 
 ## Eval Cases
@@ -105,8 +115,8 @@ CONSTRAINTS:
 | Prompt | Should Trigger | Key Output Check |
 |--------|---------------|-----------------|
 | auth refresh flow 설계안을 셋 중 하나로 좁혀야 하는데 모델 3개 의견을 합의로 정리해줘. | YES | CONSENSUS_VERDICT 존재 |
+| 이 문서 workflow를 compose로 묶어서 셋이 각각 초안을 만들고 제일 좋은 결과로 합의해줘. | YES | SELECTED_WORK_PRODUCT 존재 |
 | 이 리팩터링 방향 둘 중 뭐가 나은지 Codex/Claude/Gemini 의견을 합쳐서 결론 내려줘. | YES | CONSENSUS_RECOMMENDATION 존재 |
 | 이 버그 원인 가설 두 개를 비교해서 가장 가능성 높은 쪽을 정리해줘. | YES | UNRESOLVED_CONFLICTS 존재 |
-| 바로 코드 수정해. | NO | 구현 작업이므로 build 계열 workflow 권장 |
 | 12457 * 98 계산해줘. | NO | 결정적 계산이므로 consensus-engine 불필요 |
 | 외부 CLI 쓰지 말고 로컬 분석만 해줘. | NO | 외부 CLI 금지이므로 일반 analyze/review 스킬 권장 |

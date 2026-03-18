@@ -6,7 +6,7 @@ description: "Workflow skill that captures the repro, narrows the failure surfac
 # Workflow / Debug This
 
 ## Purpose
-Compose repro capture, failure-surface reduction, debugging, and test-gap awareness into one explicit debug workflow.
+Compose repro capture, failure-surface reduction, root-cause debugging, fix confirmation, and test-gap awareness into one explicit debug workflow.
 
 ## Default Program
 ```text
@@ -40,6 +40,7 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 - `REPRO_CAPTURE` (debug-capture-failure.v1; required): Reproduction recipe and missing repro inputs.
 - `FAILURE_SURFACE_MAP` (debug-map-impact.v1; required): Reduced failing surface and entry points.
 - `DEBUG_REPORT` (debug-report.v1; required): Root-cause analysis and fix direction.
+- `FIX_CONFIRMATION` (debug-fix-confirmation.v1; required): Evidence that the chosen fix candidate actually removes the failure.
 - `TEST_GAP_REPORT` (test-gap-report.v1; required): Regression protection gaps to close after the fix.
 - `EXPANDED_ATOMIC_PATH` (list; required; shape: {SKILL}): Actual atomic path executed by the workflow.
 
@@ -47,15 +48,16 @@ This skill uses `feynman` because it keeps the work aligned with: Reproduce firs
 - REPRO_CAPTURE should stay focused on making the failure rerunnable, not on explaining the cause.
 - FAILURE_SURFACE_MAP should remain a map of likely surface and entry points, not a confirmed root cause.
 - DEBUG_REPORT should explicitly separate confirmed cause from still-open hypotheses.
+- FIX_CONFIRMATION should stay on rerun evidence and guard quality, not repeat the full root-cause narrative.
 - TEST_GAP_REPORT should focus on regression protection to add after the concrete fix.
 - EXPANDED_ATOMIC_PATH must preserve execution order explicitly.
 
 ## Artifacts
 - `artifacts_in`: none
-- `artifacts_out`: debug-capture-failure.v1, debug-map-impact.v1, debug-report.v1, test-gap-report.v1
+- `artifacts_out`: debug-capture-failure.v1, debug-map-impact.v1, debug-report.v1, debug-fix-confirmation.v1, test-gap-report.v1
 
 ## Neutrality Rules
-- Keep repro capture, surface mapping, root cause, and test gaps as distinct outputs.
+- Keep repro capture, surface mapping, root cause, fix confirmation, and test gaps as distinct outputs.
 - Do not treat suspicion from the surface map as confirmed cause.
 - Keep the workflow explicit and inspectable.
 
@@ -90,6 +92,7 @@ Think and operate in English, but deliver the final response in Korean.
 - `$debug-capture-failure`
 - `$debug-map-impact`
 - `$debug-find-root-cause`
+- `$debug-confirm-fix`
 - `$test-find-gaps`
 
 ## Example Invocation

@@ -28,13 +28,14 @@ Compose does not impose a domain lens of its own; it exists to preserve explicit
 - Need direct PROGRAM DSL input parsing as a public entry mode.
 
 ## Required Inputs
-- `MACRO_EXPRESSION` (string; required; shape: $skill + $workflow-name + @path + [prompt]): Explicit macro text such as $workflow-review-change + @src/auth + $check-final-verify.
+- `MACRO_EXPRESSION` (string; required; shape: $skill + $workflow-name + @path + [prompt]): Explicit macro text such as $workflow-review-change + @src/auth + $review-final-verify.
 - `LENS_OVERRIDE` (string; optional): Optional explicit lens override token.
 - `SCOPE_OVERRIDE` (string|list; optional): Optional explicit scope tokens such as @src or scope:paths(src/auth).
 
 ## Input Contract Notes
 - Public compose entry is macro-only. Direct PROGRAM DSL parsing is internal and not part of the public skill contract.
 - Bracket payloads `[ ... ]` are appended to prompt tail in encounter order and are treated as explicit prompt text.
+- Bracket payloads can also carry explicit starter inputs with `[KEY: value]`. Use repeated blocks for list-like inputs such as `DONE`, `CONTEXT`, or `CONSTRAINTS`.
 - Scope can come from `@path`, markdown doc tokens, or explicit `scope:...`; compose only normalizes what is explicitly present.
 
 ## Structured Outputs
@@ -45,6 +46,7 @@ Compose does not impose a domain lens of its own; it exists to preserve explicit
 - `PARSED_DOC_INPUTS` (list; optional; shape: {DOC_OR_PATH}): Document or path tokens parsed from the macro.
 - `PROMPT_TAIL` (string; optional): Concatenated explicit prompt payload parsed from free text and bracket blocks.
 - `RAW_REQUEST` (string; optional): Original free-text request payload used for starter-input routing.
+- `STARTER_INPUT_VALUES` (object; optional): Explicit starter input values collected from `[KEY: value]` blocks before routing.
 - `NORMALIZED_SCOPE` (string; required): Resolved scope after macro tokens and skill defaults are merged.
 - `LENS_SOURCE` (explicit-override|workflow-default|atomic-default|fallback-default; required; allowed: explicit-override|workflow-default|atomic-default|fallback-default): Where the final lens came from.
 - `PROGRAM` (string; required): Normalized execution program.
@@ -58,7 +60,7 @@ Compose does not impose a domain lens of its own; it exists to preserve explicit
 ## Output Contract Notes
 - PROGRAM is the normalized one-line DSL string; the parser may also emit an auxiliary structured program breakdown.
 - PARSED_SKILLS preserves the user macro surface, while EFFECTIVE_SKILLS includes internal response-layer normalization and EXPANDED_SKILLS removes workflow names.
-- RAW_REQUEST preserves the original free-text payload while INPUT_ROUTE_TABLE and MISSING_REQUIRED_INPUTS make routing visible.
+- RAW_REQUEST preserves the original free-text payload while STARTER_INPUT_VALUES, INPUT_ROUTE_TABLE, and MISSING_REQUIRED_INPUTS make routing visible.
 - When normalization fails, STRUCTURAL_ERRORS should explain the blocking reason instead of guessing hidden fallback behavior.
 
 ## Artifacts
@@ -97,5 +99,5 @@ Ask: "Does this chain look right before I execute?"
 
 ## Example Invocation
 ```text
-$compose + $workflow-review-change + @src/auth + $check-final-verify
+$compose + $workflow-build-implement-and-guard + @src/auth + [GOAL: keep the session after refresh] + [DONE: session refresh test => stay signed in after refresh] + [CONTEXT: keep the session after refresh during an active login] + [CONSTRAINTS: keep public API stable]
 ```

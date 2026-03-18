@@ -1,0 +1,69 @@
+{
+  "name": "review-quality",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,quality-gates{tests,security,perf,compat,style},deterministic-output |\n lens: kahneman-tversky |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "SCOPE",
+      "type": "diff|file|module|folder|repo",
+      "required": true,
+      "description": "Scope to inspect."
+    },
+    {
+      "name": "GOAL",
+      "type": "string",
+      "required": true,
+      "description": "Intended behavior or maintenance goal."
+    },
+    {
+      "name": "FOCUS_ITEMS",
+      "type": "list",
+      "required": false,
+      "shape": "{ITEM}",
+      "description": "Optional checklist item numbers to emphasize while still reporting the full table."
+    },
+    {
+      "name": "EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{TYPE, REF, WHY_RELEVANT}",
+      "description": "Tests, benchmarks, issue context, or supporting evidence."
+    }
+  ],
+  "display_name": "Review / Quality",
+  "browse_category": "review",
+  "browse_priority": 30,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": [
+    {
+      "key": "SCOPE",
+      "label": "검사 범위",
+      "required": true,
+      "maps_to": ["SCOPE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "GOAL",
+      "label": "코드 목표",
+      "required": true,
+      "maps_to": ["GOAL"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "FOCUS",
+      "label": "특히 볼 항목 번호",
+      "required": false,
+      "maps_to": ["FOCUS_ITEMS"]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "CHECKLIST_STATUS",
+      "required": true,
+      "allowed_values": ["pass", "risk", "unknown"],
+      "description": "Overall fixed-checklist state."
+    }
+  ]
+}

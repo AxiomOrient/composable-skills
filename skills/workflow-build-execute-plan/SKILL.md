@@ -52,9 +52,9 @@ Run all task cycles within a single turn. Do not stop between cycles — continu
 ```
 1. Select     — Read TASKS.md, pick the next incomplete task row
 2. Implement  — build-write-code applies the code change for that task
-3. Critique   — check-improve-loop reviews the implementation and applies the highest-value fix
+3. Critique   — control-improve-loop reviews the implementation and applies the highest-value fix
 4. Sync       — plan-sync-tasks marks the task row done and records evidence in the ledger
-5. Verify     — Confirm the per-task done condition has evidence
+5. Verify     — review-final-verify confirms the per-task done condition has evidence
 6. Loop       — More tasks remain → go to step 1 immediately
               — No tasks remain → check overall DONE_CONDITION → done or blocked
 ```

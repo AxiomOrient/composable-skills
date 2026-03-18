@@ -101,7 +101,7 @@ Think and operate in English, but deliver the final response in Korean.
 Show per-step outcome (step → result):
 - release-check-repo → 준비됨 / 중단
 - release-check-hygiene → doc gate + surface sync
-- check-security-holes → 통과 / 중단
+- review-security → 통과 / 중단
 - release-verdict → 출시 가능 / 출시 불가 / 중단
 - release-publish → 배포됨 / 준비됨 / 중단
 
@@ -128,7 +128,7 @@ Ask for confirmation before any branch or tag mutation that has not yet occurred
 ## Example Invocation
 
 ```text
-$compose + $control-release-publish-flow + $check-final-verify
+$compose + $control-release-publish-flow + $review-final-verify
 
 TARGET_BRANCHES:
   - {BRANCH: codex/dev, ROLE: source}

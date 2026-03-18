@@ -126,7 +126,7 @@ Ask for confirmation before any push or publish action that has not yet occurred
 ## Example Invocation
 
 ```text
-$compose + $control-release-publish-flow + $check-final-verify
+$compose + $control-release-publish-flow + $review-final-verify
 
 TARGET_BRANCHES:
   - {BRANCH: codex/dev, ROLE: source}

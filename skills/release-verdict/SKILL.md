@@ -29,7 +29,7 @@ This skill uses `release-gatekeeper` because it keeps the work aligned with: Tre
 - Need direct implementation or bug debugging.
 - Need only repository or docs hygiene checks — use release-check-hygiene instead.
 - Need actual branch, tag, or release publication execution — use release-publish instead.
-- Need only diff/PR gate audit without rollout or rollback judgment — use check-release-risk instead.
+- Need only diff or PR gate audit without rollout or rollback judgment — use analyze-release-risk instead.
 
 ## Required Inputs
 - `RELEASE_SCOPE` (diff|repo|deployment-slice; required): Release scope under evaluation.

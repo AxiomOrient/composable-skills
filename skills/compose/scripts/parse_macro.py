@@ -2,7 +2,7 @@
 """Macro composition parser for Fusion skills.
 
 Converts expressions like:
-  $scout-structure-map + $plan-task-breakdown + $build-write-code + $check-final-verify + [extra context] + @/abs/path/plan.md
+  $analyze-structure + $plan-task-breakdown + $build-write-code + $review-final-verify + [extra context] + @/abs/path/plan.md
 into a normalized Fusion PROGRAM.
 """
 
@@ -41,23 +41,71 @@ POLICY_PRIORITY = [
     "correctness-first",
 ]
 
-COMPLETION_CONTROL_SKILLS = {"control-build-until-done", "control-finish-until-done", "check-improve-loop"}
-ROUTING_SKIP_SKILLS = {"compose", "check-final-verify"}
+COMPLETION_CONTROL_SKILLS = {"control-build-until-done", "control-finish-until-done", "control-improve-loop"}
+ROUTING_SKIP_SKILLS = {"compose", "review-final-verify"}
 DEFAULT_PLAN_DOC_PATHS = {"plans/IMPLEMENTATION-PLAN.md", "plans/TASKS.md"}
+KNOWN_STARTER_KEYS = {
+    "ALLOWED_DIRECTIONS",
+    "BOUNDARY_KIND",
+    "BRANCHES",
+    "BUDGET",
+    "CHANGE",
+    "CLAIM",
+    "CONCERNS",
+    "CONSTRAINTS",
+    "CONTEXT",
+    "CRITERIA",
+    "DEPTH",
+    "DONE",
+    "EVIDENCE",
+    "EXPECTED",
+    "FOCUS",
+    "GATE_SIGNALS",
+    "GOAL",
+    "MACRO",
+    "METHOD",
+    "METRIC",
+    "MODES",
+    "OPTIONS",
+    "PLAN",
+    "QUESTION",
+    "REQUEST",
+    "RISK_FOCUS",
+    "SAMPLE_SIZE",
+    "SCOPE",
+    "STAGE",
+    "TARGETS",
+}
 
-LEGACY_SKILL_GUIDANCE: Dict[str, str] = {}
+LEGACY_SKILL_GUIDANCE: Dict[str, str] = {
+    "scout-scope-contract": "Use $clarify-scope instead.",
+    "scout-boundaries": "Use $clarify-boundaries instead.",
+    "scout-structure-map": "Use $analyze-structure or $workflow-scout-structure instead.",
+    "scout-baseline": "Use $analyze-baseline instead.",
+    "check-change-review": "Use $review-change instead.",
+    "check-quality-scan": "Use $review-quality instead.",
+    "check-failure-paths": "Use $review-failure-paths instead.",
+    "check-security-holes": "Use $review-security instead.",
+    "check-final-verify": "Use $review-final-verify instead.",
+    "check-improve-loop": "Use $control-improve-loop instead.",
+    "check-module-bounds": "Use $analyze-module-bounds instead.",
+    "check-release-risk": "Use $analyze-release-risk instead.",
+    "tidy-review-reuse": "Use $tidy-review with FOCUS=reuse instead.",
+    "tidy-review-quality": "Use $tidy-review with FOCUS=quality instead.",
+    "tidy-review-efficiency": "Use $tidy-review with FOCUS=efficiency instead.",
+}
 
 FALLBACK_SKILL_RESPONSE_PROFILE_MAP: Dict[str, str] = {
     "compose": "generic",
     "control-build-until-done": "analysis_report",
-    "scout-structure-map": "analysis_report",
+    "analyze-structure": "analysis_report",
     "control-finish-until-done": "analysis_report",
-    "check-improve-loop": "analysis_report",
+    "control-improve-loop": "analysis_report",
     "test-run-user-scenarios": "analysis_report",
     "debug-map-impact": "analysis_report",
     "tidy-analyze": "analysis_report",
     "workflow-tidy-find-improvements": "analysis_report",
-    "scout-scope-contract": "clarify_question",
+    "clarify-scope": "clarify_question",
     "doc-write": "documentation_report",
     "doc-build-index": "documentation_report",
     "doc-publish-readme": "documentation_report",
@@ -67,34 +115,32 @@ FALLBACK_SKILL_RESPONSE_PROFILE_MAP: Dict[str, str] = {
     "plan-task-breakdown": "planning_doc",
     "plan-why-build-this": "brief_contract",
     "plan-screen-map": "ia_contract",
-    "scout-boundaries": "planning_doc",
+    "clarify-boundaries": "planning_doc",
     "plan-dependency-rules": "planning_doc",
     "plan-verify-order": "planning_doc",
     "tidy-cut-fat": "planning_doc",
     "tidy-reorganize": "planning_doc",
     "build-write-code": "implementation_delta",
     "plan-sync-tasks": "implementation_delta",
-    "check-final-verify": "self_verify_report",
-    "check-release-risk": "review_findings",
-    "check-change-review": "review_findings",
-    "check-quality-scan": "review_findings",
-    "tidy-review-reuse": "review_findings",
-    "tidy-review-quality": "review_findings",
-    "tidy-review-efficiency": "review_findings",
+    "review-final-verify": "self_verify_report",
+    "analyze-release-risk": "analysis_report",
+    "review-change": "review_findings",
+    "review-quality": "review_findings",
+    "tidy-review": "review_findings",
     "debug-find-root-cause": "debug_report",
     "build-make-faster": "performance_report",
-    "scout-baseline": "performance_report",
+    "analyze-baseline": "performance_report",
     "test-write-guards": "test_report",
     "test-design-cases": "test_report",
-    "check-security-holes": "security_report",
+    "review-security": "security_report",
     "release-check-repo": "analysis_report",
     "release-check-hygiene": "analysis_report",
     "release-verdict": "release_decision",
     "release-publish": "generic",
     "tidy-find-magic-numbers": "review_findings",
     "tidy-find-copies": "review_findings",
-    "check-module-bounds": "review_findings",
-    "check-failure-paths": "review_findings",
+    "analyze-module-bounds": "analysis_report",
+    "review-failure-paths": "review_findings",
     "test-find-gaps": "review_findings",
     "plan-what-it-does": "spec_contract",
     "plan-how-to-build": "design_contract",
@@ -151,7 +197,7 @@ FALLBACK_VALID_LENSES: Set[str] = {
     "debug-find-root-cause",
     "plan",
     "ux",
-    "check-security-holes",
+    "review-security",
     "hickey-carmack",
     "ive",
     "feynman",
@@ -452,6 +498,7 @@ class MacroParse:
     policy: List[str] = field(default_factory=list)
     docs: List[str] = field(default_factory=list)
     prompt_tail: Optional[str] = None
+    starter_inputs: Dict[str, List[str]] = field(default_factory=dict)
     unknown: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
 
@@ -657,6 +704,19 @@ def _decode_bracket_prompt_token(token: str) -> str:
     return _unescape_macro_text(inner).strip()
 
 
+def _decode_explicit_starter_input(content: str) -> Optional[Tuple[str, str]]:
+    match = re.match(r"^([A-Z][A-Z0-9_]*)\s*:\s*(.+)$", content, flags=re.S)
+    if not match:
+        return None
+    starter_key = match.group(1).strip().upper()
+    if starter_key not in KNOWN_STARTER_KEYS:
+        return None
+    value = match.group(2).strip()
+    if not value:
+        return None
+    return starter_key, value
+
+
 def _looks_like_doc_path(path_token: str) -> bool:
     if not path_token or any(ch.isspace() for ch in path_token):
         return False
@@ -718,7 +778,12 @@ def parse_macro_expr(expr: str) -> MacroParse:
         if _is_valid_bracket_prompt_token(tok):
             content = _decode_bracket_prompt_token(tok)
             if content:
-                prompt_tail_parts.append(content)
+                explicit_input = _decode_explicit_starter_input(content)
+                if explicit_input:
+                    starter_key, value = explicit_input
+                    m.starter_inputs.setdefault(starter_key, []).append(value)
+                else:
+                    prompt_tail_parts.append(content)
             continue
 
         if tok.startswith("@"):
@@ -756,7 +821,8 @@ def merge_quality_gates(policies: List[str]) -> List[str]:
             other.append(p)
 
     if gates:
-        uniq = sorted(set(gates), key=lambda x: ["tests", "check-security-holes", "compat", "docs", "style"].index(x) if x in {"tests", "check-security-holes", "compat", "docs", "style"} else 999)
+        order = ["tests", "security", "compat", "docs", "style"]
+        uniq = sorted(set(gates), key=lambda x: order.index(x) if x in set(order) else 999)
         other.append(f"quality-gates{{{','.join(uniq)}}}")
 
     return other
@@ -1078,7 +1144,7 @@ def select_primary_skill(skills: List[str], skill_response_profile_map: Optional
         if skill in COMPLETION_CONTROL_SKILLS:
             return skill
 
-    # Choose the last concrete domain skill so chained macros ($scout-structure-map $plan-task-breakdown, $plan-task-breakdown $build-write-code)
+    # Choose the last concrete domain skill so chained macros ($analyze-structure $plan-task-breakdown, $plan-task-breakdown $build-write-code)
     # render in the profile of the final intent.
     for skill in reversed(explicit):
         if skill in ROUTING_SKIP_SKILLS:
@@ -1136,6 +1202,7 @@ def build_input_routing(
     normalized_scope: Optional[str],
 ) -> Dict[str, object]:
     raw_request = macro.prompt_tail if macro else None
+    explicit_starter_inputs = dict(macro.starter_inputs) if macro else {}
     scope_source = None
     if macro:
         if macro.scope:
@@ -1174,7 +1241,23 @@ def build_input_routing(
 
             status = "optional-unset"
             value_source = None
-            if starter_key == "SCOPE" and normalized_scope and scope_source:
+            if starter_key in explicit_starter_inputs:
+                status = "mapped"
+                value_source = f"STARTER_INPUT_VALUES.{starter_key}"
+                for target_field in maps_to:
+                    if not isinstance(target_field, str) or not target_field:
+                        continue
+                    satisfied_fields.add(target_field)
+                    input_route_table.append(
+                        {
+                            "starter_key": starter_key,
+                            "value_source": value_source,
+                            "target_skill": skill,
+                            "target_field": target_field,
+                            "status": status,
+                        }
+                    )
+            elif starter_key == "SCOPE" and normalized_scope and scope_source:
                 status = "mapped"
                 value_source = scope_source
                 for target_field in maps_to:
@@ -1279,6 +1362,7 @@ def build_input_routing(
 
     return {
         "raw_request": raw_request,
+        "starter_input_values": explicit_starter_inputs,
         "input_route_table": input_route_table,
         "missing_required_inputs": missing_required_inputs,
         "starter_input_state": starter_input_state,
@@ -1306,6 +1390,7 @@ def build_contract_outputs(
         "PARSED_DOC_INPUTS": list(macro.docs) if macro else [],
         "PROMPT_TAIL": macro.prompt_tail if macro else None,
         "RAW_REQUEST": routing.get("raw_request") if routing else (macro.prompt_tail if macro else None),
+        "STARTER_INPUT_VALUES": dict(routing.get("starter_input_values", {})) if routing else {},
         "NORMALIZED_SCOPE": normalized_scope,
         "LENS_SOURCE": lens_source,
         "PROGRAM": program,
@@ -1326,8 +1411,9 @@ def main() -> int:
         help=(
             "Macro expression. '+' separators are optional for skill tokens, and plain text after "
             "skill tokens is captured as prompt tail. "
-            "Use bracket blocks '[...]' for explicit prompt payloads (supports nesting/escaping). "
-            "Example: '$plan-sync-tasks $build-write-code $check-final-verify [continue with this prompt] @plans/TASKS.md'"
+            "Use bracket blocks '[...]' for explicit prompt payloads (supports nesting/escaping), "
+            "or '[KEY: value]' for explicit starter inputs. "
+            "Example: '$workflow-build-implement-and-guard @src/auth [DONE: session refresh test => stay signed in after refresh] [CONTEXT: keep the session after refresh]'"
         ),
     )
     default_skills_root = str(Path(__file__).resolve().parents[2])
@@ -1373,6 +1459,7 @@ def main() -> int:
                     "policy": list(macro.policy) if macro else [],
                     "docs": list(macro.docs) if macro else [],
                     "prompt_tail": macro.prompt_tail if macro else None,
+                    "starter_inputs": dict(macro.starter_inputs) if macro else {},
                     "raw_request": macro.prompt_tail if macro else None,
                 },
                 "program": None,
@@ -1432,6 +1519,7 @@ def main() -> int:
                 "policy": macro.policy,
                 "docs": macro.docs,
                 "prompt_tail": macro.prompt_tail,
+                "starter_inputs": dict(macro.starter_inputs),
                 "raw_request": macro.prompt_tail,
             },
             "program": {
@@ -1465,6 +1553,14 @@ def main() -> int:
     print(f"- Docs: {', '.join(macro.docs) if macro.docs else 'None'}")
     print(f"- Prompt tail: {macro.prompt_tail or 'None'}")
     print(
+        "- Starter inputs: "
+        + (
+            json.dumps(macro.starter_inputs, ensure_ascii=False, sort_keys=True)
+            if macro.starter_inputs
+            else "None"
+        )
+    )
+    print(
         f"- Response profile: {response_profile['profile_id']} "
         f"(primary skill: ${response_profile['primary_skill']})"
     )
@@ -1491,6 +1587,10 @@ def main() -> int:
     print()
     print("ROUTING:")
     print(f"- raw_request: {routing['raw_request'] or 'None'}")
+    if routing["starter_input_values"]:
+        print("- starter_input_values:")
+        for starter_key, values in routing["starter_input_values"].items():
+            print(f"  - {starter_key}: {json.dumps(values, ensure_ascii=False)}")
     if routing["input_route_table"]:
         print("- input_route_table:")
         for row in routing["input_route_table"]:

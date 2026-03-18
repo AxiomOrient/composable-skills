@@ -129,7 +129,7 @@
   "expands_to": [
     "$release-check-repo",
     "$release-check-hygiene",
-    "$check-security-holes",
+    "$review-security",
     "$release-verdict"
   ]
 }

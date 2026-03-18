@@ -48,11 +48,13 @@
     }
   ],
   "expands_to": [
-    "$scout-structure-map",
-    "$check-module-bounds",
-    "$check-failure-paths",
+    "$analyze-structure",
+    "$tidy-find-magic-numbers",
+    "$tidy-find-copies",
+    "$analyze-module-bounds",
+    "$review-failure-paths",
     "$test-find-gaps",
-    "$check-change-review"
+    "$review-change"
   ],
   "outputs": [
     {

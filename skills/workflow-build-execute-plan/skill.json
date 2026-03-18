@@ -92,8 +92,8 @@
   ],
   "expands_to": [
     "$build-write-code",
-    "$check-improve-loop",
+    "$control-improve-loop",
     "$plan-sync-tasks",
-    "$check-final-verify"
+    "$review-final-verify"
   ]
 }

@@ -9,6 +9,7 @@ Role: orchestration only.
 Rules:
 
 - Normalize the mission
+- Normalize the optional compose execution contract
 - Route the same bounded packet to all three agents
 - Preserve explicit lens selection
 - Avoid hidden domain reasoning during orchestration
@@ -70,6 +71,8 @@ Every model answer is treated as one input signal. The final arbiter must preser
 - agreement
 - disagreement
 - evidence strength
+- anchor quality
+- work-product fit
 - remaining uncertainty
 - cheapest next checks
 
