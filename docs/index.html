@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Composable Skills</title>
+    <meta
+      name="description"
+      content="단순함과 본질에 집중하는 스킬 시스템. 철학, 시스템 구조, 사용자 가치, 그리고 모든 스킬을 한 페이지에서 설명합니다."
+    />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/styles.css" />
+    <script type="module" src="./assets/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+
+    <div class="page-shell">
+      <header class="site-header">
+        <div class="site-header__inner">
+          <a class="brand" href="#top">
+            <span class="brand__mark">CS</span>
+            <span class="brand__text">
+              <strong>Composable Skills</strong>
+              <span>핵심만 남기는 작업 시스템</span>
+            </span>
+          </a>
+
+          <nav class="site-nav" aria-label="주요 섹션">
+            <a href="#philosophy">철학</a>
+            <a href="#system">시스템</a>
+            <a href="#atlas">스킬</a>
+            <a href="#install">설치</a>
+          </nav>
+
+          <a class="header-link" href="https://github.com/AxiomOrient/composable-skills">GitHub</a>
+        </div>
+      </header>
+
+      <main id="main">
+        <section class="hero section" id="top">
+          <div class="hero__copy reveal">
+            <p class="eyebrow">Composable Skills</p>
+            <h1>작업을 크게 만들지 않는다. 핵심을 나누고, 끝까지 간다.</h1>
+            <p class="hero__lead">
+              Composable Skills는 한 스킬에 한 책임만 둡니다. 그래서 질문은 더 또렷해지고,
+              구현은 더 좁아지고, 검증은 더 분명해집니다. 단순함은 비어 있는 상태가 아니라,
+              중요한 것이 한 번에 보이는 상태입니다.
+            </p>
+
+            <div class="hero__actions">
+              <a class="button button--solid" href="#atlas">스킬 아틀라스 보기</a>
+              <a class="button button--ghost" href="#install">설치와 배포</a>
+            </div>
+          </div>
+
+          <div class="hero__panel reveal">
+            <div class="signal-card">
+              <p class="signal-card__label">Source of Truth</p>
+              <p class="signal-card__value">`skills/&lt;name&gt;/SKILL.md`</p>
+              <p class="signal-card__text">
+                설명은 흩어지지 않습니다. 사이트 카탈로그도 같은 계약에서 다시 만들어집니다.
+              </p>
+            </div>
+
+            <div class="hero-stats">
+              <article class="metric-card">
+                <p class="metric-card__number" id="metric-skills">82</p>
+                <p class="metric-card__label">전체 스킬</p>
+              </article>
+              <article class="metric-card">
+                <p class="metric-card__number" id="metric-workflows">18</p>
+                <p class="metric-card__label">워크플로</p>
+              </article>
+              <article class="metric-card">
+                <p class="metric-card__number" id="metric-atomic">60</p>
+                <p class="metric-card__label">원자 스킬</p>
+              </article>
+              <article class="metric-card">
+                <p class="metric-card__number" id="metric-control">4</p>
+                <p class="metric-card__label">제어 스킬</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="philosophy">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Philosophy</p>
+            <h2>철학은 짧고 분명해야 한다.</h2>
+            <p>
+              이 시스템은 많은 기능을 한곳에 몰지 않습니다. 대신 책임을 잘게 나누고,
+              연결은 드러내고, 결과는 근거로 확인합니다.
+            </p>
+          </div>
+
+          <div class="principles-grid">
+            <article class="principle-card reveal">
+              <p class="principle-card__index">01</p>
+              <h3>단순함은 축소가 아니다</h3>
+              <p>적게 넣는 것이 아니라, 핵심이 바로 보이게 만드는 것이다.</p>
+            </article>
+            <article class="principle-card reveal">
+              <p class="principle-card__index">02</p>
+              <h3>한 스킬, 한 책임</h3>
+              <p>한 번에 하나의 문제만 맡기면 선택과 수정이 모두 쉬워진다.</p>
+            </article>
+            <article class="principle-card reveal">
+              <p class="principle-card__index">03</p>
+              <h3>확신보다 근거</h3>
+              <p>좋아 보인다가 아니라, 왜 맞는지 확인 가능한 흔적을 남긴다.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="value">
+          <div class="section-heading reveal">
+            <p class="eyebrow">What Users Get</p>
+            <h2>사용자는 더 적게 고민하고, 더 정확하게 고른다.</h2>
+            <p>
+              이 시스템이 주는 가치는 도구 수가 아니라 판단 품질입니다. 무엇을 먼저 해야
+              하는지, 어디까지 하면 되는지, 무엇을 남겨야 하는지가 빨라집니다.
+            </p>
+          </div>
+
+          <div class="value-grid">
+            <article class="value-card reveal">
+              <h3>덜 헤맨다</h3>
+              <p>workflow가 첫 진입점을 잡아 주기 때문에 시작 비용이 줄어든다.</p>
+            </article>
+            <article class="value-card reveal">
+              <h3>덜 섞인다</h3>
+              <p>atomic이 한 책임만 맡기 때문에 문제와 해결이 서로 엉키지 않는다.</p>
+            </article>
+            <article class="value-card reveal">
+              <h3>덜 망가뜨린다</h3>
+              <p>plan, build, test, review가 검증 근거를 남겨 불필요한 추측을 줄인다.</p>
+            </article>
+            <article class="value-card reveal">
+              <h3>덜 남긴다</h3>
+              <p>tidy, doc, release가 끝맺음을 맡아 레거시 대신 정리된 상태를 남긴다.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="system">
+          <div class="section-heading reveal">
+            <p class="eyebrow">System</p>
+            <h2>시스템은 간결해야 한다.</h2>
+            <p>
+              표면은 작게, 연결은 보이게, 반복은 통제 가능하게. 이 세 가지가 이 스킬
+              시스템의 구조입니다.
+            </p>
+          </div>
+
+          <div class="system-layout reveal">
+            <article class="layer-card">
+              <p class="layer-card__label">Workflow</p>
+              <h3>한 덩어리 작업의 기본 진입점</h3>
+              <p>질문 정리, 디버그, 계획 수립, 구현, 테스트 보강 같은 큰 흐름을 맡는다.</p>
+            </article>
+
+            <article class="layer-card">
+              <p class="layer-card__label">Atomic</p>
+              <h3>정확히 하나의 동작만 수행하는 공구</h3>
+              <p>분석, 계획, 구현, 테스트, 정리처럼 필요한 동작만 정밀하게 꺼내 쓴다.</p>
+            </article>
+
+            <article class="layer-card">
+              <p class="layer-card__label">Control</p>
+              <h3>끝날 때까지 밀어 주는 제어 장치</h3>
+              <p>루프 실행, 체인 조립, 최종 정리처럼 반복과 종료 조건을 관리한다.</p>
+            </article>
+          </div>
+
+          <div class="system-rules reveal">
+            <p>작게 공개한다. workflow expansion은 숨기지 않는다. 근거 없이 완료라고 말하지 않는다.</p>
+          </div>
+        </section>
+
+        <section class="section" id="flow">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Operating Flow</p>
+            <h2>좋은 흐름은 순서가 분명하다.</h2>
+            <p>문제를 정리하고, 구조를 보고, 계획을 세우고, 구현하고, 검증하고, 정리한다.</p>
+          </div>
+
+          <div class="flow-grid">
+            <article class="flow-step reveal">
+              <span>01</span>
+              <h3>질문을 날카롭게 만든다</h3>
+              <p><code>workflow-clarify-request</code>, <code>ask-*</code>, <code>clarify-*</code></p>
+            </article>
+            <article class="flow-step reveal">
+              <span>02</span>
+              <h3>현재 상태를 본다</h3>
+              <p><code>workflow-scout-structure</code>, <code>analyze-*</code></p>
+            </article>
+            <article class="flow-step reveal">
+              <span>03</span>
+              <h3>만들기 전에 선을 긋는다</h3>
+              <p><code>workflow-plan-build-ready</code>, <code>plan-*</code></p>
+            </article>
+            <article class="flow-step reveal">
+              <span>04</span>
+              <h3>구현과 수정을 좁게 한다</h3>
+              <p><code>build-*</code>, <code>debug-*</code>, <code>workflow-build-*</code></p>
+            </article>
+            <article class="flow-step reveal">
+              <span>05</span>
+              <h3>보호막과 판정을 붙인다</h3>
+              <p><code>test-*</code>, <code>review-*</code>, <code>release-*</code></p>
+            </article>
+            <article class="flow-step reveal">
+              <span>06</span>
+              <h3>군살 없이 마무리한다</h3>
+              <p><code>tidy-*</code>, <code>doc-*</code>, <code>control-*</code></p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section atlas" id="atlas">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Skill Atlas</p>
+            <h2>스킬은 하나하나 정교해야 한다.</h2>
+            <p>
+              아래 카탈로그는 저장소의 실제 스킬 계약에서 다시 생성됩니다. 철학은 짧게
+              두고, 선택은 구체적으로 돕습니다.
+            </p>
+          </div>
+
+          <div class="family-overview reveal" id="family-overview"></div>
+
+          <div class="atlas-controls reveal">
+            <label class="search-field" for="skill-search">
+              <span>스킬 검색</span>
+              <input
+                id="skill-search"
+                type="search"
+                placeholder="이름, 설명, 추천 상황 검색"
+                autocomplete="off"
+              />
+            </label>
+
+            <div class="filter-block">
+              <p>레이어</p>
+              <div class="filter-chips" id="layer-filters"></div>
+            </div>
+
+            <div class="filter-block">
+              <p>패밀리</p>
+              <div class="filter-chips" id="family-filters"></div>
+            </div>
+          </div>
+
+          <div class="atlas-summary reveal" id="atlas-summary" aria-live="polite"></div>
+          <div class="atlas-results" id="atlas-results">
+            <p class="loading-state">카탈로그를 불러오는 중입니다.</p>
+          </div>
+          <noscript>
+            <p class="noscript-state">이 페이지의 스킬 카탈로그는 JavaScript가 필요합니다.</p>
+          </noscript>
+        </section>
+
+        <section class="section install" id="install">
+          <div class="section-heading reveal">
+            <p class="eyebrow">Install & Deploy</p>
+            <h2>설치와 배포도 복잡할 이유가 없다.</h2>
+            <p>
+              런타임 프레임워크 없이 `docs/` 정적 파일로 배포한다. 카탈로그만 다시 만들면
+              사이트는 곧바로 최신 상태가 된다.
+            </p>
+          </div>
+
+          <div class="install-grid">
+            <article class="install-card reveal">
+              <h3>설치</h3>
+              <pre><code>git clone git@github.com:AxiomOrient/composable-skills.git
+cd composable-skills
+./scripts/sync.sh</code></pre>
+            </article>
+
+            <article class="install-card reveal">
+              <h3>카탈로그 갱신</h3>
+              <pre><code>python3 scripts/build_site_data.py</code></pre>
+            </article>
+
+            <article class="install-card reveal">
+              <h3>로컬 확인</h3>
+              <pre><code>python3 -m http.server 4173 --directory docs</code></pre>
+            </article>
+
+            <article class="install-card reveal">
+              <h3>GitHub Pages</h3>
+              <p>
+                저장소 설정에서 Pages 소스를 <strong>기본 브랜치 /docs</strong> 폴더로 지정하면
+                된다.
+              </p>
+            </article>
+          </div>
+
+          <div class="doc-links reveal">
+            <a data-doc-link="repo" href="https://github.com/AxiomOrient/composable-skills">저장소</a>
+            <a data-doc-link="readme" href="https://github.com/AxiomOrient/composable-skills">README</a>
+            <a data-doc-link="system" href="https://github.com/AxiomOrient/composable-skills/blob/main/docs/SKILL-SYSTEM.md">시스템 문서</a>
+            <a data-doc-link="guide" href="https://github.com/AxiomOrient/composable-skills/blob/main/docs/ATOMIC-SKILLS-GUIDE.md">스킬 가이드</a>
+            <a data-doc-link="skills" href="https://github.com/AxiomOrient/composable-skills/tree/main/skills">skills/ 디렉터리</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <p>Composable Skills는 작은 책임, 드러난 연결, 확인 가능한 결과를 지향합니다.</p>
+      </footer>
+    </div>
+  </body>
+</html>

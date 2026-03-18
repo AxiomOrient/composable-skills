@@ -1,0 +1,91 @@
+{
+  "name": "workflow-consensus-engine",
+  "layer": "workflow",
+  "layer_badge": "Workflow",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,safety-gates,deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "REQUEST",
+      "type": "string",
+      "required": true,
+      "description": "Original decision or analysis request."
+    },
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|folder|repo|artifact",
+      "required": true,
+      "description": "Bounded scope for the consensus run."
+    },
+    {
+      "name": "DONE_CONDITION",
+      "type": "list",
+      "required": true,
+      "shape": "{CONDITION}",
+      "description": "What the final recommendation must prove or include."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Hard limits and non-goals."
+    },
+    {
+      "name": "CONTEXT_FILES",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH}",
+      "description": "Local files or notes to include in the packet."
+    },
+    {
+      "name": "CONSENSUS_MODE",
+      "type": "analysis|plan|implement-review",
+      "required": false,
+      "description": "Consensus output mode. Defaults to analysis."
+    }
+  ],
+  "display_name": "Workflow / Consensus Engine",
+  "browse_category": "analyze",
+  "browse_priority": 15,
+  "is_category_default": false,
+  "codex_surface": "public_entry",
+  "starter_inputs": [
+    {
+      "key": "GOAL",
+      "label": "무엇을 결정할지",
+      "required": true,
+      "maps_to": ["REQUEST"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "SCOPE",
+      "label": "합의 범위",
+      "required": true,
+      "maps_to": ["TARGET_SCOPE"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "DONE",
+      "label": "무엇이 나오면 끝인지",
+      "required": true,
+      "maps_to": ["DONE_CONDITION"]
+    },
+    {
+      "key": "CONSTRAINTS",
+      "label": "지켜야 할 제약",
+      "required": false,
+      "maps_to": ["CONSTRAINTS"],
+      "derive_from_raw_request": true
+    },
+    {
+      "key": "CONTEXT",
+      "label": "넣을 파일이나 메모",
+      "required": false,
+      "maps_to": ["CONTEXT_FILES"]
+    }
+  ],
+  "expands_to": [
+    "$clarify-boundaries",
+    "$consensus-engine"
+  ]
+}

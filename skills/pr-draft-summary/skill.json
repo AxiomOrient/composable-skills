@@ -1,0 +1,38 @@
+{
+  "name": "pr-draft-summary",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: diff|branch|repo |\n policy: evidence,review-ready,deterministic-output |\n lens: minto-pyramid |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "REVIEW_SCOPE",
+      "type": "diff|branch|repo",
+      "required": true,
+      "description": "What body of changes to summarize."
+    },
+    {
+      "name": "CHANGE_INTENT",
+      "type": "string",
+      "required": true,
+      "description": "What the change set was trying to accomplish."
+    },
+    {
+      "name": "BASE_REF_HINT",
+      "type": "git-ref|none",
+      "required": false,
+      "description": "Expected comparison base when not using the default upstream."
+    },
+    {
+      "name": "NOTES_POLICY",
+      "type": "minimal|include-risk-and-rollback",
+      "required": false,
+      "description": "How much operational context to include."
+    }
+  ],
+  "display_name": "PR Draft Summary",
+  "browse_category": "review",
+  "browse_priority": 36,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

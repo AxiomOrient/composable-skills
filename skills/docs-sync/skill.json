@@ -1,0 +1,39 @@
+{
+  "name": "docs-sync",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit |\n scope: repo|diff|paths(glob,...) |\n policy: evidence,quality-gates{docs,links},deterministic-output |\n lens: craft-clarity |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo|diff",
+      "required": true,
+      "description": "Scope whose documentation may now be stale."
+    },
+    {
+      "name": "DOC_SURFACE",
+      "type": "path|repo-docs",
+      "required": true,
+      "description": "Docs surface to inspect, such as `docs/`, root design notes, or architecture files."
+    },
+    {
+      "name": "SYNC_MODE",
+      "type": "audit-only|propose-edits|apply-approved",
+      "required": true,
+      "description": "Whether to only audit, propose changes, or apply already-approved edits."
+    },
+    {
+      "name": "REFERENCE_ARTIFACTS",
+      "type": "list",
+      "required": false,
+      "shape": "{REF, WHY_RELEVANT}",
+      "description": "Plans, specs, generated schema docs, or workflow files that define the source of truth."
+    }
+  ],
+  "display_name": "Docs Sync",
+  "browse_category": "doc",
+  "browse_priority": 24,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

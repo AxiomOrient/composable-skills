@@ -1,0 +1,3213 @@
+{
+  "generatedFrom": "skills/*/SKILL.md + skills/README.md",
+  "repoUrl": "https://github.com/AxiomOrient/composable-skills",
+  "stats": {
+    "skillsCount": 89,
+    "workflowCount": 19,
+    "atomicCount": 66,
+    "controlCount": 4,
+    "familyCards": [
+      {
+        "family": "workflow",
+        "count": 19,
+        "labelEn": "Workflow",
+        "labelKo": "워크플로",
+        "summaryKo": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      {
+        "family": "ask",
+        "count": 4,
+        "labelEn": "Ask",
+        "labelKo": "질문 설계",
+        "summaryKo": "좋은 답을 얻기 전에, 좋은 질문부터 만든다."
+      },
+      {
+        "family": "clarify",
+        "count": 2,
+        "labelEn": "Clarify",
+        "labelKo": "요구 명확화",
+        "summaryKo": "어디까지가 이번 일인지 먼저 분명하게 만든다."
+      },
+      {
+        "family": "analyze",
+        "count": 9,
+        "labelEn": "Analyze",
+        "labelKo": "분석",
+        "summaryKo": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      {
+        "family": "plan",
+        "count": 8,
+        "labelEn": "Plan",
+        "labelKo": "계획",
+        "summaryKo": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      {
+        "family": "build",
+        "count": 2,
+        "labelEn": "Build",
+        "labelKo": "구현",
+        "summaryKo": "생각이 아니라 실행을 담당한다."
+      },
+      {
+        "family": "debug",
+        "count": 4,
+        "labelEn": "Debug",
+        "labelKo": "디버그",
+        "summaryKo": "느낌이 아니라 재현 가능한 실패로 다룬다."
+      },
+      {
+        "family": "test",
+        "count": 4,
+        "labelEn": "Test",
+        "labelKo": "테스트",
+        "summaryKo": "무엇을 지켜야 하는지부터 설계한다."
+      },
+      {
+        "family": "review",
+        "count": 5,
+        "labelEn": "Review",
+        "labelKo": "리뷰",
+        "summaryKo": "위험과 품질을 명시적으로 판정한다."
+      },
+      {
+        "family": "tidy",
+        "count": 9,
+        "labelEn": "Tidy",
+        "labelKo": "정리",
+        "summaryKo": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      {
+        "family": "doc",
+        "count": 6,
+        "labelEn": "Doc",
+        "labelKo": "문서",
+        "summaryKo": "문서 표면과 수명주기를 함께 다룬다."
+      },
+      {
+        "family": "release",
+        "count": 4,
+        "labelEn": "Release",
+        "labelKo": "릴리즈",
+        "summaryKo": "출고 전 마지막 검증을 맡는다."
+      },
+      {
+        "family": "control",
+        "count": 4,
+        "labelEn": "Control",
+        "labelKo": "제어",
+        "summaryKo": "한 번이 아니라 끝날 때까지 실행한다."
+      },
+      {
+        "family": "compose",
+        "count": 1,
+        "labelEn": "Compose",
+        "labelKo": "조립",
+        "summaryKo": "다중 스킬 실행 순서를 명시적으로 만든다."
+      },
+      {
+        "family": "commit",
+        "count": 1,
+        "labelEn": "Commit",
+        "labelKo": "커밋",
+        "summaryKo": "코드가 아니라 변경 설명을 다룬다."
+      },
+      {
+        "family": "gemini",
+        "count": 1,
+        "labelEn": "Gemini",
+        "labelKo": "외부 조사",
+        "summaryKo": "명시 요청이 있을 때만 외부 분석을 붙인다."
+      },
+      {
+        "family": "misc",
+        "count": 6,
+        "labelEn": "Misc",
+        "labelKo": "기타",
+        "summaryKo": "좁은 목적의 보조 스킬이다."
+      }
+    ]
+  },
+  "skills": [
+    {
+      "name": "workflow-analyze-codebase",
+      "description": "Workflow skill that chains structure analysis, complexity mapping, and dependency graph analysis into one complete codebase understanding session. Use when you need a full analytical picture before planning, refactoring, or design work.",
+      "summaryKo": "구조, 복잡도, 의존성을 한 번에 분석한다. 코드베이스를 처음 파악하거나 리팩터링 전에 전체 그림이 필요할 때 쓴다.",
+      "purpose": "Compose structure, complexity, and dependency analysis into one explicit analytical workflow — producing a complete current-state picture before any planning or refactoring begins.",
+      "useWhen": [
+        "Need a full analytical picture of a codebase or module before planning or refactoring.",
+        "Need structure, complexity, and dependency analysis in one pass.",
+        "Need evidence-backed answers to \"where is the complexity?\", \"what depends on what?\", and \"what are the key boundaries?\"."
+      ],
+      "doNotUseWhen": [
+        "Need direct code implementation without prior analysis.",
+        "Need a review verdict rather than neutral analysis.",
+        "Already have a clear structural picture and only need one specific analysis dimension."
+      ],
+      "expansion": [
+        "analyze-structure",
+        "analyze-complexity",
+        "analyze-dependencies"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "구조·복잡도·의존성을 한 번에 분석하고 싶다",
+        "why": "판정 없이 코드베이스 전체 분석 지도를 만든다"
+      },
+      "sourcePath": "skills/workflow-analyze-codebase/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-analyze-codebase/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-ask-get-clear",
+      "description": "Workflow skill that turns a fuzzy topic into one clear problem statement and a usable question stack. Use when the user needs help getting clear before deeper reframing or before asking for the answer.",
+      "summaryKo": "",
+      "purpose": "Compose question clarification and scaffolding into one reusable question-design workflow.",
+      "useWhen": [
+        "Need a clear problem statement and question stack in one pass.",
+        "Need a reusable workflow entrypoint before deeper challenge or answer work.",
+        "Need a named composition rather than manually listing clarify plus scaffold each time."
+      ],
+      "doNotUseWhen": [
+        "Need assumption-challenging reframing in the same workflow.",
+        "Need the final answer directly.",
+        "Need repository or implementation work."
+      ],
+      "expansion": [
+        "ask-clarify-question",
+        "ask-break-it-down"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/workflow-ask-get-clear/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-ask-get-clear/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-build-execute-plan",
+      "description": "Plan-document-driven build pipeline. Requires plans/TASKS.md (and optionally plans/IMPLEMENTATION-PLAN.md). Reads each incomplete task row, implements it, self-critiques, syncs the ledger, verifies, and loops until all tasks are done or a real blocker stops progress. For plan-free autonomous execution without task documents, use control-build-until-done instead.",
+      "summaryKo": "이미 `plans/TASKS.md` 같은 태스크 장부가 있을 때, 그 장부를 따라 구현하고 점검하고 다시 sync하는 루프를 끝까지 돌린다.",
+      "purpose": "Execute a TASKS.md ledger to completion. Reads task rows as work orders, runs the full implement → critique → sync → verify cycle per task, and loops until every row is done or a real blocker stops progress. Does not stop between cycles — keeps going within the same turn.",
+      "useWhen": [
+        "Have a plans/TASKS.md ledger and need end-to-end automated execution of all task rows.",
+        "Need each implementation pass followed by self-critique before moving to the next task.",
+        "Need the task ledger kept in sync automatically after each pass.",
+        "Need a structured execution record of what was implemented and why."
+      ],
+      "doNotUseWhen": [
+        "Have no plan or task documents — use control-build-until-done for plan-free autonomous execution.",
+        "Need only a single-pass implementation — use build-write-code directly.",
+        "Need planning first — use workflow-plan-build-ready to create the plan, then return here.",
+        "Need non-code work (docs, review, release) — use control-finish-until-done instead."
+      ],
+      "expansion": [
+        "build-write-code",
+        "control-improve-loop",
+        "plan-sync-tasks",
+        "review-final-verify"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "기존 태스크 문서를 끝까지 자동 실행하고 싶다",
+        "why": "`plans/TASKS.md`를 읽고 루프를 계속 돈다"
+      },
+      "sourcePath": "skills/workflow-build-execute-plan/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-build-execute-plan/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-build-implement-and-guard",
+      "description": "Workflow skill that implements a bounded change and immediately follows with regression-guard work. Use when the user needs one default build entrypoint instead of separately invoking implementation and test-guard skills.",
+      "summaryKo": "코드를 바꾸고 끝내지 않는다. 바뀐 동작을 지켜 줄 테스트나 회귀 방지 장치까지 바로 붙인다.",
+      "purpose": "Compose implementation and regression-guard writing into one default build workflow.",
+      "useWhen": [
+        "Need to implement a bounded change and leave regression guards in the same run.",
+        "Need one default build entrypoint for category-first discovery.",
+        "Need implementation evidence plus concrete follow-up test protection."
+      ],
+      "doNotUseWhen": [
+        "Need planning or scope clarification before coding.",
+        "Need only test-gap analysis without changing code.",
+        "Need only direct implementation without test guard follow-up."
+      ],
+      "expansion": [
+        "build-write-code",
+        "test-write-guards"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "바로 구현하고 테스트 보호막까지 같이 만들고 싶다",
+        "why": "코드 수정 뒤 회귀 방지 테스트까지 이어 준다"
+      },
+      "sourcePath": "skills/workflow-build-implement-and-guard/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-build-implement-and-guard/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-check-with-checklist",
+      "description": "Workflow skill that combines `workflow-review-change` with the full 9-item `review-quality` checklist pass. Use when the user explicitly wants both narrow review scans and checklist coverage.",
+      "summaryKo": "",
+      "purpose": "Compose narrow review scans and the full quality checklist into one explicit project review workflow.",
+      "useWhen": [
+        "Need both explicit narrow review scans and the full 9-item checklist.",
+        "Need a named workflow instead of repeatedly typing $workflow-review-change + $review-quality.",
+        "Need checklist-backed review output for a bounded project or module scope."
+      ],
+      "doNotUseWhen": [
+        "Need only the narrower workflow-review-change workflow.",
+        "Need only the checklist without narrow review scans.",
+        "Need release-only gating without structural review."
+      ],
+      "expansion": [
+        "workflow-review-change",
+        "review-quality"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/workflow-check-with-checklist/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-check-with-checklist/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-clarify-request",
+      "description": "Workflow skill that turns a fuzzy topic into a clear problem statement, a usable question stack, and challenge questions. Use when the user wants a question that is actually worth asking, not just a longer prompt.",
+      "summaryKo": "이미 있는 질문을 더 쪼개고, 무엇을 가정하고 있는지 흔들어 보면서 \"진짜 물어야 할 질문\"으로 벼린다.",
+      "purpose": "Compose the core question-design path into one explicit ready-to-ask workflow.",
+      "useWhen": [
+        "Need a question that is ready to ask, not just a rough draft.",
+        "Need assumption-challenging reframing after the first question stack is built.",
+        "Need a stable named workflow for practical question design."
+      ],
+      "doNotUseWhen": [
+        "Already have a clear question and only need repair after a failed answer.",
+        "Need repair-after-failure rather than first-pass question preparation.",
+        "Need code or repository work."
+      ],
+      "expansion": [
+        "ask-clarify-question",
+        "ask-break-it-down",
+        "ask-flip-assumption"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "머릿속 주제가 흐리다",
+        "why": "문제 정의와 질문 구조를 한 번에 또렷하게 만든다"
+      },
+      "sourcePath": "skills/workflow-clarify-request/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-clarify-request/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-consensus-engine",
+      "description": "Workflow skill that locks a bounded scope contract and then runs the consensus engine to arbitrate one design, debugging, or planning decision across Codex, Claude Code, and Gemini CLI. Use when the public entrypoint should expose multi-model consensus without hiding the boundary-setting step.",
+      "summaryKo": "범위와 완료 조건을 먼저 잠근 뒤, Codex, Claude Code, Gemini CLI의 독립 응답과 반박 라운드를 통해 권고안, 남는 충돌, 가장 싼 다음 확인을 정리한다.",
+      "purpose": "Public entrypoint for bounded multi-model consensus: first lock the boundary, then run the script-backed engine.",
+      "useWhen": [
+        "Need a public entrypoint for choosing between design, refactor, debugging, or plan alternatives.",
+        "Need the engine to preserve disagreement instead of reducing everything to a single prose answer.",
+        "Need scope, constraints, and done condition locked before multi-model arbitration starts."
+      ],
+      "doNotUseWhen": [
+        "Need direct code changes right away.",
+        "The task is a deterministic computation or a simple factual lookup.",
+        "External CLI use is disallowed for this mission.",
+        "The request is still too fuzzy and needs a clarify workflow first."
+      ],
+      "expansion": [
+        "clarify-boundaries",
+        "consensus-engine"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "설계안, 리팩터링 방향, 디버깅 가설을 3개 모델 합의로 좁히고 싶다",
+        "why": "경계를 먼저 잠그고 다중 모델 합의를 돌려 권고안과 충돌 지점을 분리한다"
+      },
+      "sourcePath": "skills/workflow-consensus-engine/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-consensus-engine/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-debug-this",
+      "description": "Workflow skill that captures the repro, narrows the failure surface, performs root-cause debugging, and checks regression protection. Use when the user wants one default debug entrypoint instead of a broad 'fix the bug' instruction.",
+      "summaryKo": "증상을 재현 가능한 실패로 바꾸고, 실패 범위를 좁히고, 원인을 찾고, 정말 고쳐졌는지까지 확인한다. 디버깅 풀코스라고 생각하면 된다.",
+      "purpose": "Compose repro capture, failure-surface reduction, debugging, and test-gap awareness into one explicit debug workflow.",
+      "useWhen": [
+        "Need a bounded debug loop for a concrete failure.",
+        "Need to capture the repro and reduce failure surface before root-cause work.",
+        "Need debug output tied to follow-up regression protection."
+      ],
+      "doNotUseWhen": [
+        "Need a first-pass implementation with no concrete failure.",
+        "Need only a failure-surface map without deeper debugging.",
+        "Need a broad project review instead of a debug loop."
+      ],
+      "expansion": [
+        "debug-capture-failure",
+        "debug-map-impact",
+        "debug-find-root-cause",
+        "test-find-gaps"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "버그를 처음부터 끝까지 추적하고 싶다",
+        "why": "재현, 원인, 수정 확인까지 한 흐름으로 묶는다"
+      },
+      "sourcePath": "skills/workflow-debug-this/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-debug-this/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-doc-build-docset",
+      "description": "Workflow skill that inventories a folder tree and builds parent README-style overview pages plus child project-info docs. Use when the user wants one default docset builder instead of manually chaining inventory and hierarchy-writing skills.",
+      "summaryKo": "폴더 트리를 부모 README 스타일 요약 문서와 자식 프로젝트 정보 문서로 나눠 계층 문서 세트로 만든다. 상위는 요약, 하위는 상세라는 경계를 분명히 하고 싶을 때 맞다.",
+      "purpose": "Compose documentation inventory and hierarchical docset writing into one default workflow for folder-tree documentation.",
+      "useWhen": [
+        "Need a folder tree documented as parent README-style summaries and child detail docs.",
+        "Need one workflow that inventories the current surface before generating hierarchy docs.",
+        "Need recursive, MECE-friendly docs for modules, projects, or subtrees."
+      ],
+      "doNotUseWhen": [
+        "Need only lifecycle governance for existing docs.",
+        "Need repo root README publication.",
+        "Need release notes, changelog entries, or migration docs.",
+        "Need only one narrow page rather than a hierarchy."
+      ],
+      "expansion": [
+        "doc-find-all",
+        "doc-build-index"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "폴더 트리를 부모 README + 자식 프로젝트 정보 문서로 만들고 싶다",
+        "why": "상위 폴더는 요약과 링크, 하위 폴더는 상세 정보로 나눠 계층 문서 세트를 만든다"
+      },
+      "sourcePath": "skills/workflow-doc-build-docset/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-doc-build-docset/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-doc-release-package",
+      "description": "Workflow skill that inventories the current docs surface and writes or refreshes release-facing docs such as release notes, changelog entries, upgrade notes, and migration guides. Use when the user wants one release-doc entrypoint instead of manually chaining inventory and release-doc writing.",
+      "summaryKo": "릴리즈 범위를 근거로 릴리즈 노트, 변경 요약, 업그레이드/마이그레이션 문서를 만든다. 릴리즈 설명 자체를 문서 artifact로 남기고 싶을 때 쓴다.",
+      "purpose": "Compose documentation inventory and release-doc writing into one default workflow for release-facing documentation.",
+      "useWhen": [
+        "Need release notes, changelog entries, upgrade docs, migration docs, compatibility notes, or rollback summaries.",
+        "Need one workflow that checks the current docs surface before authoring release docs.",
+        "Need release documentation without mutating git refs or publishing releases."
+      ],
+      "doNotUseWhen": [
+        "Need rollout GO/NO-GO judgement or release publication.",
+        "Need generic non-release documentation.",
+        "Need repo root README publication.",
+        "Need lifecycle governance of the entire docs surface."
+      ],
+      "expansion": [
+        "doc-find-all",
+        "doc-write-release-docs"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "릴리즈 노트, 변경 요약, 업그레이드 문서를 만들고 싶다",
+        "why": "현재 릴리즈 범위를 근거로 릴리즈 문서를 묶어서 만든다"
+      },
+      "sourcePath": "skills/workflow-doc-release-package/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-doc-release-package/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-doc-systemize",
+      "description": "Workflow skill that inventories docs, classifies them by keep/update/deprecate/delete, and applies only the bounded doc updates or bridge docs that the lifecycle decision requires. Use when the user needs one default documentation governance entrypoint instead of manually chaining inventory, curation, and targeted writing.",
+      "summaryKo": "문서를 전수 조사한 뒤 keep/update/deprecate/delete 기준으로 판정하고, 필요한 브리지 문서나 갱신만 좁게 적용한다. 문서 거버넌스의 기본 진입점이다.",
+      "purpose": "Compose documentation inventory, lifecycle governance, and targeted doc writing into one default docs workflow.",
+      "useWhen": [
+        "Need one default docs entrypoint for broad documentation cleanup and governance.",
+        "Need inventory, lifecycle judgement, and targeted updates to stay connected in one path.",
+        "Need documentation work without runtime code changes."
+      ],
+      "doNotUseWhen": [
+        "Need only root README publishing.",
+        "Need a recursive folder docset with parent README-style summaries and child project docs.",
+        "Need release notes, changelog entries, or upgrade docs for a release.",
+        "Need only one narrow documentation concern.",
+        "Need runtime code changes."
+      ],
+      "expansion": [
+        "doc-find-all",
+        "doc-curate",
+        "doc-write"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "문서 표면을 keep/update/deprecate/delete 기준으로 정리하고 싶다",
+        "why": "인벤토리부터 수명주기 판정과 필요한 브리지 문서 작성까지 한 번에 이어 준다"
+      },
+      "sourcePath": "skills/workflow-doc-systemize/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-doc-systemize/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-plan-build-ready",
+      "description": "Workflow skill that turns a broad request into a bounded scope contract, a buildable spec/design path, and execution-ready task artifacts. Use when the user needs one default planning entrypoint before implementation.",
+      "summaryKo": "흐린 요청을 작업 가능한 범위 계약으로 바꾸고, 구현 가능한 설계와 실행용 태스크 문서까지 만든다. 구현 전에 길을 그리는 일이다.",
+      "purpose": "Compose scope normalization, spec/design shaping, and task breakdown into one default planning workflow.",
+      "useWhen": [
+        "Need one planning workflow before writing code.",
+        "Need scope, design, and task artifacts to stay aligned in one path.",
+        "Need a category-default planning entrypoint instead of manually chaining multiple planning skills."
+      ],
+      "doNotUseWhen": [
+        "Need direct implementation right now.",
+        "Need only one narrow planning artifact such as a feature spec or dependency rules.",
+        "Already have stable plan/task artifacts and only need plan-driven execution."
+      ],
+      "expansion": [
+        "clarify-boundaries",
+        "plan-what-it-does",
+        "plan-how-to-build",
+        "plan-task-breakdown"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "구현 전에 계획을 세우고 싶다",
+        "why": "범위 계약부터 설계와 태스크 아티팩트까지 만든다"
+      },
+      "sourcePath": "skills/workflow-plan-build-ready/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-plan-build-ready/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-release-ready-check",
+      "description": "Workflow skill that verifies repository reality, release hygiene, and final release readiness before publication. Use when the user wants a transparent release review instead of a single vague 'can we ship?' prompt.",
+      "summaryKo": "저장소가 실제로 릴리즈할 상태인지, 문서와 위생이 맞는지, 최종 출고해도 되는지 차분하게 점검한다.",
+      "purpose": "Compose repository prechecks, release hygiene gates, security preflight, and GO/NO-GO release judgement into one explicit release review workflow.",
+      "useWhen": [
+        "Need release review built from explicit repository, hygiene, and readiness subchecks.",
+        "Need repo-exposure and secret-leak gates checked before shipping.",
+        "Need document-upgrade and legacy-removal gates checked before shipping.",
+        "Need a named release-review workflow that can still be extended with check-final-verify or release-publish.",
+        "Need release judgement only, while keeping branch, tag, and publish mutation outside the current run."
+      ],
+      "doNotUseWhen": [
+        "Need direct branch, tag, or GitHub release mutation; use release-publish instead.",
+        "Need the default review-plus-publish release flow; use control-release-publish-flow instead.",
+        "Need only one narrow release concern rather than a combined release review.",
+        "Need runtime implementation or debugging rather than release gating."
+      ],
+      "expansion": [
+        "release-check-repo",
+        "release-check-hygiene",
+        "review-security",
+        "release-verdict"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "배포 가능한지 먼저 판단하고 싶다",
+        "why": "저장소 상태, 릴리즈 위생, 최종 출고 준비를 점검한다"
+      },
+      "sourcePath": "skills/workflow-release-ready-check/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-release-ready-check/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-review-change",
+      "description": "Workflow skill that composes current-state structure mapping and bounded review scans for a project, folder, or module. Use when the user wants a review built from explicit subchecks instead of a single broad 'find bugs' instruction.",
+      "summaryKo": "한 폴더나 모듈을 보고 구조 파악과 리뷰 스캔을 함께 수행한다. 막연한 \"버그 좀 봐 줘\"보다 훨씬 투명한 리뷰 흐름이다.",
+      "purpose": "Compose specific analysis and review scans into one explicit project review workflow.",
+      "useWhen": [
+        "Need a project, folder, or module reviewed through explicit subchecks.",
+        "Need review output grounded in current-state structure, duplication, boundary, error-path, and test-gap evidence.",
+        "Need a named workflow that can still be extended with additional skills."
+      ],
+      "doNotUseWhen": [
+        "Need direct code implementation without review.",
+        "Need a narrow single-concern scan rather than a combined review workflow.",
+        "Need release-only gating without structural review."
+      ],
+      "expansion": [
+        "analyze-structure",
+        "tidy-find-magic-numbers",
+        "tidy-find-copies",
+        "analyze-module-bounds",
+        "review-failure-paths",
+        "test-find-gaps",
+        "review-change"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "간단한 코드 리뷰가 필요하다",
+        "why": "구조 파악과 리뷰 스캔을 함께 돌린다"
+      },
+      "sourcePath": "skills/workflow-review-change/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-review-change/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-review-complete",
+      "description": "Workflow skill that chains structure analysis, quality scan, security review, failure-path review, and a final change verdict into one complete review session. Use when you need the most thorough review coverage in one pass.",
+      "summaryKo": "구조 분석, 품질, 보안, 실패 경로, 변경 리뷰를 모두 포함하는 완전한 리뷰. 중요한 PR이나 릴리즈 전 전면 점검에 맞다.",
+      "purpose": "Compose structure analysis, quality checklist, security review, failure-path review, and final change verdict into one complete, evidence-backed review workflow.",
+      "useWhen": [
+        "Need the most complete review coverage: structure, quality, security, failure paths, and final verdict.",
+        "Need a review workflow where each dimension is explicitly traced.",
+        "Need a final integrate/hold decision backed by multiple review dimensions."
+      ],
+      "doNotUseWhen": [
+        "Need only one specific review dimension — use the individual review-* or analyze-* skill.",
+        "Need direct code implementation.",
+        "Need release gating rather than code review — use workflow-release-ready-check instead."
+      ],
+      "expansion": [
+        "analyze-structure",
+        "review-quality",
+        "review-security",
+        "review-failure-paths",
+        "review-change"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "구조·품질·보안·실패경로 완전한 리뷰가 필요하다",
+        "why": "5가지 리뷰 렌즈를 모두 통과하는 완전한 리뷰"
+      },
+      "sourcePath": "skills/workflow-review-complete/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-review-complete/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-scout-structure",
+      "description": "Workflow skill that clarifies the scope boundary first, then maps the current structure inside that scope. Use when the user needs one default scout entrypoint to understand how a bounded system is shaped now.",
+      "summaryKo": "먼저 범위를 분명히 정한 다음 (`clarify-scope`), 그 안의 현재 구조를 지도로 그려 준다 (`analyze-structure`). 새 설계 전에 \"지금 뭐가 어디에 있는지\"부터 알고 싶을 때 맞다.",
+      "purpose": "Compose scope clarification and current-state structure mapping into one default scout workflow.",
+      "useWhen": [
+        "Need one default scout entrypoint for understanding current structure.",
+        "Need to lock scope before mapping boundaries and responsibilities.",
+        "Need a scout workflow that stays descriptive instead of slipping into redesign."
+      ],
+      "doNotUseWhen": [
+        "Need option comparison rather than structure mapping.",
+        "Need evidence-gap analysis rather than current-state mapping.",
+        "Need direct implementation or review verdicts."
+      ],
+      "expansion": [
+        "clarify-scope",
+        "analyze-structure"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "현재 구조를 먼저 알고 싶다",
+        "why": "범위를 정하고 지금 모양을 지도처럼 펼쳐 준다"
+      },
+      "sourcePath": "skills/workflow-scout-structure/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-scout-structure/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-test-close-gaps",
+      "description": "Workflow skill that identifies missing regression protection, turns it into a behavior matrix, and writes guard tests. Use when the user needs one default test entrypoint instead of manually chaining gap review, test design, and test writing.",
+      "summaryKo": "어디가 비어 있는지 찾고, 어떤 케이스를 막아야 하는지 설계하고, 실제 테스트까지 쓴다. \"테스트 좀 보강해\"의 표준 진입점이다.",
+      "purpose": "Compose test-gap review, test-case design, and guard writing into one default test workflow.",
+      "useWhen": [
+        "Need one default test entrypoint to close meaningful regression gaps.",
+        "Need missing-test analysis, case design, and guard writing in one path.",
+        "Need test work that stays tied to explicit behaviors."
+      ],
+      "doNotUseWhen": [
+        "Need only to inventory gaps without writing tests.",
+        "Need direct feature implementation unrelated to tests.",
+        "Need only a broad review rather than test-specific follow-up."
+      ],
+      "expansion": [
+        "test-find-gaps",
+        "test-design-cases",
+        "test-write-guards"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "테스트가 어디 비었는지 찾고 메우고 싶다",
+        "why": "빈 구멍 찾기부터 테스트 작성까지 이어 준다"
+      },
+      "sourcePath": "skills/workflow-test-close-gaps/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-test-close-gaps/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-tidy-find-improvements",
+      "description": "Workflow skill that maps concrete simplification and commonization opportunities before structural improvement work. Use when the user wants an explicit improvement map rather than direct cleanup of recent changes.",
+      "summaryKo": "복잡한 곳, 중복된 곳, 정리하면 좋아질 곳을 먼저 지도처럼 보여 준다. 막연한 \"좀 더 깔끔하게\"를 구체적인 개선 후보로 바꾸는 분석 전용 workflow다.",
+      "purpose": "Compose specific improvement scans with simplification and refactor intent into one explicit improvement map.",
+      "useWhen": [
+        "Need an explicit improvement map grounded in duplication and constant extraction evidence.",
+        "Need to decide whether simplification or refactoring is justified in a bounded scope.",
+        "Need analysis-first triage before any code is changed."
+      ],
+      "doNotUseWhen": [
+        "Need only a single narrow scan.",
+        "Need the skill to actually fix recent changes.",
+        "Need bug debugging rather than structure improvement."
+      ],
+      "expansion": [
+        "tidy-find-copies",
+        "tidy-find-magic-numbers",
+        "tidy-cut-fat",
+        "tidy-reorganize"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "어디부터 정리해야 할지 먼저 지도부터 보고 싶다",
+        "why": "복잡성 지도부터 개선 포인트까지 정리한다"
+      },
+      "sourcePath": "skills/workflow-tidy-find-improvements/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-tidy-find-improvements/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "workflow-tidy-simplify-this",
+      "description": "Workflow skill that reviews recent changes for reuse, quality, and efficiency issues, then applies bounded safe fixes. Use after implementing a feature or bug fix when you want one default cleanup entrypoint instead of manually chaining review and fix skills.",
+      "summaryKo": "최근 변경분을 리유즈, 구조 품질, 효율 관점으로 병렬 리뷰하고, 안전한 수정만 바로 적용한다. 구현 뒤 마지막 정리 패스로 쓰기 좋다.",
+      "purpose": "Review recent changes through specialized cleanup lenses, aggregate the findings, apply the smallest safe fixes, and verify the result.",
+      "useWhen": [
+        "Need a default post-implementation cleanup pass over recent changes.",
+        "Need one workflow that checks reuse, quality, and efficiency before editing code.",
+        "Need a diff-first simplify workflow similar to a \"clean up my recent changes\" command."
+      ],
+      "doNotUseWhen": [
+        "Need analysis-only mapping with no code edits — use workflow-tidy-find-improvements.",
+        "Need a broad refactor or architecture redesign.",
+        "Need to change behavior or add net-new features."
+      ],
+      "expansion": [
+        "tidy-review",
+        "tidy-apply-review-fixes",
+        "review-final-verify"
+      ],
+      "layer": "workflow",
+      "layerLabel": {
+        "en": "Workflow",
+        "ko": "워크플로"
+      },
+      "family": "workflow",
+      "familyInfo": {
+        "label_en": "Workflow",
+        "label_ko": "워크플로",
+        "value_ko": "처음부터 끝까지 한 흐름으로 묶어 시작 비용을 줄인다.",
+        "summary_ko": "한 번에 맡길 수 있는 기본 진입점이다."
+      },
+      "quickPick": {
+        "need": "방금 바꾼 코드를 더 깔끔하고 빠르게 다듬고 싶다",
+        "why": "최근 변경분을 리유즈·퀄리티·효율 관점으로 리뷰하고 바로 고친다"
+      },
+      "sourcePath": "skills/workflow-tidy-simplify-this/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/workflow-tidy-simplify-this/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "ask-break-it-down",
+      "description": "Break one bounded question into a prioritized question stack using first principles and explicit data/control framing. Use when the main question is clear enough to ask about, but still too large to answer well in one step.",
+      "summaryKo": "이미 잡힌 질문을 작은 질문 묶음으로 쪼갠다. 큰 문제를 한 번에 삼키지 않게 해 준다.",
+      "purpose": "Turn one broad problem statement into a small, prioritized stack of askable subquestions.",
+      "useWhen": [
+        "Need to split one large question into smaller askable units.",
+        "Need to separate business, technical, and user layers instead of mixing them.",
+        "Need a first-principles and data/control view before asking the final question."
+      ],
+      "doNotUseWhen": [
+        "Need to clarify the raw problem first because the topic is still foggy.",
+        "Need a final answer rather than question design.",
+        "Need repository work or implementation."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "ask",
+      "familyInfo": {
+        "label_en": "Ask",
+        "label_ko": "질문 설계",
+        "value_ko": "흐린 생각을 바로 물을 수 있는 질문으로 바꾼다.",
+        "summary_ko": "좋은 답을 얻기 전에, 좋은 질문부터 만든다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/ask-break-it-down/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/ask-break-it-down/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "ask-clarify-question",
+      "description": "Turn fuzzy intent into one clear problem statement and a small question handle. Use when the user is not ready to ask yet, feels mentally foggy, or needs the question boundary tightened before decomposition or reframing.",
+      "summaryKo": "흐릿한 주제를 한 문장 질문으로 묶는다. 아무 말이나 많을 때 핵심 한 줄을 잡는 공구다.",
+      "purpose": "Convert a vague thought into a bounded problem statement with a few stable question anchors.",
+      "useWhen": [
+        "Need to turn a fuzzy thought into one clear question handle.",
+        "Need to reduce mental overload before deeper question design.",
+        "Need a bounded problem statement rather than broad ideation."
+      ],
+      "doNotUseWhen": [
+        "Already have a clear bounded question.",
+        "Need the final answer directly.",
+        "Need repository analysis, implementation, or review."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "ask",
+      "familyInfo": {
+        "label_en": "Ask",
+        "label_ko": "질문 설계",
+        "value_ko": "흐린 생각을 바로 물을 수 있는 질문으로 바꾼다.",
+        "summary_ko": "좋은 답을 얻기 전에, 좋은 질문부터 만든다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/ask-clarify-question/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/ask-clarify-question/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "ask-fix-prompt",
+      "description": "Diagnose why an answer was wrong, shallow, or structurally weak, then produce the minimum prompt repair. Use only after a failed answer, not for first-pass question design, repository work, or coding.",
+      "summaryKo": "이미 받은 답이 엉뚱하거나 얕았을 때, 프롬프트를 최소한으로 고쳐 다시 묻도록 도와준다.",
+      "purpose": "Turn a failed answer into a controlled repair loop that explains the failure and proposes the smallest useful question change.",
+      "useWhen": [
+        "Already received a weak, wrong, or structurally off-target answer.",
+        "Need to explain what was missing before retrying.",
+        "Need the minimum question or prompt delta instead of a full redesign."
+      ],
+      "doNotUseWhen": [
+        "Have not yet asked the original question.",
+        "Need code editing, repository analysis, or implementation.",
+        "Need a first-pass question design rather than repair."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "ask",
+      "familyInfo": {
+        "label_en": "Ask",
+        "label_ko": "질문 설계",
+        "value_ko": "흐린 생각을 바로 물을 수 있는 질문으로 바꾼다.",
+        "summary_ko": "좋은 답을 얻기 전에, 좋은 질문부터 만든다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/ask-fix-prompt/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/ask-fix-prompt/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "ask-flip-assumption",
+      "description": "Challenge the default framing by listing assumptions, reversing them, and generating a small set of perspective-shifting questions. Use when a clear core question exists but is stuck, too feature-centric, or needs a sharper angle.",
+      "summaryKo": "질문 뒤에 숨어 있는 당연하다고 믿은 전제를 뒤집어 본다. 막힌 생각을 옆문으로 열 때 유용하다.",
+      "purpose": "Break question deadlock by exposing assumptions and generating a few high-value reframed questions.",
+      "useWhen": [
+        "Need to break a question deadlock or escape one habitual framing.",
+        "Need to challenge hidden assumptions before asking the final question.",
+        "Need a sharper angle than a feature-centric or default-solution question."
+      ],
+      "doNotUseWhen": [
+        "Need raw clarification because the problem statement is still too vague.",
+        "Need repository work or code changes.",
+        "Need a full answer instead of better question framing."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "ask",
+      "familyInfo": {
+        "label_en": "Ask",
+        "label_ko": "질문 설계",
+        "value_ko": "흐린 생각을 바로 물을 수 있는 질문으로 바꾼다.",
+        "summary_ko": "좋은 답을 얻기 전에, 좋은 질문부터 만든다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/ask-flip-assumption/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/ask-flip-assumption/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "clarify-boundaries",
+      "description": "Formalize an understood scope into an explicit in/out-of-scope boundary, done condition, and scope contract. Use when direction is clear but boundaries need to be written down before planning work starts.",
+      "summaryKo": "어디까지가 이번 일이고 어디부터가 아닌지 경계를 선명하게 그린다.",
+      "purpose": "Reduce a broad request to an explicit scope contract — in/out-of-scope, done condition, constraints — that downstream planning or spec skills can consume directly.",
+      "useWhen": [
+        "Need to lock goal, scope, constraints, and done condition before planning.",
+        "Need to separate in-scope, out-of-scope, and acceptance boundary explicitly.",
+        "Need a scope contract before writing specs or tasks."
+      ],
+      "doNotUseWhen": [
+        "Requirements are still ambiguous and clarifying questions are needed first — use clarify-scope instead.",
+        "Already have a precise scope contract.",
+        "Need direct implementation or review work."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "clarify",
+      "familyInfo": {
+        "label_en": "Clarify",
+        "label_ko": "요구 명확화",
+        "value_ko": "범위와 경계를 계약처럼 또렷하게 만든다.",
+        "summary_ko": "어디까지가 이번 일인지 먼저 분명하게 만든다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/clarify-boundaries/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/clarify-boundaries/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "clarify-scope",
+      "description": "Turn vague requirements into a concrete goal, scope boundary, constraints, acceptance criteria, and explicit inclusion/exclusion list. Use when requirements are ambiguous and must be sharpened before planning or implementation.",
+      "summaryKo": "모호한 요청을 범위, 제약, 완료 기준으로 정리한다. 아직 일의 테두리가 흐릴 때 쓴다.",
+      "purpose": "Turn vague requests into concrete goal, scope, constraints, and acceptance criteria — with explicit clarifying questions for anything still unresolved.",
+      "useWhen": [
+        "Requirements are ambiguous, missing, or conflicting.",
+        "Completion criteria are unclear.",
+        "Need clarification questions before planning or implementation."
+      ],
+      "doNotUseWhen": [
+        "Requirements are already clear and only boundary formalization is needed — use clarify-boundaries instead.",
+        "Need direct implementation.",
+        "Need deep repository analysis rather than requirement clarification."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "clarify",
+      "familyInfo": {
+        "label_en": "Clarify",
+        "label_ko": "요구 명확화",
+        "value_ko": "범위와 경계를 계약처럼 또렷하게 만든다.",
+        "summary_ko": "어디까지가 이번 일인지 먼저 분명하게 만든다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/clarify-scope/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/clarify-scope/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-baseline",
+      "description": "Capture a statistically valid performance baseline with variance analysis and budget determination before optimization. Use when you need a reproducible before-measurement, not when optimization work has already started.",
+      "summaryKo": "성능이나 수치를 개선하기 전에 현재 기준선을 정확히 찍어 둔다. 빠르게 만들기 전에 먼저 재는 공구다.",
+      "purpose": "Lock a measurable, reproducible baseline before optimization — including variance analysis, confidence intervals, and an evidence-backed budget.",
+      "useWhen": [
+        "Need to capture a statistically valid performance baseline before optimization.",
+        "Need variance analysis to determine whether a measurement is stable enough to compare.",
+        "Need an evidence-backed budget tied to a concrete constraint."
+      ],
+      "doNotUseWhen": [
+        "Optimization is already measured and only code changes remain.",
+        "Need general performance review rather than baseline capture.",
+        "There is no concrete metric to optimize."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-baseline/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-baseline/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-complexity",
+      "description": "Measure and classify complexity in a bounded scope — cyclomatic, cognitive, coupling, and hidden-state complexity. Use when you need to understand where complexity comes from and which clusters are worth simplifying.",
+      "summaryKo": "코드 복잡도를 순환 복잡도, 인지 복잡도, 결합 복잡도 기준으로 지도로 만든다.",
+      "purpose": "Produce an evidence-backed complexity map that classifies essential vs accidental complexity and ranks the highest-value simplification targets.",
+      "useWhen": [
+        "Need to understand where complexity comes from before simplification.",
+        "Need to separate domain-required complexity from accidental structure.",
+        "Need a ranked list of complexity hotspots to target first."
+      ],
+      "doNotUseWhen": [
+        "Need a full simplification plan or refactoring implementation.",
+        "Need direct implementation work.",
+        "The target scope is not bounded."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-complexity/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-complexity/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-dependencies",
+      "description": "Map module dependency directions, detect circular dependencies, measure coupling metrics, and identify dependency rule violations. Use when you need to understand the full dependency graph before refactoring or boundary work.",
+      "summaryKo": "의존성 방향, 순환, fan-in/fan-out, 위반을 분석한다. 모듈 결합을 줄이기 전에 전체 그림부터 보는 공구다.",
+      "purpose": "Produce an explicit dependency graph with coupling metrics, circular dependency detection, and dependency direction violations.",
+      "useWhen": [
+        "Need to understand module dependency directions before refactoring.",
+        "Need to detect circular dependencies and fan-out coupling problems.",
+        "Need to verify whether dependencies follow intended architecture rules."
+      ],
+      "doNotUseWhen": [
+        "Need a full refactoring plan rather than dependency analysis.",
+        "Need direct implementation work.",
+        "Need general code review without a dependency focus."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-dependencies/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-dependencies/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-evidence-gap",
+      "description": "Identify missing evidence, score confidence levels, and rank the cheapest next checks before a claim can be trusted. Use when the main job is to map uncertainty with explicit confidence scoring.",
+      "summaryKo": "결론을 믿기 전에 빠진 근거가 무엇인지 찾는다. 자신감이 아니라 증거가 필요한 순간에 맞다.",
+      "purpose": "Turn a shaky claim into an explicit confidence map — scored evidence levels, classified gaps, and information-value-ranked next checks.",
+      "useWhen": [
+        "Need to know what evidence is still missing before a claim can be trusted.",
+        "Need explicit confidence scoring, not just a vague \"we're not sure\".",
+        "Need the cheapest next checks ranked by information value."
+      ],
+      "doNotUseWhen": [
+        "Need current-state structure mapping rather than uncertainty mapping.",
+        "Need option comparison rather than evidence sufficiency checking.",
+        "Need debugging, implementation, or review verdicts."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-evidence-gap/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-evidence-gap/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-impact",
+      "description": "Map the full impact surface of a planned or existing change — direct callers, transitive paths, shared state, and downstream risk. Use when you need to understand what a change touches before implementing or releasing.",
+      "summaryKo": "변경이 어디까지 영향을 미치는지 직접/전이 범위를 추적한다. 수정 전에 파장을 먼저 확인하는 공구다.",
+      "purpose": "Produce a complete impact map for a change — direct effects, transitive paths, shared-state risks, and severity-ranked exposure surface.",
+      "useWhen": [
+        "Need to understand what a change touches before starting implementation.",
+        "Need to find transitive effects and shared-state risks before release.",
+        "Need a severity-ranked exposure surface, not just a list of changed files."
+      ],
+      "doNotUseWhen": [
+        "Need full debugging rather than surface mapping.",
+        "Need direct implementation without impact analysis.",
+        "Need a code review verdict rather than impact mapping."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-impact/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-impact/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-module-bounds",
+      "description": "Analyze whether module, API, or layer boundaries have explicit contracts, clear ownership, and no leaking responsibilities. Use when the goal is neutral boundary analysis, not a review verdict.",
+      "summaryKo": "모듈이나 API 경계가 흐린지, 책임이 새는지 중립적으로 확인한다.",
+      "purpose": "Produce a neutral boundary analysis showing current contract clarity, ownership split, and leaking assumptions — without verdict or hardening prescription.",
+      "useWhen": [
+        "Need to understand current contract clarity at a module or API boundary.",
+        "Need to map ownership and responsibility separation across layers.",
+        "Need boundary evidence before refactoring or design decisions."
+      ],
+      "doNotUseWhen": [
+        "Need a broad code review across unrelated concerns.",
+        "Need direct implementation rather than boundary analysis.",
+        "Need a hardening verdict rather than neutral analysis."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-module-bounds/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-module-bounds/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-options",
+      "description": "Compare explicit options with evidence-backed trade-offs and a weighted decision matrix. Use when the main job is to choose between named alternatives with analytical rigor.",
+      "summaryKo": "몇 가지 선택지를 나란히 놓고 장단점을 비교한다. \"A로 갈까 B로 갈까\"를 따질 때 쓴다.",
+      "purpose": "Turn a decision question and explicit option set into a disciplined, scored, evidence-backed comparison.",
+      "useWhen": [
+        "Need a rigorous, scored comparison of explicit options before planning or implementation.",
+        "Need quantitative trade-off weighting, not just qualitative impressions.",
+        "Need one recommendation tied to bounded evidence and explicit scoring."
+      ],
+      "doNotUseWhen": [
+        "Need current-state structure mapping rather than decision comparison.",
+        "Need evidence-gap analysis without a concrete option set.",
+        "Need debugging, implementation, or review verdicts."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-options/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-options/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-release-risk",
+      "description": "Analyze release or quality-gate risk with explicit evidence and gate status mapping. Use when you need a neutral risk analysis before merge or release, not a full GO/NO-GO verdict.",
+      "summaryKo": "배포 전 위험 게이트를 neutral하게 지도로 만든다. GO/NO-GO는 내지 않는다.",
+      "purpose": "Assess release or quality-gate risk with explicit evidence — gate status mapping, risk classification, and gap identification — without issuing a final GO/NO-GO verdict.",
+      "useWhen": [
+        "Need regression, gate, or release-adjacent risk analysis.",
+        "Need explicit gate status (pass/fail/unverified) before merge or release.",
+        "Need audit evidence without a hard GO/NO-GO verdict."
+      ],
+      "doNotUseWhen": [
+        "Need a general review verdict — use review-change instead.",
+        "Need vulnerability analysis only — use review-security instead.",
+        "Need full GO/NO-GO release judgment — use release-verdict instead."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-release-risk/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-release-risk/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "analyze-structure",
+      "description": "Analyze current-state structure, module coupling, data flow, and hidden dependencies in a bounded scope. Use when deep structural understanding is needed before planning, refactoring, or design work.",
+      "summaryKo": "현재 구조를 지도처럼 그린다. 파일, 책임, 경계가 어떻게 나뉘는지 보고 싶을 때 맞다.",
+      "purpose": "Produce a structure-first analytical map covering boundaries, coupling, data flow, and hidden dependencies — not just a list of files.",
+      "useWhen": [
+        "Need to understand current module structure, ownership split, and data flow before planning or refactoring.",
+        "Need coupling and cohesion evidence before boundary work.",
+        "Need to find hidden dependencies, shared state, or cross-layer leaks."
+      ],
+      "doNotUseWhen": [
+        "Need option comparison rather than current-state analysis.",
+        "Need evidence-gap analysis rather than structure explanation.",
+        "Need debugging, implementation, or review verdicts."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "analyze",
+      "familyInfo": {
+        "label_en": "Analyze",
+        "label_ko": "분석",
+        "value_ko": "판정 전에 구조와 근거를 먼저 드러낸다.",
+        "summary_ko": "무엇이 있는지 지도로 펼쳐 본다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/analyze-structure/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/analyze-structure/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-dependency-rules",
+      "description": "Define target dependency rules and allowed module directions before bounded refactoring. Use when the immediate job is to make dependency rules explicit, not to plan the full refactor yet.",
+      "summaryKo": "모듈 사이에 누가 누구를 참조해도 되는지 규칙을 세운다. 리팩터링 전에 선을 긋는 공구다.",
+      "purpose": "Make target dependency rules explicit before structural cleanup.",
+      "useWhen": [
+        "Need explicit dependency rules before refactoring.",
+        "Need to clarify allowed versus forbidden imports or calls.",
+        "Need a target boundary map for a bounded structural cleanup."
+      ],
+      "doNotUseWhen": [
+        "Need a broad architecture redesign.",
+        "Need direct implementation or code changes.",
+        "There is no bounded module or layer boundary to define.",
+        "Need only current-state boundary diagnosis without target dependency rules."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-dependency-rules/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-dependency-rules/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-how-to-build",
+      "description": "Use when turning approved requirements into a buildable technical design with explicit boundaries, data and control flow, decisions, trade-offs, and verification paths. Do not use for product briefs, IA maps, or pure feature requirements.",
+      "summaryKo": "요구사항이 이미 승인된 상태에서, 데이터 흐름과 구조와 검증 방법까지 포함한 기술 설계를 만든다.",
+      "purpose": "Translate approved product and feature intent into a buildable technical design that makes boundaries, flows, decisions, and verification explicit.",
+      "useWhen": [
+        "Need a technical design before implementation starts.",
+        "Need to make component boundaries, data flow, and trade-offs explicit.",
+        "Need one design document that engineers can implement against and review."
+      ],
+      "doNotUseWhen": [
+        "Need only high-level product framing or user problem definition.",
+        "Need only feature behavior, scope, and acceptance scenarios.",
+        "Need only information hierarchy or navigation structure.",
+        "Need only bounded dependency direction rules without a broader technical mechanism."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-how-to-build/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-how-to-build/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-screen-map",
+      "description": "Use when defining hierarchy, navigation, screen or page relationships, and core user flows before detailed UI or technical implementation. Do not use for detailed feature behavior or backend solution design.",
+      "summaryKo": "화면, 페이지, 이동 흐름을 먼저 그린다. UI나 사용자 흐름을 설계할 때 맞다.",
+      "purpose": "Define the content and navigation structure users must move through so later specs and design work share the same map.",
+      "useWhen": [
+        "Need a clear hierarchy for pages, screens, content groups, or routes.",
+        "Need navigation rules and user flows before screen-level design or implementation.",
+        "Need to separate structure decisions from detailed feature requirements."
+      ],
+      "doNotUseWhen": [
+        "Need only a product brief or business framing.",
+        "Need detailed functional requirements and acceptance checks.",
+        "Need technical boundaries, APIs, or data-flow design."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-screen-map/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-screen-map/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-sync-tasks",
+      "description": "Use when synchronizing markdown-first execution against existing implementation-plan and tasks artifacts. Treat those documents as primary data artifacts. This skill does not create the plan; it synchronizes execution against the existing task ledger.",
+      "summaryKo": "`TASKS.md` 같은 태스크 장부와 실제 진행 상태를 맞춰 주는 동기화 공구다.",
+      "purpose": "Synchronize planning artifacts, task lifecycle, and implementation evidence in one run without replacing plan-task-breakdown.",
+      "useWhen": [
+        "Need execution governed by plans/IMPLEMENTATION-PLAN.md and plans/TASKS.md.",
+        "Need task selection and status changes tied to explicit TASK-ID rows.",
+        "Need implementation and plan/task document updates kept in sync."
+      ],
+      "doNotUseWhen": [
+        "Need to create the plan or task breakdown from scratch; use plan-task-breakdown instead.",
+        "Need a standalone domain analysis or review without task tracking.",
+        "Have no plan/task artifacts and do not want markdown-first execution control.",
+        "Need implicit next actions not linked to explicit TASK-ID rows."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-sync-tasks/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-sync-tasks/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-task-breakdown",
+      "description": "Planning-only skill. Generate or update implementation plan and tasks documents. Do not implement or review code here. Do not use when a plan already exists and only execution is needed.",
+      "summaryKo": "설계를 실제 작업 항목으로 쪼개 `IMPLEMENTATION-PLAN`이나 `TASKS` 문서로 만든다.",
+      "purpose": "Create execution-ready plan and task artifacts with stable task ids and explicit verification paths.",
+      "useWhen": [
+        "Need implementation-ready plan and task documents.",
+        "Need execution phases, decision gates, and verification strategy before coding.",
+        "Need to update existing plan/task artifacts in place."
+      ],
+      "doNotUseWhen": [
+        "Need direct code changes.",
+        "Need only scope normalization before planning.",
+        "Need review verdicts or release judgement.",
+        "Need product framing, information architecture, feature specification, or technical design as the primary artifact."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-task-breakdown/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-task-breakdown/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-verify-order",
+      "description": "Define the narrow-to-broad verification map before changing code. Use when the immediate job is to decide how success will be verified, not to implement the change yet.",
+      "summaryKo": "코드를 바꾸기 전에 어떤 순서로 검증할지 정한다. 작은 확인부터 큰 확인으로 가는 길을 만드는 공구다.",
+      "purpose": "Lock a concrete verification path before implementation work starts.",
+      "useWhen": [
+        "Need to define how a code change will be verified before patching.",
+        "Need narrow-to-broad verification steps for a bounded task.",
+        "Need to separate smoke checks from broader quality gates."
+      ],
+      "doNotUseWhen": [
+        "Implementation is already complete and only execution evidence is needed.",
+        "Need a general plan rather than verification design.",
+        "There is no bounded target change yet.",
+        "Need an exhaustive happy, edge, and failure case inventory rather than verification order and stop conditions."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-verify-order/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-verify-order/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-what-it-does",
+      "description": "Use when writing implementation-ready feature specifications with explicit scope, required behavior, acceptance scenarios, and edge cases. Do not use for high-level product briefs or direct code changes.",
+      "summaryKo": "기능이 정확히 무엇을 해야 하는지, 어떤 경우를 처리해야 하는지 스펙으로 적는다.",
+      "purpose": "Write feature specifications that make required behavior, non-requirements, acceptance scenarios, and edge cases explicit before implementation.",
+      "useWhen": [
+        "Need a build-ready feature or flow specification.",
+        "Need explicit functional requirements, non-requirements, and acceptance scenarios.",
+        "Need to lock edge cases and failure expectations before implementation starts."
+      ],
+      "doNotUseWhen": [
+        "Need direct code changes.",
+        "Need only high-level problem framing before requirements are known.",
+        "Need information architecture or technical solution design rather than feature behavior.",
+        "Need only verification sequencing or exhaustive test case inventory."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-what-it-does/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-what-it-does/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "plan-why-build-this",
+      "description": "Use when turning a rough idea into a short product brief that names the user, problem, intended outcome, success signals, and non-goals before writing specs or design docs. Do not use for detailed feature requirements or technical solution design.",
+      "summaryKo": "왜 이걸 만드는지부터 짧게 정리한다. 사용자, 문제, 기대 효과, 비목표를 잡는 제품 브리프 공구다.",
+      "purpose": "Capture why the work matters, for whom it matters, and what success looks like before deeper specification begins.",
+      "useWhen": [
+        "Need a high-level brief before feature spec or design work.",
+        "Need to make audience, problem, success signals, and non-goals explicit.",
+        "Need one short alignment document that prevents premature solution design."
+      ],
+      "doNotUseWhen": [
+        "Need detailed functional requirements or edge-case behavior.",
+        "Need navigation structure or information hierarchy.",
+        "Need technical boundaries, data flow, or implementation trade-offs."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "plan",
+      "familyInfo": {
+        "label_en": "Plan",
+        "label_ko": "계획",
+        "value_ko": "만들기 전에 구조와 검증 순서를 고정한다.",
+        "summary_ko": "바로 손대지 않고 먼저 설계를 세운다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/plan-why-build-this/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/plan-why-build-this/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "build-make-faster",
+      "description": "Use when performance bottlenecks require measurement, optimization, and before/after verification. Do not use when the task is general feature implementation or optimization guesswork without measurement.",
+      "summaryKo": "성능 병목을 측정하고, 개선하고, 전후 차이를 확인한다. 감으로 최적화하지 않게 해 준다.",
+      "purpose": "Measure and improve a bounded performance bottleneck with comparable before/after evidence.",
+      "useWhen": [
+        "Need measured performance optimization.",
+        "Need baseline, bottleneck evidence, and after-result in one path.",
+        "Need to optimize a bounded hot path or memory issue."
+      ],
+      "doNotUseWhen": [
+        "Need general feature implementation.",
+        "Need only baseline capture before optimization.",
+        "Need performance review without applying changes."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "build",
+      "familyInfo": {
+        "label_en": "Build",
+        "label_ko": "구현",
+        "value_ko": "실제 변경을 만들고 검증 근거까지 남긴다.",
+        "summary_ko": "생각이 아니라 실행을 담당한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/build-make-faster/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/build-make-faster/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "build-write-code",
+      "description": "Implementation-only skill. Apply code changes and produce verification-backed implementation evidence. Do not own orchestration, plan/task synchronization, architecture analysis reports, or code-review verdicts here.",
+      "summaryKo": "실제 코드 변경을 수행하고, 그 변경이 맞다는 검증 근거를 남긴다. 구현 자체를 담당하는 핵심 공구다.",
+      "purpose": "Apply code changes for explicit task ids and produce verification-backed implementation evidence.",
+      "useWhen": [
+        "Need to apply real code changes for a bounded task.",
+        "Need to emit implementation evidence that downstream delivery flow can synchronize with plan/task artifacts.",
+        "Need explicit verification evidence after code changes."
+      ],
+      "doNotUseWhen": [
+        "Need only analysis or review output.",
+        "Need only verification-map design before patching.",
+        "Need release-only or review-only judgement."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "build",
+      "familyInfo": {
+        "label_en": "Build",
+        "label_ko": "구현",
+        "value_ko": "실제 변경을 만들고 검증 근거까지 남긴다.",
+        "summary_ko": "생각이 아니라 실행을 담당한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/build-write-code/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/build-write-code/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "debug-capture-failure",
+      "description": "Turn a failure symptom into a repeatable failing recipe. Use when a bug report is real but the failure steps are still missing, unstable, or too hand-wavy for deeper debugging.",
+      "summaryKo": "\"가끔 망가져요\"를 재현 가능한 실패 절차로 바꾼다.",
+      "purpose": "Convert a reported failure into concrete reproduction steps and explicit missing repro inputs.",
+      "useWhen": [
+        "Need a stable repro recipe before deeper debugging.",
+        "Need to turn a vague failure report into actionable reproduction steps.",
+        "Need to separate missing repro data from root-cause hypotheses."
+      ],
+      "doNotUseWhen": [
+        "Already have a stable repro recipe.",
+        "Need confirmed root cause rather than repro capture.",
+        "Need direct implementation or broad review work."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "debug",
+      "familyInfo": {
+        "label_en": "Debug",
+        "label_ko": "디버그",
+        "value_ko": "현상에서 원인까지 좁혀 재현 가능한 수정으로 바꾼다.",
+        "summary_ko": "느낌이 아니라 재현 가능한 실패로 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/debug-capture-failure/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/debug-capture-failure/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "debug-confirm-fix",
+      "description": "Verify that a chosen fix actually removes the bug and leaves behind meaningful regression protection. Use after a concrete fix candidate exists, not during the initial root-cause search.",
+      "summaryKo": "고친 것처럼 보이는 수정안이 정말 문제를 없앴는지, 다시 안 터지게 막았는지 확인한다.",
+      "purpose": "Check whether a fix candidate removes the failure and whether the regression guard is real.",
+      "useWhen": [
+        "Need to verify a fix candidate after root cause is already known.",
+        "Need to confirm the bug is gone and the guard is meaningful.",
+        "Need a narrow post-fix validation step rather than another broad debug pass."
+      ],
+      "doNotUseWhen": [
+        "Still lack a stable repro or fix candidate.",
+        "Need first-pass root-cause debugging.",
+        "Need direct implementation work rather than post-fix confirmation."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "debug",
+      "familyInfo": {
+        "label_en": "Debug",
+        "label_ko": "디버그",
+        "value_ko": "현상에서 원인까지 좁혀 재현 가능한 수정으로 바꾼다.",
+        "summary_ko": "느낌이 아니라 재현 가능한 실패로 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/debug-confirm-fix/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/debug-confirm-fix/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "debug-find-root-cause",
+      "description": "Neutral debugging skill for concrete failures. Use when a concrete failure, bug, or crash requires reproducible debugging and root-cause analysis after the repro is already stable or close to stable. Do not use when the main missing artifact is the repro recipe itself.",
+      "summaryKo": "재현 가능한 버그가 있을 때 진짜 원인을 찾아낸다. 추측이 아니라 근거 중심으로 파고드는 공구다.",
+      "purpose": "Reproduce a concrete failure, confirm root cause, and isolate the minimal fix path.",
+      "useWhen": [
+        "A concrete failure exists and reproducible RCA is required.",
+        "Need to move from symptom to confirmed cause and minimal fix direction.",
+        "Need regression guard planning after a real bug fix."
+      ],
+      "doNotUseWhen": [
+        "The request is exploratory with no concrete failure.",
+        "The request is feature implementation.",
+        "The immediate job is only to reduce failure surface."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "debug",
+      "familyInfo": {
+        "label_en": "Debug",
+        "label_ko": "디버그",
+        "value_ko": "현상에서 원인까지 좁혀 재현 가능한 수정으로 바꾼다.",
+        "summary_ko": "느낌이 아니라 재현 가능한 실패로 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/debug-find-root-cause/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/debug-find-root-cause/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "debug-map-impact",
+      "description": "Map a concrete failure into reproduction scope, impacted paths, and observed-versus-expected boundaries before deeper debugging. Use when a bug exists but the failing surface is still diffuse.",
+      "summaryKo": "이 버그가 어디까지 번지는지, 무엇이 기대와 다르게 보이는지 영향 범위를 그린다.",
+      "purpose": "Reduce a broad bug report to a bounded reproduction window and impacted code surface before root-cause work.",
+      "useWhen": [
+        "A failure is reported but the affected modules or boundaries are still unclear.",
+        "Need to map observed versus expected behavior before debugging deeper.",
+        "Need a reproducible scope window for a bug hunt."
+      ],
+      "doNotUseWhen": [
+        "Need the final code fix directly.",
+        "Need general repository analysis without a concrete failure symptom.",
+        "Already have a confirmed root cause."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "debug",
+      "familyInfo": {
+        "label_en": "Debug",
+        "label_ko": "디버그",
+        "value_ko": "현상에서 원인까지 좁혀 재현 가능한 수정으로 바꾼다.",
+        "summary_ko": "느낌이 아니라 재현 가능한 실패로 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/debug-map-impact/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/debug-map-impact/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "test-design-cases",
+      "description": "Test-category design skill. Define the exact happy-path, edge-case, and failure-path matrix before or alongside test writing. Use when the immediate job is to map what must be tested, not to write all tests yet.",
+      "summaryKo": "정상, 경계, 실패 케이스를 빠짐없이 설계한다. 테스트 설계도 역할을 한다.",
+      "purpose": "Make regression test coverage explicit before test implementation.",
+      "useWhen": [
+        "Need a test matrix before writing or extending tests.",
+        "Need to prioritize happy, edge, and failure-path scenarios.",
+        "Need to map missing regression protection precisely."
+      ],
+      "doNotUseWhen": [
+        "Tests are already written and only execution evidence is needed.",
+        "Need a broad review rather than test-design output.",
+        "There is no bounded behavior or change target.",
+        "Need ordered verification steps and stop conditions rather than a case inventory."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "test",
+      "familyInfo": {
+        "label_en": "Test",
+        "label_ko": "테스트",
+        "value_ko": "다음 번 같은 문제를 막는 보호막을 만든다.",
+        "summary_ko": "무엇을 지켜야 하는지부터 설계한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/test-design-cases/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/test-design-cases/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "test-find-gaps",
+      "description": "Test-category gap-analysis skill. Review whether a bounded scope is missing regression tests for core behavior, failure paths, or boundary contracts. Use when the goal is test-gap analysis rather than writing tests immediately.",
+      "summaryKo": "중요한 동작에 테스트 구멍이 어디 있는지 찾는다.",
+      "purpose": "Identify exact regression-prevention gaps in a bounded target before test implementation.",
+      "useWhen": [
+        "Need to know what is not covered by current tests.",
+        "Need to review test gaps for core behavior, edge cases, or failure paths.",
+        "Need evidence-backed test priorities before adding tests."
+      ],
+      "doNotUseWhen": [
+        "Need to write the tests immediately without first reviewing gaps.",
+        "Need a broad code review unrelated to test coverage.",
+        "There is no bounded target scope."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "test",
+      "familyInfo": {
+        "label_en": "Test",
+        "label_ko": "테스트",
+        "value_ko": "다음 번 같은 문제를 막는 보호막을 만든다.",
+        "summary_ko": "무엇을 지켜야 하는지부터 설계한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/test-find-gaps/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/test-find-gaps/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "test-run-user-scenarios",
+      "description": "Test-category scenario validation skill. Simulate realistic users and agents running the framework through happy, failure, and weird cases, then report where the skill surface is confusing, brittle, or missing guardrails.",
+      "summaryKo": "진짜 사용자나 에이전트가 쓸 법한 시나리오로 돌려 보면서 헷갈리는 지점과 깨지는 지점을 찾는다.",
+      "purpose": "Simulate real user and agent usage with concrete inputs and expected outputs, then expose where the framework breaks, confuses, or under-specifies behavior.",
+      "useWhen": [
+        "Need to validate the framework against realistic use cases instead of only happy-path examples.",
+        "Need concrete user and agent scenarios with varied inputs, expected outputs, and observable pass/fail signals.",
+        "Need to include success cases, failure cases, and weird-but-plausible misuse cases before release or major refactors."
+      ],
+      "doNotUseWhen": [
+        "Need unit or integration test code written directly.",
+        "Need only narrow test-gap analysis for one code path.",
+        "Need final contract verification after the work is already complete."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "test",
+      "familyInfo": {
+        "label_en": "Test",
+        "label_ko": "테스트",
+        "value_ko": "다음 번 같은 문제를 막는 보호막을 만든다.",
+        "summary_ko": "무엇을 지켜야 하는지부터 설계한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/test-run-user-scenarios/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/test-run-user-scenarios/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "test-write-guards",
+      "description": "Test-category execution skill. Add or strengthen automated tests that act as real regression guards. Do not use for direct feature implementation, fake CI-only coverage, or diagnosing failures without a test-design intent.",
+      "summaryKo": "실제 자동화 테스트를 써서 다음 번 같은 버그를 막는 보호막을 만든다.",
+      "purpose": "Add or improve regression-prevention tests with an explicit scenario matrix and execution evidence.",
+      "useWhen": [
+        "Need to add or strengthen automated tests.",
+        "Need to convert a regression risk into concrete test protection.",
+        "Need a bounded test matrix plus implemented tests."
+      ],
+      "doNotUseWhen": [
+        "Need only to analyze missing test gaps.",
+        "Need direct feature implementation unrelated to tests.",
+        "Need only the scenario matrix before writing tests.",
+        "Need to make CI green with low-value tests that do not protect real behavior."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "test",
+      "familyInfo": {
+        "label_en": "Test",
+        "label_ko": "테스트",
+        "value_ko": "다음 번 같은 문제를 막는 보호막을 만든다.",
+        "summary_ko": "무엇을 지켜야 하는지부터 설계한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/test-write-guards/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/test-write-guards/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "review-change",
+      "description": "Contract file missing in repository snapshot.",
+      "summaryKo": "PR 리뷰처럼 문제를 우선순위와 근거와 함께 정리한다. 승인할지 보류할지 판단하는 공구다.",
+      "purpose": "Contract file is missing in this repository snapshot.",
+      "useWhen": [],
+      "doNotUseWhen": [],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "review",
+      "familyInfo": {
+        "label_en": "Review",
+        "label_ko": "리뷰",
+        "value_ko": "좋아 보인다가 아니라 통과/보류 판단을 만든다.",
+        "summary_ko": "위험과 품질을 명시적으로 판정한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/review-change",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-change",
+      "missingContract": true
+    },
+    {
+      "name": "review-failure-paths",
+      "description": "Contract file missing in repository snapshot.",
+      "summaryKo": "정상 경로가 아니라 실패 경로만 집중해서 본다. 예외 처리와 복구가 약한지 점검할 때 맞다.",
+      "purpose": "Contract file is missing in this repository snapshot.",
+      "useWhen": [],
+      "doNotUseWhen": [],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "review",
+      "familyInfo": {
+        "label_en": "Review",
+        "label_ko": "리뷰",
+        "value_ko": "좋아 보인다가 아니라 통과/보류 판단을 만든다.",
+        "summary_ko": "위험과 품질을 명시적으로 판정한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/review-failure-paths",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-failure-paths",
+      "missingContract": true
+    },
+    {
+      "name": "review-final-verify",
+      "description": "Contract file missing in repository snapshot.",
+      "summaryKo": "작업이 끝난 뒤, 약속한 완료 조건이 정말 충족됐는지 마지막으로 확인한다.",
+      "purpose": "Contract file is missing in this repository snapshot.",
+      "useWhen": [],
+      "doNotUseWhen": [],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "review",
+      "familyInfo": {
+        "label_en": "Review",
+        "label_ko": "리뷰",
+        "value_ko": "좋아 보인다가 아니라 통과/보류 판단을 만든다.",
+        "summary_ko": "위험과 품질을 명시적으로 판정한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/review-final-verify",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-final-verify",
+      "missingContract": true
+    },
+    {
+      "name": "review-quality",
+      "description": "Contract file missing in repository snapshot.",
+      "summaryKo": "정해진 9개 품질 항목으로 바뀐 코드를 훑는다. 체크리스트 검사관에 가깝다.",
+      "purpose": "Contract file is missing in this repository snapshot.",
+      "useWhen": [],
+      "doNotUseWhen": [],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "review",
+      "familyInfo": {
+        "label_en": "Review",
+        "label_ko": "리뷰",
+        "value_ko": "좋아 보인다가 아니라 통과/보류 판단을 만든다.",
+        "summary_ko": "위험과 품질을 명시적으로 판정한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/review-quality",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-quality",
+      "missingContract": true
+    },
+    {
+      "name": "review-security",
+      "description": "Contract file missing in repository snapshot.",
+      "summaryKo": "보안 노출, 비밀 정보 유출, OWASP 취약 지점을 우선순위와 함께 검토한다.",
+      "purpose": "Contract file is missing in this repository snapshot.",
+      "useWhen": [],
+      "doNotUseWhen": [],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "review",
+      "familyInfo": {
+        "label_en": "Review",
+        "label_ko": "리뷰",
+        "value_ko": "좋아 보인다가 아니라 통과/보류 판단을 만든다.",
+        "summary_ko": "위험과 품질을 명시적으로 판정한다."
+      },
+      "quickPick": {
+        "need": "보안 노출만 좁게 보고 싶다",
+        "why": "비밀키, ignore drift, 공개 설정 노출 같은 위험만 좁게 본다"
+      },
+      "sourcePath": "skills/review-security",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/tree/main/skills/review-security",
+      "missingContract": true
+    },
+    {
+      "name": "tidy-analyze",
+      "description": "Inventory essential versus accidental complexity in a bounded scope before simplification. Use when the immediate job is to identify complexity, duplication, and stale structure before choosing a simplification path.",
+      "summaryKo": "지금 왜 복잡한지 원인을 먼저 분해한다. 본질적인 복잡함과 쓸데없는 복잡함을 구분하는 공구다.",
+      "purpose": "Map complexity sources and classify them as essential or accidental before simplification work.",
+      "useWhen": [
+        "Need a bounded complexity inventory before simplification.",
+        "Need to know whether complexity comes from domain rules or accidental structure.",
+        "Need to identify which complexity clusters are worth removing first."
+      ],
+      "doNotUseWhen": [
+        "Need a full simplification plan already.",
+        "Need direct implementation work.",
+        "The target scope is not bounded."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-analyze/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-analyze/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-apply-review-fixes",
+      "description": "Implementation skill that takes bounded cleanup findings and applies the smallest safe fixes while preserving current behavior. Designed to consume review outputs such as reuse, quality, and efficiency findings.",
+      "summaryKo": "여러 review atomic 결과를 모아 겹치는 지적을 정리한 뒤, 안전한 수정만 실제 코드에 반영한다.",
+      "purpose": "Aggregate bounded cleanup findings, apply the smallest safe fixes, and verify that behavior still holds.",
+      "useWhen": [],
+      "doNotUseWhen": [],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-apply-review-fixes/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-apply-review-fixes/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-cut-fat",
+      "description": "Use when complexity must be reduced without changing core behavior: oversized objects, unclear architecture, noisy folder trees, weak naming, hidden side effects, or accidental abstraction. Produce a minimal simplification blueprint. Do not use for net-new feature work, incident firefighting, or cases where splitting would only increase navigation cost or hurt a measured hot path.",
+      "summaryKo": "핵심 동작은 그대로 두고 군살만 도려낸다. 과한 구조, 시끄러운 폴더, 쓸데없는 추상화를 줄일 때 맞다.",
+      "purpose": "Identify and propose the smallest useful complexity reduction without changing intended behavior or fragmenting structures whose main value is contiguous readability or measured performance.",
+      "useWhen": [
+        "Need a simplification blueprint for a bounded scope.",
+        "Need to distinguish essential complexity from accidental complexity.",
+        "Need to reduce structural or naming noise before implementation."
+      ],
+      "doNotUseWhen": [
+        "Need direct code changes rather than a planning output.",
+        "Need security or release review rather than simplification planning.",
+        "Need a dependency-rule refactor plan rather than broad simplification.",
+        "The target is mostly declarative data or configuration and splitting it would only force cross-file lookup without reducing logic complexity.",
+        "The target is a strict procedural sequence or tightly coupled algorithm where breaking the flow would make the behavior harder to follow.",
+        "The target is a measured hot path where extra indirection, dispatch, or call boundaries would risk real performance cost."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-cut-fat/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-cut-fat/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-find-copies",
+      "description": "Find behavior-level, structure-level, or logic-level duplication in a bounded scope. Use when a module, folder, or repo needs explicit duplication analysis before simplification or refactoring.",
+      "summaryKo": "같은 로직이나 구조가 여러 군데 복제돼 있는지 찾는다.",
+      "purpose": "Identify duplicated logic or structure that can be consolidated without changing behavior.",
+      "useWhen": [
+        "Need evidence-backed duplication findings before simplification or refactoring.",
+        "Need to know whether similar code is accidental copy-paste or justified variation.",
+        "Need a bounded duplication report for one module, folder, or repo."
+      ],
+      "doNotUseWhen": [
+        "Need a general review without duplication focus.",
+        "Need to implement refactoring immediately without first identifying duplication boundaries.",
+        "The target scope is too broad to compare meaningfully without narrowing."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-find-copies/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-find-copies/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-find-magic-numbers",
+      "description": "Find repeated literals, configuration-like values, and policy constants that should be centralized into constants, config, or shared definitions. Use when a bounded module, folder, or repo needs explicit constant/common extraction analysis.",
+      "summaryKo": "여기저기 흩어진 숫자와 상수 후보를 찾아 한곳으로 모으도록 돕는다.",
+      "purpose": "Identify exact literal values and policy constants that can be centralized without changing behavior.",
+      "useWhen": [
+        "Need to find extractable constants in a module, folder, or repo.",
+        "Need to reduce repeated literals and policy drift.",
+        "Need evidence-backed commonization candidates before refactoring."
+      ],
+      "doNotUseWhen": [
+        "Need a general bug review.",
+        "Need to implement the refactor immediately without first identifying candidates.",
+        "The target contains no meaningful repeated literals or config-like values."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-find-magic-numbers/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-find-magic-numbers/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-remove-legacy",
+      "description": "Use when a bounded scope contains unnecessary files, stale docs, completed planning artifacts, deprecated aliases, or obsolete glue that should be removed without widening into broad refactor work. Execute the cleanup, update direct references, and verify that no required surface was deleted by mistake.",
+      "summaryKo": "오래된 파일, 다 끝난 계획 문서, 죽은 별칭, 쓸모없는 접착 코드 같은 잔재를 치운다.",
+      "purpose": "Remove unnecessary legacy surface in a bounded scope, relink surviving references, and verify that the remaining public or runtime surface still matches the intended contract.",
+      "useWhen": [
+        "Need to delete unnecessary files, stale docs, completed planning artifacts, deprecated aliases, or obsolete glue in a bounded scope.",
+        "Need direct references updated as part of the same cleanup pass.",
+        "Need explicit verification that required surface still exists after the cleanup."
+      ],
+      "doNotUseWhen": [
+        "Need release-only hygiene review rather than file changes; use release-check-hygiene.",
+        "Need a broad structural refactor plan rather than bounded cleanup execution; use tidy-reorganize.",
+        "Need speculative simplification with no concrete legacy targets."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-remove-legacy/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-remove-legacy/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-reorganize",
+      "description": "Use when planning behavior-preserving structural refactoring, module-boundary cleanup, or dependency hygiene in a bounded scope. For cognitive-load reduction with actual code changes, use tidy-simplify instead. Do not use when adding new features or fixing production incidents.",
+      "summaryKo": "동작은 유지한 채 파일 구조와 경계를 더 낫게 재배치하는 리팩터링 계획 공구다.",
+      "purpose": "Plan structure-preserving cleanup with explicit invariants, dependency rules, and rollback paths.",
+      "useWhen": [
+        "Need a behavior-preserving refactor plan.",
+        "Need dependency hygiene or module-boundary cleanup in a bounded scope.",
+        "Need atomic refactor steps with rollback paths."
+      ],
+      "doNotUseWhen": [
+        "Need direct code changes.",
+        "Need broad simplification rather than bounded refactor planning.",
+        "Need new feature design or incident debugging."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-reorganize/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-reorganize/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-review",
+      "description": "Read-only cleanup review skill. Inspect a bounded scope for missed reuse opportunities, code-quality issues, and efficiency problems. Produces structured findings that feed into tidy-apply-review-fixes. Use before applying cleanup edits.",
+      "summaryKo": "",
+      "purpose": "Inspect a bounded scope through up to three cleanup lenses — reuse, quality, and efficiency — and produce structured findings without touching any code.",
+      "useWhen": [
+        "Need read-only inspection for reuse, quality, or efficiency opportunities before editing code.",
+        "Need structured findings to feed into tidy-apply-review-fixes.",
+        "Composing workflow-tidy-simplify-this and need the review phase before the apply phase."
+      ],
+      "doNotUseWhen": [
+        "Need to apply the fixes — use tidy-apply-review-fixes after this skill.",
+        "Need deep complexity inventory — use tidy-analyze instead.",
+        "Need duplication analysis only — use tidy-find-copies instead."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-review/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-review/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "tidy-simplify",
+      "description": "Behavior-preserving code simplification skill for one bounded scope after the target has already been identified. Applies the four-step cognitive-load reduction sequence: Intent Extraction, Abstraction Cost, Collapse & Merge, and Immutability Check. For recent-diff cleanup across reuse, quality, and efficiency, use workflow-tidy-simplify-this instead.",
+      "summaryKo": "한정된 범위에서 실제 코드 구조를 더 짧고 이해하기 쉬운 모양으로 단순화한다. \"방금 바꾼 diff를 전체적으로 정리\"하는 기본 진입은 아니다.",
+      "purpose": "Apply the four-step cognitive-load reduction sequence to a bounded code scope while preserving functional equivalence.",
+      "useWhen": [
+        "Need to apply actual code changes that reduce cognitive load in a concrete, bounded scope.",
+        "Need to remove indirection, nested branching, one-use helpers, or mutable state churn after the scope is clearly defined.",
+        "Need a dedicated simplification implementation pass before broader refactoring or review.",
+        "tidy-cut-fat produced a simplification blueprint and now the actual reduction moves must be applied."
+      ],
+      "doNotUseWhen": [
+        "Need net-new feature work or behavior changes.",
+        "Need only analysis, inventory, or a simplification plan — use tidy-cut-fat or tidy-analyze instead.",
+        "Need recent-diff cleanup across reuse, quality, and efficiency — use workflow-tidy-simplify-this.",
+        "Need only checklist review or final delivery verification.",
+        "The target scope is too broad to verify functional equivalence after simplification."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "tidy",
+      "familyInfo": {
+        "label_en": "Tidy",
+        "label_ko": "정리",
+        "value_ko": "복잡함과 레거시를 덜어 같은 일을 더 단순하게 만든다.",
+        "summary_ko": "군살을 줄여 이해와 유지 비용을 낮춘다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/tidy-simplify/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/tidy-simplify/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "doc-build-index",
+      "description": "Build recursive folder docsets where each parent folder gets a README-style overview and each child folder or project gets a focused project-info doc with explicit links. Use when the target is a folder tree or module tree and readers need summary-at-parent plus detail-at-child navigation. Do not modify the repo root README.",
+      "summaryKo": "폴더 트리를 부모 README 스타일 요약 문서와 자식 프로젝트 정보 문서로 나눠 계층 문서 세트로 만든다.",
+      "purpose": "Build hierarchical folder docsets with parent overview pages and child detail pages, while keeping the hierarchy MECE and easy to navigate.",
+      "useWhen": [
+        "Need a folder tree or module tree documented as parent overview pages plus child project or module info pages.",
+        "Need README-style summaries at folder boundaries without touching the repo root README.",
+        "Need one docset whose parent pages summarize and link while child pages hold focused project information."
+      ],
+      "doNotUseWhen": [
+        "Need only a single guide page with no hierarchy.",
+        "Need repo root README authoring or multilingual publishing.",
+        "Need lifecycle governance only.",
+        "Need release notes, changelog entries, or migration docs for a release."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "doc",
+      "familyInfo": {
+        "label_en": "Doc",
+        "label_ko": "문서",
+        "value_ko": "지식을 흩어 놓지 않고 구조화해 남긴다.",
+        "summary_ko": "문서 표면과 수명주기를 함께 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/doc-build-index/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/doc-build-index/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "doc-curate",
+      "description": "Govern the documentation surface by classifying docs as keep, update, deprecate, or delete, while preserving durable knowledge and explicit replacement paths. Use when repository docs need lifecycle decisions before rewriting or removal. Do not modify runtime code.",
+      "summaryKo": "각 문서를 keep/update/deprecate/delete로 분류하고, 삭제 전에 옮겨야 할 durable knowledge와 대체 경로를 정한다.",
+      "purpose": "Reclassify and clean the documentation surface with explicit lifecycle decisions grounded in current reader need, current role, migration need, and durable-knowledge retention.",
+      "useWhen": [
+        "Need to decide whether each doc should be kept, updated, deprecated, or deleted.",
+        "Need to preserve durable knowledge before deleting delivery-only docs.",
+        "Need to separate canonical docs from stale, superseded, or migration-only docs.",
+        "Need explicit cleanup actions without touching runtime code."
+      ],
+      "doNotUseWhen": [
+        "Need repo root README authoring or multilingual publishing.",
+        "Need a recursive folder docset with parent README-style summaries; use doc-build-index.",
+        "Need release notes, upgrade notes, or migration docs for a specific release; use doc-write-release-docs.",
+        "Need only a fresh inventory with no lifecycle judgement."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "doc",
+      "familyInfo": {
+        "label_en": "Doc",
+        "label_ko": "문서",
+        "value_ko": "지식을 흩어 놓지 않고 구조화해 남긴다.",
+        "summary_ko": "문서 표면과 수명주기를 함께 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/doc-curate/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/doc-curate/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "doc-find-all",
+      "description": "Inventory documentation files, infer their likely reader and role, and expose orphan, duplicate, time-sensitive, or delivery-only docs before curation. Use when the immediate job is evidence-backed inventory, not rewriting docs yet.",
+      "summaryKo": "문서를 전수 조사해서 고아 문서, 중복 문서, 시간에 묶인 문서, delivery-only 문서를 찾는다.",
+      "purpose": "Create an evidence-backed documentation inventory before lifecycle curation, docset building, or release-doc work.",
+      "useWhen": [
+        "Need to know which docs are active, stale, duplicate, orphaned, delivery-only, or time-sensitive.",
+        "Need a bounded documentation inventory before lifecycle decisions or rewrite work.",
+        "Need reader-role evidence before recommending keep, update, deprecate, or delete."
+      ],
+      "doNotUseWhen": [
+        "Need to write the README, release notes, or guide content directly.",
+        "Need runtime code changes.",
+        "The target scope contains no documentation boundary worth inventorying."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "doc",
+      "familyInfo": {
+        "label_en": "Doc",
+        "label_ko": "문서",
+        "value_ko": "지식을 흩어 놓지 않고 구조화해 남긴다.",
+        "summary_ko": "문서 표면과 수명주기를 함께 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/doc-find-all/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/doc-find-all/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "doc-publish-readme",
+      "description": "Create or refresh the repo root README as a GitHub-friendly project entrypoint, then publish easy-to-read localized entry docs under /i18n/<lang>/. Use when the target is the repository root landing page. Folder-level README or index pages below the root belong to doc-build-index. Release-facing docs belong to doc-write-release-docs.",
+      "summaryKo": "저장소 루트 README를 GitHub 입구답게 만들고, 필요하면 언어별 진입 문서까지 함께 퍼블리시한다.",
+      "purpose": "Publish the project root README and localized project entry docs with audience-level, plain-language explanations.",
+      "useWhen": [
+        "Need to create or refresh the repo root README.",
+        "Need GitHub-style project onboarding with links to deeper docs.",
+        "Need localized project entry docs under a stable language folder."
+      ],
+      "doNotUseWhen": [
+        "Need only non-root guide writing.",
+        "Need folder-level README or index pages below the repo root.",
+        "Need release notes, changelog entries, or migration docs.",
+        "Need documentation inventory or lifecycle cleanup without publishing the root entry docs."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "doc",
+      "familyInfo": {
+        "label_en": "Doc",
+        "label_ko": "문서",
+        "value_ko": "지식을 흩어 놓지 않고 구조화해 남긴다.",
+        "summary_ko": "문서 표면과 수명주기를 함께 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/doc-publish-readme/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/doc-publish-readme/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "doc-write",
+      "description": "Documentation-only skill. Produce or refresh non-root, non-release documentation such as concept guides, architecture notes, usage docs, module docs, redirects, and deprecation notices from evidence. Root README publishing belongs to doc-publish-readme. Recursive folder docsets belong to doc-build-index. Release-facing docs belong to doc-write-release-docs. Do not implement code or perform review verdicts.",
+      "summaryKo": "아키텍처 노트, 사용 가이드, 개념 설명, deprecation/redirect 문서 같은 비루트 문서를 실제로 쓴다.",
+      "purpose": "Write or refresh non-root documentation from repository evidence with audience-aware difficulty control.",
+      "useWhen": [
+        "Need to create or refresh non-root guides, architecture docs, usage docs, module notes, redirect notes, or deprecation notices.",
+        "Need to turn upstream stage payloads into documentation artifacts.",
+        "Need documentation changes without runtime code changes."
+      ],
+      "doNotUseWhen": [
+        "Need runtime code changes.",
+        "Need documentation inventory or lifecycle governance only.",
+        "Need repo root README, GitHub landing docs, or multilingual publishing.",
+        "Need recursive parent/child folder docsets.",
+        "Need release notes, changelog entries, migration docs, or rollback notes.",
+        "Need review verdicts rather than docs."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "doc",
+      "familyInfo": {
+        "label_en": "Doc",
+        "label_ko": "문서",
+        "value_ko": "지식을 흩어 놓지 않고 구조화해 남긴다.",
+        "summary_ko": "문서 표면과 수명주기를 함께 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/doc-write/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/doc-write/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "doc-write-release-docs",
+      "description": "Produce or refresh release-facing docs such as release notes, changelog entries, upgrade notes, migration guides, compatibility notes, and rollback summaries from concrete release evidence. Use when preparing or shipping a release. Do not mutate git refs, publish releases, or judge rollout GO/NO-GO.",
+      "summaryKo": "릴리즈 노트, changelog entry, 업그레이드/마이그레이션 문서, 롤백 요약 같은 릴리즈 문서를 쓴다.",
+      "purpose": "Write release-facing documentation that explains what changed, who is affected, what action is required, and how to move safely.",
+      "useWhen": [
+        "Need release notes, changelog entries, upgrade notes, migration docs, compatibility notes, or rollback summaries.",
+        "Need one release-doc writer that can handle both user-facing and operator-facing release documents.",
+        "Need to document the current release from concrete change evidence."
+      ],
+      "doNotUseWhen": [
+        "Need git branch, tag, or GitHub release mutation.",
+        "Need rollout GO/NO-GO judgement.",
+        "Need generic non-release documentation.",
+        "Need recursive folder docsets or repo root README publication."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "doc",
+      "familyInfo": {
+        "label_en": "Doc",
+        "label_ko": "문서",
+        "value_ko": "지식을 흩어 놓지 않고 구조화해 남긴다.",
+        "summary_ko": "문서 표면과 수명주기를 함께 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/doc-write-release-docs/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/doc-write-release-docs/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "release-check-hygiene",
+      "description": "Use when release readiness depends on legacy removal, document freshness, and public-surface sync. Do not use for branch mutation or rollout-risk judgement.",
+      "summaryKo": "낡은 파일이 남아 있지 않은지, 공개 표면과 문서가 어긋나지 않는지 릴리즈 위생을 본다.",
+      "purpose": "Verify release hygiene gates such as required docs, stale or legacy surface removal, and skill-metadata-to-doc sync before release judgement or publication.",
+      "useWhen": [
+        "Need to confirm required release docs are upgraded and delivery-only implementation docs are removed before shipping.",
+        "Need to check that legacy files, stale docs, or removed public skills are actually cleaned up.",
+        "Need explicit evidence that skill metadata, user docs, and public surface still agree."
+      ],
+      "doNotUseWhen": [
+        "Need git branch, tag, or remote state only; use release-check-repo instead.",
+        "Need rollout risk or rollback judgement; use release-verdict instead.",
+        "Need to rewrite docs directly; use doc-write, doc-curate, or doc-publish-readme instead."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "release",
+      "familyInfo": {
+        "label_en": "Release",
+        "label_ko": "릴리즈",
+        "value_ko": "내보내도 되는지 근거로 점검한다.",
+        "summary_ko": "출고 전 마지막 검증을 맡는다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/release-check-hygiene/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/release-check-hygiene/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "release-check-repo",
+      "description": "Use when release work must start by confirming the repository is a real git release target with usable branches, remotes, and a clean enough working tree. Do not use for rollout judgement or actual publication.",
+      "summaryKo": "이 저장소가 실제로 릴리즈 가능한 git 상태인지, 브랜치와 remote가 맞는지부터 확인한다.",
+      "purpose": "Check repository, branch, remote, and tag preconditions before release review or publication.",
+      "useWhen": [
+        "Need to confirm the target is a git repository before any release work.",
+        "Need to inspect source/target branch state, worktree cleanliness, remotes, or tag collisions.",
+        "Need explicit repository preconditions before release review or publish execution."
+      ],
+      "doNotUseWhen": [
+        "Need rollout risk or GO/NO-GO judgement; use release-verdict instead.",
+        "Need documentation or public-surface hygiene checks; use release-check-hygiene instead.",
+        "Need to mutate branches, tags, or remotes; use release-publish instead."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "release",
+      "familyInfo": {
+        "label_en": "Release",
+        "label_ko": "릴리즈",
+        "value_ko": "내보내도 되는지 근거로 점검한다.",
+        "summary_ko": "출고 전 마지막 검증을 맡는다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/release-check-repo/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/release-check-repo/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "release-publish",
+      "description": "Use when a validated change set must be cleaned up, merged into the release branch as a release-only commit, tagged, and optionally published as a GitHub release. Do not use for release-risk judgement only; use release-verdict or workflow-release-ready-check for GO/NO-GO analysis.",
+      "summaryKo": "점검이 끝난 변경을 release-only 커밋, 태그, GitHub release publish로 실제 출고하는 공구다.",
+      "purpose": "Execute release preparation and publication with explicit cleanup, branch, tag, and publish evidence while keeping main release-only.",
+      "useWhen": [
+        "Need to turn a validated dev branch into a release-only commit on the target branch.",
+        "Need legacy removal, temporary implementation-doc deletion, tag creation, and GitHub release publication handled as one explicit release run.",
+        "Need the exact release evidence such as cleanup actions, commit refs, tag refs, and publish status recorded.",
+        "Need low-level control over the publish stage after review has already been resolved elsewhere."
+      ],
+      "doNotUseWhen": [
+        "Need only release safety or rollout judgement; use release-verdict or workflow-release-ready-check instead.",
+        "Need the default end-to-end release flow; use control-release-publish-flow instead.",
+        "Need normal implementation, debugging, or documentation authoring work.",
+        "Cannot tolerate branch, tag, or remote mutation in the current run."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "release",
+      "familyInfo": {
+        "label_en": "Release",
+        "label_ko": "릴리즈",
+        "value_ko": "내보내도 되는지 근거로 점검한다.",
+        "summary_ko": "출고 전 마지막 검증을 맡는다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/release-publish/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/release-publish/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "release-verdict",
+      "description": "Use when assessing release safety, rollout risk, compatibility impact, and rollback readiness. Use it for release verdict analysis, not for publication execution.",
+      "summaryKo": "배포 범위, 롤아웃, 롤백 준비를 보고 GO/NO-GO 판단을 내린다.",
+      "purpose": "Judge release safety and rollback readiness.",
+      "useWhen": [
+        "Need rollout, impact, or rollback judgement before release.",
+        "Need a release verdict grounded in release evidence.",
+        "Need rollout, interface, and monitoring checks before deployment."
+      ],
+      "doNotUseWhen": [
+        "Need direct implementation or bug debugging.",
+        "Need only repository or docs hygiene checks — use release-check-hygiene instead.",
+        "Need actual branch, tag, or release publication execution — use release-publish instead.",
+        "Need only diff/PR gate audit without rollout or rollback judgment — use check-release-risk instead."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "release",
+      "familyInfo": {
+        "label_en": "Release",
+        "label_ko": "릴리즈",
+        "value_ko": "내보내도 되는지 근거로 점검한다.",
+        "summary_ko": "출고 전 마지막 검증을 맡는다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/release-verdict/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/release-verdict/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "compose",
+      "description": "Single entrypoint for deterministic multi-skill orchestration via explicit macro syntax (Stage x Policy x Lens). Use when multiple skills must be chained in a defined order with clear output contracts. Do not use when a single skill invocation is sufficient or when ad-hoc chaining is preferred.",
+      "summaryKo": "여러 스킬을 정해진 순서로 연결하는 조립판이다. 한 번에 하나의 workflow로 안 끝날 때 쓴다.",
+      "purpose": "Parse explicit skill macros into one deterministic execution program without adding hidden domain logic.",
+      "useWhen": [
+        "Need to normalize a multi-skill macro into one deterministic execution plan.",
+        "Need workflow expansion from direct per-skill metadata.",
+        "Need stage, lens, scope, or output overrides resolved before domain execution."
+      ],
+      "doNotUseWhen": [
+        "Need domain analysis, implementation, review, or debugging by itself.",
+        "Need shorthand or non-canonical names instead of explicit workflows or explicit skills.",
+        "Need to infer missing domain skills without an explicit macro or workflow skill.",
+        "Need direct PROGRAM DSL input parsing as a public entry mode."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "compose",
+      "familyInfo": {
+        "label_en": "Compose",
+        "label_ko": "조립",
+        "value_ko": "여러 스킬을 숨김 없이 한 체인으로 엮는다.",
+        "summary_ko": "다중 스킬 실행 순서를 명시적으로 만든다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/compose/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/compose/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "commit-write-message",
+      "description": "Use when generating Conventional Commit message candidates from an existing diff or change summary. Do not use when implementation, debugging, or review analysis is requested.",
+      "summaryKo": "이미 끝난 변경을 바탕으로 Conventional Commit 메시지 후보를 만든다.",
+      "purpose": "Generate precise Conventional Commit proposals from an existing diff or structured change summary.",
+      "useWhen": [
+        "Need commit message candidates after the implementation is already done.",
+        "Need commit type, scope, and breaking-change status inferred from evidence.",
+        "Need 3-5 stable commit candidates with rationale."
+      ],
+      "doNotUseWhen": [
+        "Need implementation, debugging, or review work.",
+        "Need release decision rather than commit wording.",
+        "There is no diff or change summary to summarize."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "commit",
+      "familyInfo": {
+        "label_en": "Commit",
+        "label_ko": "커밋",
+        "value_ko": "끝난 변경의 의도를 짧고 정확하게 남긴다.",
+        "summary_ko": "코드가 아니라 변경 설명을 다룬다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/commit-write-message/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/commit-write-message/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "gemini",
+      "description": "Use when the user explicitly requests Gemini CLI as a sub-agent for large-context analysis or web research, including session resume. Do not run Gemini implicitly. English triggers: gemini, gemini cli, external research delegation.",
+      "summaryKo": "사용자가 명시적으로 원할 때만 Gemini CLI를 외부 조사원처럼 붙이는 특수 공구다. 기본값으로는 쓰지 않는다.",
+      "purpose": "Run an explicitly requested Gemini CLI delegation and keep its output separated from local evidence.",
+      "useWhen": [
+        "The user explicitly invokes gemini or $gemini.",
+        "Need large-context external analysis, web research, or session resume through Gemini CLI.",
+        "Need Gemini output compared against local evidence instead of replacing it."
+      ],
+      "doNotUseWhen": [
+        "Gemini was not explicitly requested.",
+        "Need ordinary local repository analysis that can be completed without external delegation.",
+        "Need automatic file edits unless the user explicitly requested apply mode."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "gemini",
+      "familyInfo": {
+        "label_en": "Gemini",
+        "label_ko": "외부 조사",
+        "value_ko": "외부 분석을 붙이되 로컬 근거와 분리해 비교한다.",
+        "summary_ko": "명시 요청이 있을 때만 외부 분석을 붙인다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/gemini/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/gemini/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "bug-repro",
+      "description": "Turn a vague bug report into a rerunnable reproduction with explicit environment facts, minimal failing steps, and evidence. Use when the immediate job is to prove the failure and narrow missing inputs before deeper root-cause work.",
+      "summaryKo": "",
+      "purpose": "Convert a symptom into a rerunnable failure description that another engineer or agent can execute without guesswork.",
+      "useWhen": [
+        "Need a bug report turned into a minimal, rerunnable repro.",
+        "Need to separate observed failure from guessed cause.",
+        "Need evidence collection before deeper debugging or fixing."
+      ],
+      "doNotUseWhen": [
+        "The failure is already reproducible and the immediate job is root-cause analysis.",
+        "Need only a broad issue summary with no runnable failure path.",
+        "Need regression test design after the fix rather than repro capture before the fix."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "misc",
+      "familyInfo": {
+        "label_en": "Misc",
+        "label_ko": "기타",
+        "value_ko": "작은 보조 역할을 맡아 전체 흐름을 돕는다.",
+        "summary_ko": "좁은 목적의 보조 스킬이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/bug-repro/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/bug-repro/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "code-change-verification",
+      "description": "Run the smallest credible verification stack after runtime, test, or build changes. Use when code, tests, or build behavior changed and you need explicit verify commands, fail-fast execution, and root-cause grouped failure reporting.",
+      "summaryKo": "",
+      "purpose": "Prove that a code or build change is actually safe enough to hand off by selecting the smallest relevant verification stack, running it in a deliberate order, and reporting failures by root cause instead of raw log order.",
+      "useWhen": [
+        "Need the mandatory verification path after code, tests, or build behavior changed.",
+        "Need to decide which format, lint, typecheck, and test commands are actually relevant.",
+        "Need one concise verification report instead of scattered shell output."
+      ],
+      "doNotUseWhen": [
+        "Only docs, comments, or non-runtime metadata changed.",
+        "Need test-gap discovery rather than command execution.",
+        "Need a final merge verdict that also weighs design or product fit."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "misc",
+      "familyInfo": {
+        "label_en": "Misc",
+        "label_ko": "기타",
+        "value_ko": "작은 보조 역할을 맡아 전체 흐름을 돕는다.",
+        "summary_ko": "좁은 목적의 보조 스킬이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/code-change-verification/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/code-change-verification/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "consensus-engine",
+      "description": "Run a script-backed three-agent consensus pass for one bounded decision, design, debugging, or planning question. Use when Codex, Claude Code, and Gemini CLI should answer independently, challenge only the disagreement surface, and end with evidence-weighted arbitration instead of naive majority vote.",
+      "summaryKo": "",
+      "purpose": "Produce one auditable consensus artifact set from Codex, Claude Code, and Gemini CLI without collapsing disagreement into fake certainty.",
+      "useWhen": [
+        "Need one bounded recommendation for architecture, refactoring, debugging, migration, or implementation strategy.",
+        "Need Codex, Claude Code, and Gemini CLI to answer the same mission independently before seeing disagreement only.",
+        "Need a durable artifact set that preserves accepted decisions, provisional lean, unresolved conflicts, and cheapest next checks.",
+        "Need deterministic orchestration through a script because the workflow depends on external CLIs and structured output collection."
+      ],
+      "doNotUseWhen": [
+        "One model is enough.",
+        "The task is deterministic and debate adds no value.",
+        "Required CLIs are unavailable, unauthenticated, or forbidden in the environment.",
+        "The prompt contains secrets or regulated data that must not be sent to external model CLIs.",
+        "The main job is direct implementation rather than analysis."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "misc",
+      "familyInfo": {
+        "label_en": "Misc",
+        "label_ko": "기타",
+        "value_ko": "작은 보조 역할을 맡아 전체 흐름을 돕는다.",
+        "summary_ko": "좁은 목적의 보조 스킬이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/consensus-engine/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/consensus-engine/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "docs-sync",
+      "description": "Compare repository behavior, configuration, and plans against the docs surface to find missing, stale, or wrong documentation. Use when code changed and you need a doc audit, patch plan, or approval-ready doc sync report.",
+      "summaryKo": "",
+      "purpose": "Keep repository knowledge legible by comparing the real code, config, and execution artifacts against the current documentation surface, then reporting or applying only the doc changes that are actually warranted.",
+      "useWhen": [
+        "Need a docs audit after code, configuration, CLI, or workflow changes.",
+        "Need to compare AGENTS.md, architecture notes, plans, and docs against the actual repository.",
+        "Need an approval-ready docs sync report before editing documentation."
+      ],
+      "doNotUseWhen": [
+        "Need feature design before implementation.",
+        "Need a release-only checklist with no doc comparison.",
+        "Need to rewrite documentation style without checking implementation truth first."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "misc",
+      "familyInfo": {
+        "label_en": "Misc",
+        "label_ko": "기타",
+        "value_ko": "작은 보조 역할을 맡아 전체 흐름을 돕는다.",
+        "summary_ko": "좁은 목적의 보조 스킬이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/docs-sync/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/docs-sync/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "implementation-strategy",
+      "description": "Decide the simplest safe implementation path before editing compatibility-sensitive code. Use when a task may affect APIs, config, schemas, durable state, or migration boundaries and you need an explicit rewrite-vs-shim decision.",
+      "summaryKo": "",
+      "purpose": "Choose the smallest implementation that satisfies the current task while protecting real released boundaries and calling out the cases that need migration or explicit confirmation.",
+      "useWhen": [
+        "Need to decide whether a change can be rewritten directly or needs compatibility handling.",
+        "Need to judge a proposed change against the latest real release boundary instead of branch churn.",
+        "Need to make migration, rollback, or durable-state risk explicit before coding."
+      ],
+      "doNotUseWhen": [
+        "Need only a product brief or feature spec.",
+        "The change is obviously internal and has no meaningful compatibility surface.",
+        "The work is already implemented and you only need verification or PR summary."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "misc",
+      "familyInfo": {
+        "label_en": "Misc",
+        "label_ko": "기타",
+        "value_ko": "작은 보조 역할을 맡아 전체 흐름을 돕는다.",
+        "summary_ko": "좁은 목적의 보조 스킬이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/implementation-strategy/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/implementation-strategy/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "pr-draft-summary",
+      "description": "Generate a review-ready branch suggestion, PR title, and concise draft description after substantive work is complete. Use when code, tests, build config, or behavior-relevant docs changed and you need a tight summary block for handoff or review.",
+      "summaryKo": "",
+      "purpose": "Turn a real repository diff into a review-ready summary block that a human can paste into a PR without rewriting the change story from scratch.",
+      "useWhen": [
+        "Substantive work is done and ready for review or handoff.",
+        "Need a branch suggestion, title, and concise PR description derived from the actual diff.",
+        "Need risk and rollback notes without bloated prose."
+      ],
+      "doNotUseWhen": [
+        "No meaningful code or behavior-relevant diff exists.",
+        "Need release notes rather than a review-ready PR block.",
+        "Need a final merge verdict instead of a summary artifact."
+      ],
+      "expansion": [],
+      "layer": "atomic",
+      "layerLabel": {
+        "en": "Atomic",
+        "ko": "원자 스킬"
+      },
+      "family": "misc",
+      "familyInfo": {
+        "label_en": "Misc",
+        "label_ko": "기타",
+        "value_ko": "작은 보조 역할을 맡아 전체 흐름을 돕는다.",
+        "summary_ko": "좁은 목적의 보조 스킬이다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/pr-draft-summary/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/pr-draft-summary/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "control-build-until-done",
+      "description": "Plan-free autonomous build loop. Drives a bounded code mission to completion without requiring plan or task documents. Evaluates current state, picks the smallest next code action, executes it, and loops until the done contract is proven or a real blocker stops progress. For document-driven execution with a TASKS.md ledger, use workflow-build-execute-plan instead.",
+      "summaryKo": "플랜 문서 없이 끝까지 자율 실행 → 위 \"구현과 실행\" 섹션 참조.",
+      "purpose": "Autonomously drive a bounded code mission to completion without plan documents. Reads current code state, evaluates it against the done contract, picks the smallest useful next action, executes it, and loops immediately. No manual stepping. No stopping between passes — done or blocked is the only exit.",
+      "useWhen": [
+        "Need to drive a code mission to completion without any plan or task documents.",
+        "DONE_CONDITION is clear but the implementation path is not fully mapped upfront.",
+        "Need ralph-mode execution: evaluate → act → verify → repeat until provably done.",
+        "A pass fails mid-loop — debug and retry within the same loop instead of stopping."
+      ],
+      "doNotUseWhen": [
+        "Have a plans/TASKS.md ledger — use workflow-build-execute-plan for document-driven execution.",
+        "Need only a single-pass implementation — use build-write-code directly.",
+        "Need non-code work (docs, review) — use control-finish-until-done instead."
+      ],
+      "expansion": [],
+      "layer": "control",
+      "layerLabel": {
+        "en": "Control",
+        "ko": "제어 스킬"
+      },
+      "family": "control",
+      "familyInfo": {
+        "label_en": "Control",
+        "label_ko": "제어",
+        "value_ko": "반복과 종료 조건을 자동으로 밀어준다.",
+        "summary_ko": "한 번이 아니라 끝날 때까지 실행한다."
+      },
+      "quickPick": {
+        "need": "코드를 끝까지 고쳐야 한다. 태스크 문서 없음",
+        "why": "테스트 통과"
+      },
+      "sourcePath": "skills/control-build-until-done/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/control-build-until-done/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "control-finish-until-done",
+      "description": "Plan-free autonomous loop for non-code work. Drives bounded documentation, review, planning, or release-prep missions to completion without requiring task documents. Reads current artifact state, evaluates it against the done contract, applies the smallest content improvement, and loops until the contract is proven or a real blocker stops progress. For code-changing missions, use control-build-until-done instead.",
+      "summaryKo": "플랜 문서 없이 문서/리뷰/계획 작업을 끝까지 자율 실행한다. `control-build-until-done`의 비코드 대칭 스킬. craft-clarity lens — \"작성됨\"과 \"완료됨\"은 다르다.",
+      "purpose": "Autonomously drive a bounded non-code mission to completion without plan documents. Reads current artifact state, evaluates it against the done contract, picks the smallest useful improvement, applies it, and loops immediately. No manual stepping — done or blocked is the only exit.",
+      "useWhen": [
+        "Need to drive documentation, review, planning, or release-prep to completion without any task documents.",
+        "DONE_CONDITION is clear but the path to get there is not fully mapped upfront.",
+        "Need to keep iterating on content — write → read → revise → verify — until the quality bar is provably met.",
+        "A pass reveals a new gap — incorporate it into the loop instead of stopping."
+      ],
+      "doNotUseWhen": [
+        "Need code implementation, tests, or performance fixes — use control-build-until-done instead.",
+        "Have a TASKS.md plan and need ledger-driven execution — use workflow-build-execute-plan instead.",
+        "Need only final validation after work is already complete."
+      ],
+      "expansion": [],
+      "layer": "control",
+      "layerLabel": {
+        "en": "Control",
+        "ko": "제어 스킬"
+      },
+      "family": "control",
+      "familyInfo": {
+        "label_en": "Control",
+        "label_ko": "제어",
+        "value_ko": "반복과 종료 조건을 자동으로 밀어준다.",
+        "summary_ko": "한 번이 아니라 끝날 때까지 실행한다."
+      },
+      "quickPick": {
+        "need": "문서/리뷰/계획을 끝까지 만들어야 한다",
+        "why": "독자가 이해할 수 있음"
+      },
+      "sourcePath": "skills/control-finish-until-done/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/control-finish-until-done/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "control-improve-loop",
+      "description": "Atomic self-feedback refinement loop. Review one bounded work product, extract the highest-value improvement, run the smallest fix, and repeat until the explicit quality bar is satisfied or a real blocker stops progress.",
+      "summaryKo": "결과물을 보고 가장 값비싼 흠을 하나씩 고치며 품질 문턱까지 반복한다. 자기 피드백 루프 공구 (control 카테고리).",
+      "purpose": "Drive bounded self-critique and improvement loops toward a simpler, higher-quality result without drifting into over-engineering.",
+      "useWhen": [
+        "Need iterative self-critique and improvement for one bounded artifact or scope.",
+        "Need to keep refining until the core quality bar is met while rejecting over-engineering.",
+        "Need one explicit skill that can critique current work, choose the smallest high-value fix, and rerun the loop."
+      ],
+      "doNotUseWhen": [
+        "Need only final read-only delivery verification — use review-final-verify instead.",
+        "Need broad multi-track planning or orchestration across unrelated scopes.",
+        "Need net-new feature ideation rather than refinement of existing work."
+      ],
+      "expansion": [],
+      "layer": "control",
+      "layerLabel": {
+        "en": "Control",
+        "ko": "제어 스킬"
+      },
+      "family": "control",
+      "familyInfo": {
+        "label_en": "Control",
+        "label_ko": "제어",
+        "value_ko": "반복과 종료 조건을 자동으로 밀어준다.",
+        "summary_ko": "한 번이 아니라 끝날 때까지 실행한다."
+      },
+      "quickPick": null,
+      "sourcePath": "skills/control-improve-loop/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/control-improve-loop/SKILL.md",
+      "missingContract": false
+    },
+    {
+      "name": "control-release-publish-flow",
+      "description": "Control workflow that runs repository checks, release hygiene, release readiness, and then the release-only commit, tag, and publish flow as one explicit internal control path.",
+      "summaryKo": "release ready check와 publish를 한 control path로 묶는다.",
+      "purpose": "Compose repository prechecks, release hygiene, security preflight, release judgement, and release publication into one explicit release control workflow.",
+      "useWhen": [
+        "Need one explicit release control flow instead of manually chaining workflow-release-ready-check and release-publish.",
+        "Need repo checks, hygiene gates, release-only commit policy, tag creation, and publish status handled as one explicit flow.",
+        "Need security preflight to run before the release decision and publication steps.",
+        "Need TARGET_BRANCHES to be the single branch source of truth for both review and publish phases."
+      ],
+      "doNotUseWhen": [
+        "Need only release judgement without any branch or tag mutation; use workflow-release-ready-check instead.",
+        "Need only low-level publish execution after some other gate system already ran; use release-publish instead.",
+        "Cannot tolerate branch, tag, or remote mutation in the current run."
+      ],
+      "expansion": [
+        "release-check-repo",
+        "release-check-hygiene",
+        "review-security",
+        "release-verdict",
+        "release-publish"
+      ],
+      "layer": "control",
+      "layerLabel": {
+        "en": "Control",
+        "ko": "제어 스킬"
+      },
+      "family": "control",
+      "familyInfo": {
+        "label_en": "Control",
+        "label_ko": "제어",
+        "value_ko": "반복과 종료 조건을 자동으로 밀어준다.",
+        "summary_ko": "한 번이 아니라 끝날 때까지 실행한다."
+      },
+      "quickPick": {
+        "need": "릴리즈 점검부터 publish까지 한 번에 하고 싶다",
+        "why": "점검, 커밋/태그, 공개까지 한 흐름으로 묶는 내부 제어 경로다"
+      },
+      "sourcePath": "skills/control-release-publish-flow/SKILL.md",
+      "sourceUrl": "https://github.com/AxiomOrient/composable-skills/blob/main/skills/control-release-publish-flow/SKILL.md",
+      "missingContract": false
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Consensus Engine"
+  short_description: "Broker 3-way model consensus"
+  default_prompt: "Use $consensus-engine to produce a defensible consensus from Codex, Claude Code, and Gemini CLI for the current task or repository context. Write the request packet, run the independent round and the rebuttal round, then return the final consensus report with accepted decisions, unresolved conflicts, and cheapest next checks."

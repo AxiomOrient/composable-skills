@@ -1,0 +1,39 @@
+{
+  "name": "code-change-verification",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>plan>verify>review>handoff>audit |\n scope: diff|repo|paths(glob,...) |\n policy: evidence,quality-gates{format,lint,typecheck,tests},deterministic-output |\n lens: kent-beck |\n output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "TARGET_SCOPE",
+      "type": "path|module|repo|diff",
+      "required": true,
+      "description": "Where the change lives."
+    },
+    {
+      "name": "CHANGE_TYPE",
+      "type": "runtime|tests|build|mixed",
+      "required": true,
+      "description": "What kind of change was made."
+    },
+    {
+      "name": "VERIFICATION_POLICY",
+      "type": "smallest-relevant|required-full-stack",
+      "required": false,
+      "description": "Whether to run the minimum credible stack or the full repository stack."
+    },
+    {
+      "name": "KNOWN_COMMAND_SOURCES",
+      "type": "list",
+      "required": false,
+      "shape": "{REF, WHY_RELEVANT}",
+      "description": "AGENTS, WORKFLOW, Makefile, package scripts, CI workflows, or repo scripts that define the verification order."
+    }
+  ],
+  "display_name": "Code Change Verification",
+  "browse_category": "check",
+  "browse_priority": 28,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}

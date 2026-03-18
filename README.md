@@ -30,6 +30,20 @@ cd composable-skills
 - `bash`
 - `python3`
 
+## 프로젝트 사이트
+
+프로젝트 사이트는 `docs/`에 있는 순수 정적 페이지입니다.
+
+```bash
+python3 scripts/build_site_data.py
+python3 -m http.server 4173 --directory docs
+```
+
+- 카탈로그 데이터: `docs/data/skills.json`
+- 사이트 엔트리: `docs/index.html`
+- 스타일/동작: `docs/assets/`
+- GitHub Pages: 저장소 설정에서 기본 브랜치의 `/docs` 폴더를 publish source로 지정
+
 ---
 
 ## 어떻게 쓰나요?
@@ -69,6 +83,7 @@ Atomic 스킬 카테고리:
 | 질문/요청이 흐리다, 뭘 해야 할지 모르겠다 | [`workflow-clarify-request`](./skills/workflow-clarify-request/SKILL.md) |
 | 코드 구조·복잡도·의존성을 한 번에 분석하고 싶다 | [`workflow-analyze-codebase`](./skills/workflow-analyze-codebase/SKILL.md) |
 | 현재 코드 구조와 범위를 먼저 파악하고 싶다 | [`workflow-scout-structure`](./skills/workflow-scout-structure/SKILL.md) |
+| 설계안이나 디버깅 가설을 Codex/Claude/Gemini 합의로 좁히고 싶다 | [`workflow-consensus-engine`](./skills/workflow-consensus-engine/SKILL.md) |
 | 간단한 코드 리뷰가 필요하다 | [`workflow-review-change`](./skills/workflow-review-change/SKILL.md) |
 | 구조·품질·보안·실패경로 완전한 리뷰가 필요하다 | [`workflow-review-complete`](./skills/workflow-review-complete/SKILL.md) |
 | 버그를 처음부터 끝까지 잡고 싶다 | [`workflow-debug-this`](./skills/workflow-debug-this/SKILL.md) |

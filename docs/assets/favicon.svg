@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title>Composable Skills</title>
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c96e3a" />
+      <stop offset="100%" stop-color="#efc79e" />
+    </linearGradient>
+  </defs>
+  <rect width="96" height="96" rx="28" fill="url(#g)" />
+  <path d="M31 31h20v8H39v18h12v8H31zm34 0H45v8h20c3.3 0 6 2.7 6 6s-2.7 6-6 6H53v8h12c7.7 0 14-6.3 14-14s-6.3-14-14-14z" fill="#191714" />
+</svg>

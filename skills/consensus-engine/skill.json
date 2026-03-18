@@ -1,0 +1,54 @@
+{
+  "name": "consensus-engine",
+  "layer": "atomic",
+  "layer_badge": "Atomic",
+  "default_program": "[stages: preflight>detect>analyze>review>handoff>audit | scope: repo|diff|paths(glob,...) | policy: evidence,safety-gates,deterministic-output | lens: kahneman-tversky | output: md(contract=v1)]",
+  "required_inputs": [
+    {
+      "name": "MISSION_TASK",
+      "type": "string",
+      "required": true,
+      "description": "One bounded decision or analysis question."
+    },
+    {
+      "name": "CONSENSUS_MODE",
+      "type": "analysis|plan|implement-review",
+      "required": false,
+      "description": "Output mode. Defaults to analysis."
+    },
+    {
+      "name": "CONSTRAINTS",
+      "type": "list",
+      "required": false,
+      "shape": "{CONSTRAINT}",
+      "description": "Hard limits, non-goals, or compatibility boundaries."
+    },
+    {
+      "name": "DONE_SIGNALS",
+      "type": "list",
+      "required": true,
+      "shape": "{DONE_SIGNAL}",
+      "description": "What a valid final recommendation must contain."
+    },
+    {
+      "name": "CONTEXT_FILES",
+      "type": "list",
+      "required": false,
+      "shape": "{PATH}",
+      "description": "Local files to embed as bounded evidence."
+    },
+    {
+      "name": "LOCAL_EVIDENCE",
+      "type": "list",
+      "required": false,
+      "shape": "{FACT}",
+      "description": "Already verified facts that should anchor the run."
+    }
+  ],
+  "display_name": "Consensus Engine",
+  "browse_category": "analyze",
+  "browse_priority": 30,
+  "is_category_default": false,
+  "codex_surface": "expert",
+  "starter_inputs": []
+}
